@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register — Community Register</title>
+<title>Register — Enemind Company</title>
+<link rel="icon" type="image/png" href="https://www.google.com/s2/favicons?domain=enemindcompany.page.gd&sz=64">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -49,11 +50,32 @@
   }
 
   .brandmark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     font-family: var(--font-display);
     font-weight: 700;
     font-size: 1.05rem;
     letter-spacing: 0.02em;
     text-decoration: none;
+  }
+
+  .brandmark .glyph {
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--copper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--paper);
+    flex-shrink: 0;
+  }
+  .brandmark .glyph img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   main {
@@ -248,7 +270,10 @@
 <body>
 
 <header>
-  <a href="#top" class="brandmark">COMMUNITY REGISTER</a>
+  <a href="#top" class="brandmark">
+    <span class="glyph"><img src="https://www.google.com/s2/favicons?domain=enemindcompany.page.gd&sz=64" alt="Enemind Company logo"></span>
+    ENEMIND COMPANY
+  </a>
 </header>
 
 <main id="top">
@@ -309,13 +334,22 @@
     <div class="field-row">
       <div class="field-index">05</div>
       <div class="field-body">
+        <label for="university">University</label>
+        <select id="university" name="university" required>
+          <option value="" disabled selected>Select university</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-index">06</div>
+      <div class="field-body">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" autocomplete="new-password" required>
         <div class="hint">At least 8 characters, with a letter and a number.</div>
       </div>
     </div>
     <div class="field-row">
-      <div class="field-index">06</div>
+      <div class="field-index">07</div>
       <div class="field-body">
         <label for="confirmPassword">Confirm password</label>
         <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
@@ -330,7 +364,7 @@
 </main>
 
 <footer>
-  Community Register — built on Google Sheets + Apps Script
+  Enemind Company — built on Google Sheets + Apps Script
 </footer>
 
 <script>
@@ -349,12 +383,32 @@
     'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
   ];
 
+  const UNIVERSITIES = [
+    'University of Nairobi (UoN)', 'Maseno University', 'Moi University',
+    'Chuka University', 'Kisii University',
+    'Masinde Muliro University of Science and Technology (MMUST)',
+    'University of Eldoret', 'Tharaka University', 'University of Kabianga',
+    'Rongo University', 'University of Embu',
+    'Jaramogi Oginga Odinga University of Science and Technology (JOOUST)',
+    'Bomet University', 'Kibabii University', 'Pwani University',
+    'Maasai Mara University', 'Turkana University', 'Kaimosi Friends University',
+    'Garissa University'
+  ];
+
   const countySelect = document.getElementById('county');
   COUNTIES.forEach(c => {
     const opt = document.createElement('option');
     opt.value = c;
     opt.textContent = c;
     countySelect.appendChild(opt);
+  });
+
+  const universitySelect = document.getElementById('university');
+  UNIVERSITIES.forEach(u => {
+    const opt = document.createElement('option');
+    opt.value = u;
+    opt.textContent = u;
+    universitySelect.appendChild(opt);
   });
 
   const form = document.getElementById('registerForm');
@@ -369,11 +423,12 @@
       email: document.getElementById('email').value.trim(),
       phone: document.getElementById('phone').value.trim(),
       county: document.getElementById('county').value,
+      university: document.getElementById('university').value,
       password: document.getElementById('password').value,
     };
     const confirmPassword = document.getElementById('confirmPassword').value;
 
-    if (!data.name || !data.email || !data.phone || !data.county || !data.password) {
+    if (!data.name || !data.email || !data.phone || !data.county || !data.university || !data.password) {
       setStatus('Please fill in every field.', 'err');
       return;
     }
