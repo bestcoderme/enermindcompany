@@ -184,6 +184,40 @@
     font-size: 1.4rem;
   }
 
+  .mode-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid rgba(232,238,242,0.4);
+    margin-bottom: 32px;
+  }
+
+  .mode-toggle button {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: transparent;
+    color: rgba(232,238,242,0.6);
+    border: none;
+    padding: 14px 12px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .mode-toggle button:first-child { border-right: 1px solid rgba(232,238,242,0.4); }
+  .mode-toggle button.active {
+    background: var(--copper);
+    color: var(--blueprint-navy);
+    font-weight: 600;
+  }
+  .mode-toggle button:not(.active):hover { background: rgba(232,238,242,0.08); color: var(--paper); }
+  .mode-toggle button:focus-visible { outline: 2px solid var(--copper); outline-offset: -2px; }
+
+  .form-panel { display: none; }
+  .form-panel.active { display: block; }
+
+  #login-status[data-state="ok"] { color: var(--ok); }
+  #login-status[data-state="err"] { color: var(--err); }
+
   form.spec-sheet {
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.3);
@@ -343,9 +377,15 @@
 
   <div class="section-head">
     <span class="sheet-no">01</span>
-    <h2>Registration form</h2>
+    <h2 id="formTitle">Registration form</h2>
   </div>
 
+  <div class="mode-toggle" role="tablist">
+    <button type="button" id="tabRegister" class="active" role="tab" aria-selected="true" aria-controls="registerPanel">Register</button>
+    <button type="button" id="tabLogin" role="tab" aria-selected="false" aria-controls="loginPanel">Login</button>
+  </div>
+
+  <div class="form-panel active" id="registerPanel">
   <form class="spec-sheet" id="registerForm" novalidate>
     <div class="field-row">
       <div class="field-index">01</div>
@@ -413,6 +453,34 @@
       <button type="submit" class="commit" id="submitBtn">Submit registration</button>
     </div>
   </form>
+  </div>
+
+  <div class="form-panel" id="loginPanel">
+  <form class="spec-sheet" id="loginForm" novalidate>
+    <div class="field-row">
+      <div class="field-index">01</div>
+      <div class="field-body">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" name="loginEmail" autocomplete="email" required>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-index">02</div>
+      <div class="field-body">
+        <label for="loginPassword">Password</label>
+        <div class="password-wrap">
+          <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" required>
+          <button type="button" class="toggle-visibility" data-target="loginPassword">Show</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-row">
+      <span id="login-status" role="status" aria-live="polite"></span>
+      <button type="submit" class="commit" id="loginBtn">Log in</button>
+    </div>
+  </form>
+  </div>
 </main>
 
 <footer>
@@ -422,7 +490,7 @@
 <script>
   // Replace with your deployed Apps Script Web App URL from setup.gs
   // (Deploy > New deployment > Web app > copy the /exec URL).
-  const WEB_APP_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzuz0nKmTTBAQ-cN_0ZOH5cZjkFIiMJG7M8YHoxH7L6VEELzPbYyG5uaPZRcD-qCoPb/exec';
 
   const COUNTIES = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
@@ -472,6 +540,82 @@
     });
   });
 
+  /* ---------- REGISTER / LOGIN TAB TOGGLE ---------- */
+
+  const tabRegister = document.getElementById('tabRegister');
+  const tabLogin = document.getElementById('tabLogin');
+  const registerPanel = document.getElementById('registerPanel');
+  const loginPanel = document.getElementById('loginPanel');
+  const formTitle = document.getElementById('formTitle');
+
+  function showRegister() {
+    tabRegister.classList.add('active');
+    tabLogin.classList.remove('active');
+    tabRegister.setAttribute('aria-selected', 'true');
+    tabLogin.setAttribute('aria-selected', 'false');
+    registerPanel.classList.add('active');
+    loginPanel.classList.remove('active');
+    formTitle.textContent = 'Registration form';
+  }
+
+  function showLogin() {
+    tabLogin.classList.add('active');
+    tabRegister.classList.remove('active');
+    tabLogin.setAttribute('aria-selected', 'true');
+    tabRegister.setAttribute('aria-selected', 'false');
+    loginPanel.classList.add('active');
+    registerPanel.classList.remove('active');
+    formTitle.textContent = 'Log in';
+  }
+
+  tabRegister.addEventListener('click', showRegister);
+  tabLogin.addEventListener('click', showLogin);
+
+  /* ---------- LOGIN FORM ---------- */
+
+  const loginForm = document.getElementById('loginForm');
+  const loginStatusEl = document.getElementById('login-status');
+  const loginBtn = document.getElementById('loginBtn');
+
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email || !password) {
+      setLoginStatus('Please enter your email and password.', 'err');
+      return;
+    }
+
+    setLoginStatus('Logging in…', '');
+    loginBtn.disabled = true;
+
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'login', email, password })
+      });
+      const result = await res.json();
+
+      if (result.success) {
+        setLoginStatus(result.message || 'Login successful.', 'ok');
+      } else {
+        setLoginStatus(result.message || 'Login failed.', 'err');
+      }
+    } catch (err) {
+      setLoginStatus('Network error — check the Web App URL is set.', 'err');
+    } finally {
+      loginBtn.disabled = false;
+    }
+  });
+
+  function setLoginStatus(message, state) {
+    loginStatusEl.textContent = message;
+    if (state) loginStatusEl.setAttribute('data-state', state);
+    else loginStatusEl.removeAttribute('data-state');
+  }
+
   const form = document.getElementById('registerForm');
   const statusEl = document.getElementById('form-status');
   const submitBtn = document.getElementById('submitBtn');
@@ -480,6 +624,7 @@
     e.preventDefault();
 
     const data = {
+      action: 'register',
       name: document.getElementById('fullName').value.trim(),
       email: document.getElementById('email').value.trim(),
       phone: document.getElementById('phone').value.trim(),
