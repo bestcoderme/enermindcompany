@@ -893,6 +893,8 @@
 
   // Sends the person to the dashboard, passing their account details
   // along as URL query parameters so home.html can render them.
+  // Opened as a brand-new page/tab rather than replacing this one, so the
+  // register/login page stays put in its own tab.
   function goToHome(user) {
     const qs = new URLSearchParams({
       name: user.name || '',
@@ -902,7 +904,12 @@
       university: user.university || '',
       status: user.status || 'Pending'
     });
-    window.location.href = 'home.html?' + qs.toString();
+    const homeUrl = 'home.html?' + qs.toString();
+    const newTab = window.open(homeUrl, '_blank');
+    if (!newTab) {
+      // Pop-up blocked — fall back to navigating in the same tab.
+      window.location.href = homeUrl;
+    }
   }
 
   tabRegister.addEventListener('click', showRegister);
