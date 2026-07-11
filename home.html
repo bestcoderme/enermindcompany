@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — Enemind Company</title>
+<link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blueprint-navy: #10243E;
+    --blueprint-blue: #2E6F9E;
+    --blueprint-line: #4C86AE;
+    --paper: #E8EEF2;
+    --copper: #C97B3D;
+    --ink: #0B1B2B;
+    --ok: #3F8F5F;
+    --err: #B4453A;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background:
+      repeating-linear-gradient(0deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      var(--blueprint-navy);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  a { color: inherit; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    background: rgba(16,36,62,0.92);
+    border-bottom: 1px solid rgba(232,238,242,0.15);
+    position: relative;
+  }
+
+  .header-right { position: relative; }
+
+  .account-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--copper);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+    color: var(--blueprint-navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: filter 0.15s ease;
+  }
+  .account-btn:hover { filter: brightness(0.95); }
+  .account-btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+  .account-btn svg { width: 22px; height: 22px; }
+
+  .account-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 260px;
+    background: var(--blueprint-navy);
+    border: 1px solid rgba(232,238,242,0.35);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    z-index: 20;
+  }
+  .account-dropdown.open { display: block; }
+
+  .account-dropdown .ad-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+  }
+
+  .account-dropdown .ad-row {
+    padding: 10px 18px;
+    border-top: 1px solid rgba(232,238,242,0.15);
+  }
+  .account-dropdown .ad-row:first-of-type { border-top: none; }
+
+  .account-dropdown .ad-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 2px;
+  }
+  .account-dropdown .ad-value {
+    font-size: 0.9rem;
+    color: var(--paper);
+    word-break: break-word;
+  }
+
+  .account-dropdown .ad-actions {
+    padding: 14px 18px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .account-dropdown button.commit,
+  .account-dropdown a.commit {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 0.72rem;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .brandmark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  main {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+  }
+
+  .hero-logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 3px solid var(--copper);
+    overflow: hidden;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+  }
+  .hero-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+  .hero-text { text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    max-width: 22ch;
+  }
+
+  h1 em { font-style: normal; color: var(--copper); }
+
+  p.lede {
+    margin-top: 16px;
+    max-width: 52ch;
+    font-size: 1rem;
+    color: rgba(232,238,242,0.8);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 48px 0 24px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    padding-bottom: 16px;
+    scroll-margin-top: 24px;
+  }
+
+  .sheet-no {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--copper);
+    flex-shrink: 0;
+  }
+
+  .section-head h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.4rem;
+  }
+
+  /* ---------- Menu (link list to every section) ---------- */
+  .menu-list {
+    border: 1px solid rgba(232,238,242,0.3);
+    background: rgba(232,238,242,0.04);
+  }
+
+  .menu-row {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    align-items: center;
+    border-top: 1px solid rgba(232,238,242,0.25);
+    padding: 16px 20px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease;
+  }
+  .menu-row:first-child { border-top: none; }
+  .menu-row:hover { background: rgba(232,238,242,0.07); }
+  .menu-row:focus-visible { outline: 2px solid var(--copper); outline-offset: -2px; }
+
+  .menu-row .field-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--blueprint-line);
+  }
+
+  .menu-label {
+    display: block;
+    font-size: 1rem;
+    color: var(--paper);
+    font-weight: 500;
+  }
+  .menu-hint {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: rgba(232,238,242,0.5);
+    margin-top: 2px;
+  }
+
+  .menu-arrow {
+    color: var(--copper);
+    font-family: var(--font-mono);
+    font-size: 1rem;
+  }
+
+  /* ---------- Info banners (support / university) ---------- */
+  .info-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.25);
+    border-left: 3px solid var(--copper);
+  }
+  .info-banner .banner-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(232,238,242,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background: rgba(232,238,242,0.05);
+  }
+  .info-banner .banner-text { font-size: 0.9rem; color: rgba(232,238,242,0.85); }
+  .info-banner .banner-text strong { color: var(--paper); }
+  .info-banner .banner-text a { color: var(--copper); text-decoration: underline; }
+  .info-banner.university-banner { border-left-color: var(--blueprint-line); }
+
+  /* ---------- Profile / about cards ---------- */
+  .profile-card {
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+  }
+
+  .profile-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    border-top: 1px solid rgba(232,238,242,0.25);
+  }
+  .profile-row:first-child { border-top: none; }
+
+  .profile-row .field-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--blueprint-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(232,238,242,0.25);
+  }
+
+  .profile-row .profile-body { padding: 14px 20px; }
+
+  .profile-row .profile-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 4px;
+  }
+
+  .profile-row .profile-value { font-size: 1rem; color: var(--paper); }
+
+  .motto-line {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--copper);
+  }
+
+  .motto-alts { list-style: none; margin-top: 4px; }
+  .motto-alts li {
+    position: relative;
+    padding-left: 18px;
+    margin-top: 6px;
+    color: rgba(232,238,242,0.85);
+  }
+  .motto-alts li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--copper);
+  }
+
+  .status-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid currentColor;
+  }
+  .status-badge.status-approved { color: var(--ok); }
+  .status-badge.status-pending { color: var(--copper); }
+  .status-badge.status-rejected { color: var(--err); }
+
+  .profile-actions { padding: 20px; display: flex; justify-content: flex-end; }
+
+  button.commit {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--copper);
+    color: var(--blueprint-navy);
+    border: none;
+    padding: 14px 28px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  button.commit:hover { filter: brightness(1.1); }
+  button.commit:active { transform: translateY(1px); }
+  button.commit:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+
+  button.commit.ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid var(--copper);
+  }
+
+  section { scroll-margin-top: 24px; }
+
+  footer {
+    border-top: 1px solid rgba(232,238,242,0.2);
+    padding: 28px 32px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(232,238,242,0.55);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="home.html" class="brandmark">ENEMIND COMPANY</a>
+
+  <div class="header-right">
+    <button type="button" id="accountToggle" class="account-btn" aria-haspopup="true" aria-expanded="false" title="Account">
+      <svg id="accountIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="account-dropdown" id="accountDropdown" role="menu">
+      <div class="ad-header">Your account</div>
+      <div class="ad-row">
+        <span class="ad-label">Full name</span>
+        <span class="ad-value" id="adName"></span>
+      </div>
+      <div class="ad-row">
+        <span class="ad-label">Email</span>
+        <span class="ad-value" id="adEmail"></span>
+      </div>
+      <div class="ad-row">
+        <span class="ad-label">Status</span>
+        <span class="ad-value"><span class="status-badge" id="adStatus"></span></span>
+      </div>
+      <div class="ad-actions">
+        <button type="button" class="commit ghost" id="adLogoutBtn">Log out</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero-logo">
+    <img src="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2" alt="Enemind Company logo">
+  </div>
+  <div class="hero-text">
+    <p class="eyebrow">Dashboard</p>
+    <h1>Welcome back, <em id="welcomeName">there</em>.</h1>
+    <p class="lede">Jump to any section of your EnerMind account below.</p>
+  </div>
+
+  <div class="section-head">
+    <span class="sheet-no">00</span>
+    <h2>Menu</h2>
+  </div>
+
+  <div class="menu-list">
+    <a class="menu-row" href="#account-details">
+      <span class="field-index">01</span>
+      <span>
+        <span class="menu-label">Account details</span>
+        <span class="menu-hint">Name, email, phone, county, university</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#registration-status">
+      <span class="field-index">02</span>
+      <span>
+        <span class="menu-label">Registration status</span>
+        <span class="menu-hint">Approved, pending, or rejected</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#support">
+      <span class="field-index">03</span>
+      <span>
+        <span class="menu-label">Support</span>
+        <span class="menu-hint">Email and phone for help</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#university">
+      <span class="field-index">04</span>
+      <span>
+        <span class="menu-label">University resources</span>
+        <span class="menu-hint">Attachments, notes, and exams</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#about">
+      <span class="field-index">05</span>
+      <span>
+        <span class="menu-label">About EnerMind</span>
+        <span class="menu-hint">Vision, aim, and motto</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+  </div>
+
+  <section id="account-details">
+    <div class="section-head">
+      <span class="sheet-no">01</span>
+      <h2>Account details</h2>
+    </div>
+    <div class="profile-card">
+      <div class="profile-row">
+        <div class="field-index">01</div>
+        <div class="profile-body">
+          <span class="profile-label">Full name</span>
+          <span class="profile-value" id="profileName"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">02</div>
+        <div class="profile-body">
+          <span class="profile-label">Email</span>
+          <span class="profile-value" id="profileEmail"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">03</div>
+        <div class="profile-body">
+          <span class="profile-label">Phone number</span>
+          <span class="profile-value" id="profilePhone"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">04</div>
+        <div class="profile-body">
+          <span class="profile-label">County</span>
+          <span class="profile-value" id="profileCounty"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">05</div>
+        <div class="profile-body">
+          <span class="profile-label">University</span>
+          <span class="profile-value" id="profileUniversity"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="registration-status">
+    <div class="section-head">
+      <span class="sheet-no">02</span>
+      <h2>Registration status</h2>
+    </div>
+    <div class="profile-card">
+      <div class="profile-row">
+        <div class="field-index">01</div>
+        <div class="profile-body">
+          <span class="profile-label">Registration status</span>
+          <span class="profile-value"><span class="status-badge" id="profileStatus"></span></span>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button type="button" class="commit ghost" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="support">
+    <div class="section-head">
+      <span class="sheet-no">03</span>
+      <h2>Support</h2>
+    </div>
+    <div class="info-banner support-banner">
+      <span class="banner-icon">🛟</span>
+      <div class="banner-text">
+        <strong>Need help?</strong> If you run into any trouble with your account, email us at
+        <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> or call
+        <a href="tel:+254711629600">+254 711 629 600</a>. We usually respond within one business day.
+      </div>
+    </div>
+  </section>
+
+  <section id="university">
+    <div class="section-head">
+      <span class="sheet-no">04</span>
+      <h2>University resources</h2>
+    </div>
+    <div class="info-banner university-banner">
+      <span class="banner-icon">🎓</span>
+      <div class="banner-text">
+        <strong>University students:</strong> EnerMind connects students across Kenyan universities,
+        helping you find attachments, notes, and past exams shared by your peers.
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="section-head">
+      <span class="sheet-no">05</span>
+      <h2>About EnerMind</h2>
+    </div>
+
+    <p class="lede" style="margin-bottom: 24px;">
+      EnerMind is built for Kenyan universities — connecting students, and helping them find
+      attachments, notes, and past exams.
+    </p>
+
+    <div class="profile-card">
+      <div class="profile-row">
+        <div class="field-index">01</div>
+        <div class="profile-body">
+          <span class="profile-label">Vision</span>
+          <span class="profile-value">To empower students, businesses, and communities across Kenyan universities through innovative technology, renewable energy, and hands-on entrepreneurship — connecting students and helping them find attachments, notes, and exams, while turning ideas into skills, and skills into sustainable livelihoods.</span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">02</div>
+        <div class="profile-body">
+          <span class="profile-label">Aim</span>
+          <span class="profile-value">EnerMind exists to close the gap between learning and earning. Our aim is to equip people with practical technology, AI, and renewable energy skills, connect them to real mentors and real work through the Hustler Market, and help them build businesses and careers that last — while delivering professional-grade energy, software, and consulting solutions to the clients and partners who need them.</span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">03</div>
+        <div class="profile-body">
+          <span class="profile-label">Motto</span>
+          <span class="profile-value"><span class="motto-line">Learn. Hustle. Build.</span></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">04</div>
+        <div class="profile-body">
+          <span class="profile-label">Alternate mottos</span>
+          <span class="profile-value">
+            <ul class="motto-alts">
+              <li>Powering Ideas. Building Futures.</li>
+              <li>From Ideas to Impact.</li>
+              <li>Innovate. Hustle. Empower.</li>
+            </ul>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Enemind Company — built on Google Sheets + Apps Script
+</footer>
+
+<script>
+  // Home page is reached after a successful login on register.html, which
+  // passes the account fields along as URL query parameters.
+  const params = new URLSearchParams(window.location.search);
+  const currentUser = {
+    name: params.get('name') || '',
+    email: params.get('email') || '',
+    phone: params.get('phone') || '',
+    county: params.get('county') || '',
+    university: params.get('university') || '',
+    status: params.get('status') || 'Pending'
+  };
+
+  // No email means we didn't arrive here from a real login — send the
+  // visitor back to the register/login page instead of showing an empty dashboard.
+  if (!currentUser.email) {
+    window.location.replace('register.html');
+  }
+
+  document.getElementById('welcomeName').textContent = currentUser.name || currentUser.email;
+
+  document.getElementById('profileName').textContent = currentUser.name;
+  document.getElementById('profileEmail').textContent = currentUser.email;
+  document.getElementById('profilePhone').textContent = currentUser.phone;
+  document.getElementById('profileCounty').textContent = currentUser.county;
+  document.getElementById('profileUniversity').textContent = currentUser.university;
+
+  const statusClass = 'status-' + currentUser.status.toLowerCase();
+  document.getElementById('profileStatus').textContent = currentUser.status;
+  document.getElementById('profileStatus').className = 'status-badge ' + statusClass;
+
+  document.getElementById('adName').textContent = currentUser.name;
+  document.getElementById('adEmail').textContent = currentUser.email;
+  document.getElementById('adStatus').textContent = currentUser.status;
+  document.getElementById('adStatus').className = 'status-badge ' + statusClass;
+
+  /* ---------- Account dropdown ---------- */
+  const accountToggle = document.getElementById('accountToggle');
+  const accountDropdown = document.getElementById('accountDropdown');
+
+  accountToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    accountDropdown.classList.toggle('open');
+    accountToggle.setAttribute('aria-expanded', accountDropdown.classList.contains('open'));
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!accountDropdown.contains(e.target) && e.target !== accountToggle) {
+      accountDropdown.classList.remove('open');
+      accountToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      accountDropdown.classList.remove('open');
+      accountToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  function goToLogout() {
+    window.location.href = 'register.html';
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', goToLogout);
+  document.getElementById('adLogoutBtn').addEventListener('click', goToLogout);
+</script>
+
+</body>
+</html>
