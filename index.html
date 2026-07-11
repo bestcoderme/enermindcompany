@@ -306,6 +306,35 @@
     border-left-color: var(--blueprint-line);
   }
 
+  /* ---------- About section (vision / aim / motto) ---------- */
+  .about-intro {
+    margin-bottom: 24px;
+  }
+
+  .profile-value .motto-line {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--copper);
+  }
+
+  .motto-alts {
+    list-style: none;
+    margin-top: 4px;
+  }
+  .motto-alts li {
+    position: relative;
+    padding-left: 18px;
+    margin-top: 6px;
+    color: rgba(232,238,242,0.85);
+  }
+  .motto-alts li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: var(--copper);
+  }
+
   .section-head {
     display: flex;
     align-items: baseline;
@@ -791,6 +820,53 @@
       </div>
       <div class="profile-actions">
         <button type="button" class="commit ghost" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="sheet-no">02</span>
+    <h2>About EnerMind</h2>
+  </div>
+
+  <p class="lede about-intro">
+    EnerMind is built for Kenyan universities — connecting students, and helping them find
+    attachments, notes, and past exams.
+  </p>
+
+  <div class="profile-card">
+    <div class="profile-row">
+      <div class="field-index">01</div>
+      <div class="profile-body">
+        <span class="profile-label">Vision</span>
+        <span class="profile-value">To empower students, businesses, and communities across Kenyan universities through innovative technology, renewable energy, and hands-on entrepreneurship — connecting students and helping them find attachments, notes, and exams, while turning ideas into skills, and skills into sustainable livelihoods.</span>
+      </div>
+    </div>
+    <div class="profile-row">
+      <div class="field-index">02</div>
+      <div class="profile-body">
+        <span class="profile-label">Aim</span>
+        <span class="profile-value">EnerMind exists to close the gap between learning and earning. Our aim is to equip people with practical technology, AI, and renewable energy skills, connect them to real mentors and real work through the Hustler Market, and help them build businesses and careers that last — while delivering professional-grade energy, software, and consulting solutions to the clients and partners who need them.</span>
+      </div>
+    </div>
+    <div class="profile-row">
+      <div class="field-index">03</div>
+      <div class="profile-body">
+        <span class="profile-label">Motto</span>
+        <span class="profile-value"><span class="motto-line">Learn. Hustle. Build.</span></span>
+      </div>
+    </div>
+    <div class="profile-row">
+      <div class="field-index">04</div>
+      <div class="profile-body">
+        <span class="profile-label">Alternate mottos</span>
+        <span class="profile-value">
+          <ul class="motto-alts">
+            <li>Powering Ideas. Building Futures.</li>
+            <li>From Ideas to Impact.</li>
+            <li>Innovate. Hustle. Empower.</li>
+          </ul>
+        </span>
       </div>
     </div>
   </div>
