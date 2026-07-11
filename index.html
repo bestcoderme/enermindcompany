@@ -44,9 +44,104 @@
   header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 18px 32px;
     background: rgba(16,36,62,0.92);
     border-bottom: 1px solid rgba(232,238,242,0.15);
+    position: relative;
+  }
+
+  /* ---------- Account icon + dropdown ---------- */
+  .header-right {
+    position: relative;
+  }
+
+  .account-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--copper);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+    color: var(--blueprint-navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: filter 0.15s ease;
+  }
+  .account-btn:hover { filter: brightness(0.95); }
+  .account-btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+  .account-btn svg { width: 22px; height: 22px; }
+
+  .account-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 260px;
+    background: var(--blueprint-navy);
+    border: 1px solid rgba(232,238,242,0.35);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    z-index: 20;
+  }
+  .account-dropdown.open { display: block; }
+
+  .account-dropdown .ad-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+  }
+
+  .account-dropdown .ad-row {
+    padding: 10px 18px;
+    border-top: 1px solid rgba(232,238,242,0.15);
+  }
+  .account-dropdown .ad-row:first-of-type { border-top: none; }
+
+  .account-dropdown .ad-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 2px;
+  }
+  .account-dropdown .ad-value {
+    font-size: 0.9rem;
+    color: var(--paper);
+    word-break: break-word;
+  }
+
+  .account-dropdown .ad-empty {
+    padding: 18px;
+    font-size: 0.88rem;
+    color: rgba(232,238,242,0.75);
+  }
+
+  .account-dropdown .ad-actions {
+    padding: 14px 18px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .account-dropdown button.commit,
+  .account-dropdown a.commit {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 0.72rem;
+    text-decoration: none;
+    display: inline-block;
   }
 
   .brandmark {
@@ -160,6 +255,48 @@
   .title-block .value {
     font-family: var(--font-mono);
     font-size: 0.9rem;
+  }
+
+  /* ---------- Info banners (support / university) ---------- */
+  .info-banner {
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.25);
+    border-left: 3px solid var(--copper);
+  }
+
+  .info-banner .banner-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(232,238,242,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background: rgba(232,238,242,0.05);
+  }
+
+  .info-banner .banner-text {
+    font-size: 0.9rem;
+    color: rgba(232,238,242,0.85);
+  }
+
+  .info-banner .banner-text strong {
+    color: var(--paper);
+  }
+
+  .info-banner .banner-text a {
+    color: var(--copper);
+    text-decoration: underline;
+  }
+
+  .info-banner.university-banner {
+    border-left-color: var(--blueprint-line);
   }
 
   .section-head {
@@ -415,6 +552,43 @@
     <span class="glyph"><img src="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2" alt="Enemind Company logo"></span>
     ENEMIND COMPANY
   </a>
+
+  <div class="header-right">
+    <button type="button" id="accountToggle" class="account-btn" aria-haspopup="true" aria-expanded="false" title="Account">
+      <svg id="accountIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
+        <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <div class="account-dropdown" id="accountDropdown" role="menu">
+      <div id="adLoggedOut" class="ad-empty">
+        You're not logged in.
+        <div class="ad-actions">
+          <button type="button" class="commit" id="adLoginBtn">Log in</button>
+        </div>
+      </div>
+
+      <div id="adLoggedIn" style="display:none;">
+        <div class="ad-header">Your account</div>
+        <div class="ad-row">
+          <span class="ad-label">Full name</span>
+          <span class="ad-value" id="adName"></span>
+        </div>
+        <div class="ad-row">
+          <span class="ad-label">Email</span>
+          <span class="ad-value" id="adEmail"></span>
+        </div>
+        <div class="ad-row">
+          <span class="ad-label">Status</span>
+          <span class="ad-value"><span class="status-badge" id="adStatus"></span></span>
+        </div>
+        <div class="ad-actions">
+          <button type="button" class="commit ghost" id="adLogoutBtn">Log out</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </header>
 
 <main id="top">
@@ -436,6 +610,23 @@
     <div class="cell">
       <div class="label">Status</div>
       <div class="value">Open for registration</div>
+    </div>
+  </div>
+
+  <div class="info-banner support-banner">
+    <span class="banner-icon">🛟</span>
+    <div class="banner-text">
+      <strong>Need help?</strong> If you run into any trouble registering or logging in, email us at
+      <a href="mailto:support@enemind.co.ke">support@enemind.co.ke</a> or call
+      <a href="tel:+254700000000">+254 700 000 000</a>. We usually respond within one business day.
+    </div>
+  </div>
+
+  <div class="info-banner university-banner">
+    <span class="banner-icon">🎓</span>
+    <div class="banner-text">
+      <strong>University students:</strong> pick your university in the form below so we can route
+      campus-specific updates, events, and resources to you once your registration is approved.
     </div>
   </div>
 
@@ -707,14 +898,90 @@
     formTitle.textContent = 'Your account';
   }
 
-  document.getElementById('logoutBtn').addEventListener('click', () => {
+  function doLogout() {
+    currentUser = null;
+    renderAccountDropdown();
     loginForm.reset();
     setLoginStatus('', '');
     showLogin();
-  });
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', doLogout);
 
   tabRegister.addEventListener('click', showRegister);
   tabLogin.addEventListener('click', showLogin);
+
+  /* ---------- ACCOUNT ICON + DROPDOWN ---------- */
+
+  let currentUser = null;
+
+  const accountToggle = document.getElementById('accountToggle');
+  const accountDropdown = document.getElementById('accountDropdown');
+  const accountIcon = document.getElementById('accountIcon');
+  const adLoggedOut = document.getElementById('adLoggedOut');
+  const adLoggedIn = document.getElementById('adLoggedIn');
+  const accountIconMarkup = accountIcon.outerHTML;
+
+  function renderAccountDropdown() {
+    if (currentUser) {
+      adLoggedOut.style.display = 'none';
+      adLoggedIn.style.display = 'block';
+      document.getElementById('adName').textContent = currentUser.name || '';
+      document.getElementById('adEmail').textContent = currentUser.email || '';
+      const status = currentUser.status || 'Pending';
+      const adStatusEl = document.getElementById('adStatus');
+      adStatusEl.textContent = status;
+      adStatusEl.className = 'status-badge status-' + status.toLowerCase();
+
+      // Swap the header icon for the user's initial.
+      const initial = (currentUser.name || currentUser.email || '?').trim().charAt(0).toUpperCase();
+      accountToggle.innerHTML = initial;
+    } else {
+      adLoggedOut.style.display = 'block';
+      adLoggedIn.style.display = 'none';
+      accountToggle.innerHTML = accountIconMarkup;
+    }
+  }
+
+  function openDropdown() {
+    accountDropdown.classList.add('open');
+    accountToggle.setAttribute('aria-expanded', 'true');
+  }
+
+  function closeDropdown() {
+    accountDropdown.classList.remove('open');
+    accountToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  accountToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    renderAccountDropdown();
+    if (accountDropdown.classList.contains('open')) {
+      closeDropdown();
+    } else {
+      openDropdown();
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!accountDropdown.contains(e.target) && e.target !== accountToggle) {
+      closeDropdown();
+    }
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDropdown();
+  });
+
+  document.getElementById('adLoginBtn').addEventListener('click', () => {
+    closeDropdown();
+    showLogin();
+  });
+
+  document.getElementById('adLogoutBtn').addEventListener('click', () => {
+    closeDropdown();
+    doLogout();
+  });
 
   /* ---------- LOGIN FORM ---------- */
 
@@ -746,6 +1013,8 @@
       if (result.success) {
         setLoginStatus(result.message || 'Login successful.', 'ok');
         if (result.data) {
+          currentUser = result.data;
+          renderAccountDropdown();
           showProfile(result.data);
         }
       } else {
