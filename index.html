@@ -218,6 +218,70 @@
   #login-status[data-state="ok"] { color: var(--ok); }
   #login-status[data-state="err"] { color: var(--err); }
 
+  .profile-card {
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+  }
+
+  .profile-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    border-top: 1px solid rgba(232,238,242,0.25);
+  }
+  .profile-row:first-child { border-top: none; }
+
+  .profile-row .field-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--blueprint-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(232,238,242,0.25);
+  }
+
+  .profile-row .profile-body { padding: 14px 20px; }
+
+  .profile-row .profile-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 4px;
+  }
+
+  .profile-row .profile-value {
+    font-size: 1rem;
+    color: var(--paper);
+  }
+
+  .status-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid currentColor;
+  }
+  .status-badge.status-approved { color: var(--ok); }
+  .status-badge.status-pending { color: var(--copper); }
+  .status-badge.status-rejected { color: var(--err); }
+
+  .profile-actions {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  button.commit.ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid var(--copper);
+  }
+
   form.spec-sheet {
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.3);
@@ -481,6 +545,56 @@
     </div>
   </form>
   </div>
+
+  <div class="form-panel" id="profilePanel">
+    <div class="profile-card">
+      <div class="profile-row">
+        <div class="field-index">01</div>
+        <div class="profile-body">
+          <span class="profile-label">Full name</span>
+          <span class="profile-value" id="profileName"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">02</div>
+        <div class="profile-body">
+          <span class="profile-label">Email</span>
+          <span class="profile-value" id="profileEmail"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">03</div>
+        <div class="profile-body">
+          <span class="profile-label">Phone number</span>
+          <span class="profile-value" id="profilePhone"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">04</div>
+        <div class="profile-body">
+          <span class="profile-label">County</span>
+          <span class="profile-value" id="profileCounty"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">05</div>
+        <div class="profile-body">
+          <span class="profile-label">University</span>
+          <span class="profile-value" id="profileUniversity"></span>
+        </div>
+      </div>
+      <div class="profile-row">
+        <div class="field-index">06</div>
+        <div class="profile-body">
+          <span class="profile-label">Registration status</span>
+          <span class="profile-value"><span class="status-badge" id="profileStatus"></span></span>
+        </div>
+      </div>
+      <div class="profile-actions">
+        <button type="button" class="commit ghost" id="logoutBtn">Log out</button>
+      </div>
+    </div>
+  </div>
 </main>
 
 <footer>
@@ -490,7 +604,7 @@
 <script>
   // Replace with your deployed Apps Script Web App URL from setup.gs
   // (Deploy > New deployment > Web app > copy the /exec URL).
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzuz0nKmTTBAQ-cN_0ZOH5cZjkFIiMJG7M8YHoxH7L6VEELzPbYyG5uaPZRcD-qCoPb/exec';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxm0Krq4xmKKVhyFWnMk-Y7l6hBRCex3r1qjiZeQ54j4__O85fqVbF1zBVTVHG-VwWp/exec';
 
   const COUNTIES = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
@@ -546,6 +660,8 @@
   const tabLogin = document.getElementById('tabLogin');
   const registerPanel = document.getElementById('registerPanel');
   const loginPanel = document.getElementById('loginPanel');
+  const profilePanel = document.getElementById('profilePanel');
+  const modeToggle = document.querySelector('.mode-toggle');
   const formTitle = document.getElementById('formTitle');
 
   function showRegister() {
@@ -555,6 +671,8 @@
     tabLogin.setAttribute('aria-selected', 'false');
     registerPanel.classList.add('active');
     loginPanel.classList.remove('active');
+    profilePanel.classList.remove('active');
+    modeToggle.style.display = '';
     formTitle.textContent = 'Registration form';
   }
 
@@ -565,8 +683,35 @@
     tabRegister.setAttribute('aria-selected', 'false');
     loginPanel.classList.add('active');
     registerPanel.classList.remove('active');
+    profilePanel.classList.remove('active');
+    modeToggle.style.display = '';
     formTitle.textContent = 'Log in';
   }
+
+  function showProfile(user) {
+    document.getElementById('profileName').textContent = user.name || '';
+    document.getElementById('profileEmail').textContent = user.email || '';
+    document.getElementById('profilePhone').textContent = user.phone || '';
+    document.getElementById('profileCounty').textContent = user.county || '';
+    document.getElementById('profileUniversity').textContent = user.university || '';
+
+    const statusEl = document.getElementById('profileStatus');
+    const status = user.status || 'Pending';
+    statusEl.textContent = status;
+    statusEl.className = 'status-badge status-' + status.toLowerCase();
+
+    modeToggle.style.display = 'none';
+    registerPanel.classList.remove('active');
+    loginPanel.classList.remove('active');
+    profilePanel.classList.add('active');
+    formTitle.textContent = 'Your account';
+  }
+
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    loginForm.reset();
+    setLoginStatus('', '');
+    showLogin();
+  });
 
   tabRegister.addEventListener('click', showRegister);
   tabLogin.addEventListener('click', showLogin);
@@ -600,6 +745,9 @@
 
       if (result.success) {
         setLoginStatus(result.message || 'Login successful.', 'ok');
+        if (result.data) {
+          showProfile(result.data);
+        }
       } else {
         setLoginStatus(result.message || 'Login failed.', 'err');
       }
