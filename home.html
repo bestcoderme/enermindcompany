@@ -384,6 +384,33 @@
     border: 1px solid var(--copper);
   }
 
+  /* ---------- Service cards (grid of services within a section) ---------- */
+  .service-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .service-card {
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+    border-left: 3px solid var(--copper);
+    padding: 18px 20px;
+  }
+
+  .service-card .service-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.02rem;
+    color: var(--paper);
+    margin-bottom: 6px;
+  }
+
+  .service-card .service-desc {
+    font-size: 0.9rem;
+    color: rgba(232,238,242,0.8);
+  }
+
   section { scroll-margin-top: 24px; }
 
   footer {
@@ -462,24 +489,56 @@
       </span>
       <span class="menu-arrow">→</span>
     </a>
-    <a class="menu-row" href="#support">
+    <a class="menu-row" href="#university">
       <span class="field-index">03</span>
+      <span>
+        <span class="menu-label">University resources</span>
+        <span class="menu-hint">Attachments, notes, and past exams</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#hustler-market">
+      <span class="field-index">04</span>
+      <span>
+        <span class="menu-label">Hustler Market</span>
+        <span class="menu-hint">Mentors, real work, and gigs</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#skills-training">
+      <span class="field-index">05</span>
+      <span>
+        <span class="menu-label">Skills training</span>
+        <span class="menu-hint">Technology, AI, and renewable energy</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#energy-solutions">
+      <span class="field-index">06</span>
+      <span>
+        <span class="menu-label">Energy solutions</span>
+        <span class="menu-hint">Renewable energy consulting and services</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#software-consulting">
+      <span class="field-index">07</span>
+      <span>
+        <span class="menu-label">Software &amp; consulting</span>
+        <span class="menu-hint">Professional-grade software solutions</span>
+      </span>
+      <span class="menu-arrow">→</span>
+    </a>
+    <a class="menu-row" href="#support">
+      <span class="field-index">08</span>
       <span>
         <span class="menu-label">Support</span>
         <span class="menu-hint">Email and phone for help</span>
       </span>
       <span class="menu-arrow">→</span>
     </a>
-    <a class="menu-row" href="#university">
-      <span class="field-index">04</span>
-      <span>
-        <span class="menu-label">University resources</span>
-        <span class="menu-hint">Attachments, notes, and exams</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
     <a class="menu-row" href="#about">
-      <span class="field-index">05</span>
+      <span class="field-index">09</span>
       <span>
         <span class="menu-label">About EnerMind</span>
         <span class="menu-hint">Vision, aim, and motto</span>
@@ -551,9 +610,113 @@
     </div>
   </section>
 
-  <section id="support">
+  <section id="university">
     <div class="section-head">
       <span class="sheet-no">03</span>
+      <h2>University resources</h2>
+    </div>
+    <div class="info-banner university-banner" style="margin-bottom: 20px;">
+      <span class="banner-icon">🎓</span>
+      <div class="banner-text">
+        <strong>University students:</strong> EnerMind connects students across Kenyan universities,
+        helping you find attachments, notes, and past exams shared by your peers.
+      </div>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-title">Attachments board</div>
+        <div class="service-desc">Browse and share industrial attachment openings posted by students and partner organizations.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">Notes exchange</div>
+        <div class="service-desc">Find and upload course notes shared by students at your university.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">Past exams</div>
+        <div class="service-desc">Search past exam papers organized by unit and university to help you revise.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="hustler-market">
+    <div class="section-head">
+      <span class="sheet-no">04</span>
+      <h2>Hustler Market</h2>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-title">Mentorship</div>
+        <div class="service-desc">Get matched with real mentors who can guide your learning and career decisions.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">Real work &amp; gigs</div>
+        <div class="service-desc">Find short-term jobs and freelance gigs that turn your skills into income.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">Business building</div>
+        <div class="service-desc">Get support turning your ideas into a business or a lasting career.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills-training">
+    <div class="section-head">
+      <span class="sheet-no">05</span>
+      <h2>Skills training</h2>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-title">Technology skills</div>
+        <div class="service-desc">Practical training in in-demand technology skills for the modern job market.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">AI skills</div>
+        <div class="service-desc">Hands-on training on applying artificial intelligence tools to real problems.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">Renewable energy skills</div>
+        <div class="service-desc">Learn practical renewable energy skills through hands-on entrepreneurship.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="energy-solutions">
+    <div class="section-head">
+      <span class="sheet-no">06</span>
+      <h2>Energy solutions</h2>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-title">Renewable energy consulting</div>
+        <div class="service-desc">Professional-grade renewable energy consulting for clients and partners.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">Energy project support</div>
+        <div class="service-desc">Guidance and hands-on support for renewable energy projects from idea to delivery.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="software-consulting">
+    <div class="section-head">
+      <span class="sheet-no">07</span>
+      <h2>Software &amp; consulting</h2>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <div class="service-title">Software solutions</div>
+        <div class="service-desc">Professional-grade software delivered for clients and partners who need it.</div>
+      </div>
+      <div class="service-card">
+        <div class="service-title">Consulting services</div>
+        <div class="service-desc">Technology and energy consulting to help organizations turn ideas into impact.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="support">
+    <div class="section-head">
+      <span class="sheet-no">08</span>
       <h2>Support</h2>
     </div>
     <div class="info-banner support-banner">
@@ -566,23 +729,9 @@
     </div>
   </section>
 
-  <section id="university">
-    <div class="section-head">
-      <span class="sheet-no">04</span>
-      <h2>University resources</h2>
-    </div>
-    <div class="info-banner university-banner">
-      <span class="banner-icon">🎓</span>
-      <div class="banner-text">
-        <strong>University students:</strong> EnerMind connects students across Kenyan universities,
-        helping you find attachments, notes, and past exams shared by your peers.
-      </div>
-    </div>
-  </section>
-
   <section id="about">
     <div class="section-head">
-      <span class="sheet-no">05</span>
+      <span class="sheet-no">09</span>
       <h2>About EnerMind</h2>
     </div>
 
