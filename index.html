@@ -667,7 +667,7 @@
     </div>
   </div>
 
-  <div class="section-head">
+  <div class="section-head" id="mainSectionHead">
     <span class="sheet-no">01</span>
     <h2 id="formTitle">Registration form</h2>
   </div>
@@ -775,6 +775,10 @@
   </div>
 
   <div class="form-panel" id="profilePanel">
+    <div class="section-head">
+      <span class="sheet-no">01</span>
+      <h2>Account details</h2>
+    </div>
     <div class="profile-card">
       <div class="profile-row">
         <div class="field-index">01</div>
@@ -811,8 +815,15 @@
           <span class="profile-value" id="profileUniversity"></span>
         </div>
       </div>
+    </div>
+
+    <div class="section-head">
+      <span class="sheet-no">02</span>
+      <h2>Registration status</h2>
+    </div>
+    <div class="profile-card">
       <div class="profile-row">
-        <div class="field-index">06</div>
+        <div class="field-index">01</div>
         <div class="profile-body">
           <span class="profile-label">Registration status</span>
           <span class="profile-value"><span class="status-badge" id="profileStatus"></span></span>
@@ -825,7 +836,7 @@
   </div>
 
   <div class="section-head">
-    <span class="sheet-no">02</span>
+    <span class="sheet-no">03</span>
     <h2>About EnerMind</h2>
   </div>
 
@@ -938,6 +949,7 @@
   const profilePanel = document.getElementById('profilePanel');
   const modeToggle = document.querySelector('.mode-toggle');
   const formTitle = document.getElementById('formTitle');
+  const mainSectionHead = document.getElementById('mainSectionHead');
 
   function showRegister() {
     tabRegister.classList.add('active');
@@ -948,6 +960,7 @@
     loginPanel.classList.remove('active');
     profilePanel.classList.remove('active');
     modeToggle.style.display = '';
+    mainSectionHead.style.display = '';
     formTitle.textContent = 'Registration form';
   }
 
@@ -960,6 +973,7 @@
     registerPanel.classList.remove('active');
     profilePanel.classList.remove('active');
     modeToggle.style.display = '';
+    mainSectionHead.style.display = '';
     formTitle.textContent = 'Log in';
   }
 
@@ -976,10 +990,10 @@
     statusEl.className = 'status-badge status-' + status.toLowerCase();
 
     modeToggle.style.display = 'none';
+    mainSectionHead.style.display = 'none';
     registerPanel.classList.remove('active');
     loginPanel.classList.remove('active');
     profilePanel.classList.add('active');
-    formTitle.textContent = 'Your account';
   }
 
   function doLogout() {
