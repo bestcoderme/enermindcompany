@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register — Enemind Company</title>
-<link rel="icon" type="image/png" href="https://www.google.com/s2/favicons?domain=enemindcompany.page.gd&sz=64">
+<link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -219,6 +219,30 @@
     outline: none;
   }
 
+  .password-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .password-wrap input { padding-right: 52px; }
+
+  .toggle-visibility {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--blueprint-line);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 4px 2px;
+  }
+  .toggle-visibility:hover, .toggle-visibility:focus-visible { color: var(--copper); }
+
   .field-body input:focus,
   .field-body select:focus {
     border-color: var(--copper);
@@ -271,7 +295,7 @@
 
 <header>
   <a href="#top" class="brandmark">
-    <span class="glyph"><img src="https://www.google.com/s2/favicons?domain=enemindcompany.page.gd&sz=64" alt="Enemind Company logo"></span>
+    <span class="glyph"><img src="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2" alt="Enemind Company logo"></span>
     ENEMIND COMPANY
   </a>
 </header>
@@ -344,7 +368,10 @@
       <div class="field-index">06</div>
       <div class="field-body">
         <label for="password">Password</label>
-        <input type="password" id="password" name="password" autocomplete="new-password" required>
+        <div class="password-wrap">
+          <input type="password" id="password" name="password" autocomplete="new-password" required>
+          <button type="button" class="toggle-visibility" data-target="password">Show</button>
+        </div>
         <div class="hint">At least 8 characters, with a letter and a number.</div>
       </div>
     </div>
@@ -352,7 +379,10 @@
       <div class="field-index">07</div>
       <div class="field-body">
         <label for="confirmPassword">Confirm password</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
+        <div class="password-wrap">
+          <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
+          <button type="button" class="toggle-visibility" data-target="confirmPassword">Show</button>
+        </div>
       </div>
     </div>
 
@@ -370,7 +400,7 @@
 <script>
   // Replace with your deployed Apps Script Web App URL from setup.gs
   // (Deploy > New deployment > Web app > copy the /exec URL).
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwhjvQN6rWRUK96SRXtKF2xsVfcUwL-Qbt5MHX4tXk0zkGA3ouXxpU_KKgGHTEVl6dD/exec';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzQiMi48f4Fc9KaUfS0be7pQmOU8FI9Wnm8pmqHmkTDOnYHaXVrYyd2BCbDpdDs8235/exec';
 
   const COUNTIES = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
@@ -409,6 +439,15 @@
     opt.value = u;
     opt.textContent = u;
     universitySelect.appendChild(opt);
+  });
+
+  document.querySelectorAll('.toggle-visibility').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.dataset.target);
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      btn.textContent = isHidden ? 'Hide' : 'Show';
+    });
   });
 
   const form = document.getElementById('registerForm');
