@@ -635,7 +635,7 @@
 </footer>
 
 <script>
-  // Home page is reached after a successful login on register.html, which
+  // Home page is reached after a successful login on index.html, which
   // passes the account fields along as URL query parameters.
   const params = new URLSearchParams(window.location.search);
   const currentUser = {
@@ -650,7 +650,7 @@
   // No email means we didn't arrive here from a real login — send the
   // visitor back to the register/login page instead of showing an empty dashboard.
   if (!currentUser.email) {
-    window.location.replace('register.html');
+    window.location.replace('index.html');
   }
 
   document.getElementById('welcomeName').textContent = currentUser.name || currentUser.email;
@@ -695,7 +695,7 @@
   });
 
   function goToLogout() {
-    window.location.href = 'register.html';
+    window.location.href = 'index.html';
   }
 
   document.getElementById('logoutBtn').addEventListener('click', goToLogout);
