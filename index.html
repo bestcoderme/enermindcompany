@@ -573,11 +573,25 @@
 
   footer {
     border-top: 1px solid rgba(232,238,242,0.2);
-    padding: 28px 32px;
+    padding: 28px 32px 32px;
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: rgba(232,238,242,0.55);
     text-align: center;
+  }
+
+  footer .footer-banners {
+    max-width: 640px;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+    font-family: var(--font-body);
+  }
+
+  footer .info-banner {
+    margin-top: 0;
   }
 </style>
 </head>
@@ -628,23 +642,6 @@
     <div class="cell">
       <div class="label">Status</div>
       <div class="value">Open for registration</div>
-    </div>
-  </div>
-
-  <div class="info-banner support-banner">
-    <span class="banner-icon">🛟</span>
-    <div class="banner-text">
-      <strong>Need help?</strong> If you run into any trouble registering or logging in, email us at
-      <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> or call
-      <a href="tel:+254711629600">+254 711 629 600</a>. We usually respond within one business day.
-    </div>
-  </div>
-
-  <div class="info-banner university-banner">
-    <span class="banner-icon">🎓</span>
-    <div class="banner-text">
-      <strong>University students:</strong> pick your university in the form below so we can route
-      campus-specific updates, events, and resources to you once your registration is approved.
     </div>
   </div>
 
@@ -804,6 +801,25 @@
 </main>
 
 <footer>
+  <div class="footer-banners">
+    <div class="info-banner support-banner">
+      <span class="banner-icon">🛟</span>
+      <div class="banner-text">
+        <strong>Need help?</strong> If you run into any trouble registering or logging in, email us at
+        <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> or call
+        <a href="tel:+254711629600">+254 711 629 600</a>. We usually respond within one business day.
+      </div>
+    </div>
+
+    <div class="info-banner university-banner">
+      <span class="banner-icon">🎓</span>
+      <div class="banner-text">
+        <strong>University students:</strong> pick your university in the form below so we can route
+        campus-specific updates, events, and resources to you once your registration is approved.
+      </div>
+    </div>
+  </div>
+
   Enemind Company — built on Google Sheets + Apps Script
 </footer>
 
