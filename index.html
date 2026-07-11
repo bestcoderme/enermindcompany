@@ -84,6 +84,25 @@
     padding: 56px 32px 96px;
   }
 
+  .hero-logo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    border: 3px solid var(--copper);
+    overflow: hidden;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+  .hero-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
   .eyebrow {
     font-family: var(--font-mono);
     font-size: 0.75rem;
@@ -301,6 +320,9 @@
 </header>
 
 <main id="top">
+  <div class="hero-logo">
+    <img src="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2" alt="Enemind Company logo">
+  </div>
   <p class="eyebrow">Registration</p>
   <h1>Create your <em>account</em> on the register.</h1>
   <p class="lede">
@@ -400,7 +422,7 @@
 <script>
   // Replace with your deployed Apps Script Web App URL from setup.gs
   // (Deploy > New deployment > Web app > copy the /exec URL).
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxfeFQVIoVVe9AooI1N4POhIjVuDUsIhJTpoYdI_Y0EnxLL9CzCMJ2yImdB9ePsZ_5C/exec';
+  const WEB_APP_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
 
   const COUNTIES = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
