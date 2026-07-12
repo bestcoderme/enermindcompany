@@ -17,14 +17,11 @@
     --ink: #0B1B2B;
     --ok: #3F8F5F;
     --err: #B4453A;
-
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'IBM Plex Sans', sans-serif;
     --font-mono: 'IBM Plex Mono', monospace;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     background:
       repeating-linear-gradient(0deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
@@ -35,293 +32,142 @@
     line-height: 1.5;
     min-height: 100vh;
   }
-
   a { color: inherit; }
-
   header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 32px;
-    background: rgba(16,36,62,0.92);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 32px; background: rgba(16,36,62,0.92);
     border-bottom: 1px solid rgba(232,238,242,0.15);
   }
-
-  .brandmark {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1.05rem;
-    letter-spacing: 0.02em;
-    text-decoration: none;
-  }
-
-  .header-tag {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--copper);
-    border: 1px solid var(--copper);
-    padding: 4px 10px;
-  }
-
-  main {
-    max-width: 920px;
-    margin: 0 auto;
-    padding: 56px 32px 96px;
-  }
-
-  .eyebrow {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-    margin-bottom: 18px;
-  }
-
-  h1 {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.7rem, 4vw, 2.4rem);
-    line-height: 1.15;
-  }
-
+  .brandmark { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; text-decoration: none; }
+  .header-tag { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--copper); border: 1px solid var(--copper); padding: 4px 10px; }
+  main { max-width: 1040px; margin: 0 auto; padding: 56px 32px 96px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blueprint-line); margin-bottom: 18px; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.4rem); line-height: 1.15; }
   h1 em { font-style: normal; color: var(--copper); }
+  p.lede { margin-top: 14px; max-width: 66ch; font-size: 1rem; color: rgba(232,238,242,0.8); }
 
-  p.lede {
-    margin-top: 14px;
-    max-width: 60ch;
-    font-size: 1rem;
-    color: rgba(232,238,242,0.8);
-  }
-
-  /* ---------- Unlock gate ---------- */
-  .gate-card {
-    margin-top: 32px;
-    background: rgba(232,238,242,0.04);
-    border: 1px solid rgba(232,238,242,0.3);
-    max-width: 440px;
-  }
-  .gate-row {
-    display: grid;
-    grid-template-columns: 44px 1fr;
-  }
-  .gate-index {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--blueprint-line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-right: 1px solid rgba(232,238,242,0.25);
-  }
+  .gate-card { margin-top: 32px; background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.3); max-width: 440px; }
+  .gate-row { display: grid; grid-template-columns: 44px 1fr; }
+  .gate-index { font-family: var(--font-mono); font-size: 0.75rem; color: var(--blueprint-line); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(232,238,242,0.25); }
   .gate-body { padding: 16px 20px; }
-  .gate-body label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-    margin-bottom: 8px;
-  }
-  .gate-body input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(232,238,242,0.35);
-    color: var(--paper);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    padding: 6px 2px;
-    outline: none;
-  }
+  .gate-body label { display: block; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blueprint-line); margin-bottom: 8px; }
+  .gate-body input { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(232,238,242,0.35); color: var(--paper); font-family: var(--font-body); font-size: 1rem; padding: 6px 2px; outline: none; }
   .gate-body input:focus { border-color: var(--copper); }
-  .gate-submit-row {
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-  }
-
+  .gate-submit-row { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
   #gate-status { font-family: var(--font-mono); font-size: 0.8rem; }
   #gate-status[data-state="err"] { color: var(--err); }
 
-  /* ---------- Dashboard (post-unlock) ---------- */
   .dashboard { display: none; }
   .dashboard.open { display: block; }
   .gate-wrap.hidden { display: none; }
 
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 16px;
-    margin: 40px 0 24px;
-    border-bottom: 1px solid rgba(232,238,242,0.2);
-    padding-bottom: 16px;
-    flex-wrap: wrap;
+  .tab-bar { display: flex; gap: 0; border: 1px solid rgba(232,238,242,0.4); margin-top: 32px; flex-wrap: wrap; }
+  .tab-bar button {
+    font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    background: transparent; color: rgba(232,238,242,0.6); border: none; border-right: 1px solid rgba(232,238,242,0.4);
+    padding: 13px 18px; cursor: pointer; transition: background 0.15s ease, color 0.15s ease;
   }
+  .tab-bar button:last-child { border-right: none; }
+  .tab-bar button.active { background: var(--copper); color: var(--blueprint-navy); font-weight: 600; }
+  .tab-bar button:not(.active):hover { background: rgba(232,238,242,0.08); color: var(--paper); }
+
+  .tab-panel { display: none; margin-top: 28px; }
+  .tab-panel.active { display: block; }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 32px 0 20px; border-bottom: 1px solid rgba(232,238,242,0.2); padding-bottom: 14px; flex-wrap: wrap; }
   .section-head .heading { display: flex; align-items: baseline; gap: 16px; }
   .sheet-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--copper); flex-shrink: 0; }
-  .section-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; }
+  .section-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.25rem; }
 
-  .filters {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .filters select,
-  .filters input {
-    background: var(--blueprint-navy);
-    color: var(--paper);
-    border: 1px solid rgba(232,238,242,0.35);
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.04em;
-    padding: 8px 10px;
+  .filters { display: flex; gap: 10px; flex-wrap: wrap; }
+  .filters select, .filters input {
+    background: var(--blueprint-navy); color: var(--paper); border: 1px solid rgba(232,238,242,0.35);
+    font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; padding: 8px 10px;
   }
   .filters select { text-transform: uppercase; }
   .filters input { text-transform: none; min-width: 200px; }
 
-  .stat-strip {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border: 1px solid rgba(232,238,242,0.4);
-    margin-top: 28px;
-  }
-  .stat-cell {
-    padding: 16px 18px;
-    border-right: 1px solid rgba(232,238,242,0.4);
-  }
+  .stat-strip { display: grid; grid-template-columns: repeat(2, 1fr); border: 1px solid rgba(232,238,242,0.4); margin-top: 24px; }
+  .stat-cell { padding: 16px 18px; border-right: 1px solid rgba(232,238,242,0.4); }
   .stat-cell:last-child { border-right: none; }
-  .stat-cell .stat-label {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-  }
-  .stat-cell .stat-value {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 700;
-    margin-top: 4px;
-  }
-  .stat-cell.pending .stat-value { color: var(--copper); }
-  .stat-cell.approved .stat-value { color: var(--ok); }
-  .stat-cell.rejected .stat-value { color: var(--err); }
+  .stat-cell .stat-label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blueprint-line); }
+  .stat-cell .stat-value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin-top: 4px; }
+  .stat-cell.active .stat-value { color: var(--ok); }
+  .stat-cell.inactive .stat-value { color: var(--err); }
 
-  /* ---------- Member list (name-only roster) ---------- */
   .entry-list { list-style: none; }
-
   .entry-card {
-    background: rgba(232,238,242,0.04);
-    border: 1px solid rgba(232,238,242,0.3);
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 14px 20px;
-    flex-wrap: wrap;
+    background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.3); margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 20px; flex-wrap: wrap;
   }
-
   .entry-title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .entry-name { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; }
-  .entry-type {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-  }
+  .entry-name { font-family: var(--font-display); font-weight: 600; font-size: 1.02rem; }
+  .entry-type { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blueprint-line); }
+  .entry-sub { font-family: var(--font-mono); font-size: 0.72rem; color: rgba(232,238,242,0.5); }
 
-  .status-badge {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border: 1px solid currentColor;
-  }
-  .status-badge.status-approved { color: var(--ok); }
-  .status-badge.status-pending { color: var(--copper); }
-  .status-badge.status-rejected { color: var(--err); }
+  .status-badge { display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border: 1px solid currentColor; }
+  .status-badge.status-active { color: var(--ok); }
+  .status-badge.status-inactive { color: var(--err); }
 
-  .entry-actions {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
+  .entry-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
   button.commit {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: var(--copper);
-    color: var(--blueprint-navy);
-    border: none;
-    padding: 10px 18px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: filter 0.15s ease, transform 0.1s ease;
+    font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase;
+    background: var(--copper); color: var(--blueprint-navy); border: none; padding: 10px 18px; cursor: pointer;
+    font-weight: 600; transition: filter 0.15s ease, transform 0.1s ease;
   }
   button.commit:hover { filter: brightness(1.1); }
   button.commit:active { transform: translateY(1px); }
   button.commit:disabled { opacity: 0.45; cursor: not-allowed; }
-  button.commit:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px; }
+  button.commit.ghost { background: transparent; color: var(--paper); border: 1px solid var(--copper); }
+  button.commit.reject { background: transparent; color: var(--err); border: 1px solid var(--err); }
+  button.commit.approve-outline { background: transparent; color: var(--ok); border: 1px solid var(--ok); }
+  button.commit.small { padding: 7px 12px; font-size: 0.7rem; }
 
-  button.commit.ghost {
-    background: transparent;
-    color: var(--paper);
-    border: 1px solid var(--copper);
-  }
-  button.commit.reject {
-    background: transparent;
-    color: var(--err);
-    border: 1px solid var(--err);
-  }
-  button.commit.approve-outline {
-    background: transparent;
-    color: var(--ok);
-    border: 1px solid var(--ok);
-  }
+  .refresh-row { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: -6px; margin-bottom: 16px; }
 
-  .refresh-row {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: -8px;
-    margin-bottom: 16px;
-  }
-  .refresh-row button.commit.ghost { padding: 8px 14px; font-size: 0.72rem; }
-
-  .empty-state {
-    padding: 48px 24px;
-    text-align: center;
-    border: 1px dashed rgba(232,238,242,0.35);
-  }
+  .empty-state { padding: 40px 24px; text-align: center; border: 1px dashed rgba(232,238,242,0.35); }
   .empty-state .empty-icon { font-size: 1.6rem; }
   .empty-state p { color: rgba(232,238,242,0.75); margin-top: 8px; }
 
-  #list-status { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(232,238,242,0.6); }
-  #list-status[data-state="err"] { color: var(--err); }
+  #list-status, #enList-status, #mvList-status, #pmList-status { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(232,238,242,0.6); }
+  #list-status[data-state="err"], #enList-status[data-state="err"], #mvList-status[data-state="err"], #pmList-status[data-state="err"] { color: var(--err); }
 
-  footer {
-    border-top: 1px solid rgba(232,238,242,0.2);
-    padding: 28px 32px 32px;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: rgba(232,238,242,0.55);
-    text-align: center;
+  /* ---------- Forms (spec-sheet rows) ---------- */
+  .form-card { background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.3); }
+  .field-row { display: grid; grid-template-columns: 44px 1fr; border-top: 1px solid rgba(232,238,242,0.25); }
+  .field-row:first-child { border-top: none; }
+  .field-index { font-family: var(--font-mono); font-size: 0.75rem; color: var(--blueprint-line); display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(232,238,242,0.25); }
+  .field-body { padding: 14px 20px; }
+  .field-body label { display: block; font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blueprint-line); margin-bottom: 8px; }
+  .field-body label .optional-tag { text-transform: none; letter-spacing: normal; color: rgba(232,238,242,0.45); font-family: var(--font-body); }
+  .field-body input, .field-body select, .field-body textarea {
+    width: 100%; background: transparent; border: 1px solid rgba(232,238,242,0.35); color: var(--paper);
+    font-family: var(--font-body); font-size: 0.95rem; padding: 9px 10px; outline: none; resize: vertical;
   }
+  .field-body textarea { min-height: 68px; }
+  .field-body select option { background: var(--blueprint-navy); color: var(--paper); }
+  .field-body input:focus, .field-body select:focus, .field-body textarea:focus { border-color: var(--copper); }
+  .checkbox-row { display: flex; align-items: center; gap: 10px; }
+  .checkbox-row input { width: auto; }
+
+  .form-actions { padding: 18px 20px; display: flex; justify-content: flex-end; align-items: center; gap: 14px; flex-wrap: wrap; }
+  #enForm-status, #mvForm-status { font-family: var(--font-mono); font-size: 0.8rem; }
+  #enForm-status[data-state="ok"], #mvForm-status[data-state="ok"] { color: var(--ok); }
+  #enForm-status[data-state="err"], #mvForm-status[data-state="err"] { color: var(--err); }
+
+  /* ---------- Payments table ---------- */
+  .pay-table { width: 100%; border-collapse: collapse; background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.3); font-size: 0.82rem; }
+  .pay-table th, .pay-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid rgba(232,238,242,0.15); white-space: nowrap; }
+  .pay-table th { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blueprint-line); }
+  .pay-table tbody tr:last-child td { border-bottom: none; }
+  .pay-status { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; padding: 2px 8px; border: 1px solid currentColor; }
+  .pay-status.PENDING { color: var(--copper); }
+  .pay-status.COMPLETED { color: var(--ok); }
+  .pay-status.FAILED { color: var(--err); }
+  .table-scroll { overflow-x: auto; }
+
+  footer { border-top: 1px solid rgba(232,238,242,0.2); padding: 28px 32px 32px; font-family: var(--font-mono); font-size: 0.75rem; color: rgba(232,238,242,0.55); text-align: center; }
 </style>
 </head>
 <body>
@@ -334,11 +180,11 @@
 <main id="top">
   <div class="gate-wrap" id="gateWrap">
     <p class="eyebrow">Admin access</p>
-    <h1>Review and <em>approve</em> registrations.</h1>
+    <h1>Manage <em>Enemind</em>.</h1>
     <p class="lede">
-      Enter the admin access code to see everyone who has registered, filter by
-      status or category, and approve or reject accounts — without opening the
-      spreadsheet directly.
+      Enter the admin access code to manage member accounts, curate the
+      Entrepreneurs &amp; Best Businesses showcase, manage the weekly
+      motivation quotes, and review book payments.
     </p>
 
     <div class="gate-card">
@@ -360,55 +206,188 @@
 
   <div class="dashboard" id="dashboard">
     <p class="eyebrow">Admin dashboard</p>
-    <h1>Registered <em>members</em>.</h1>
-    <p class="lede">Every registration lives in one shared sheet. This view lists just each member's name, category, and status — approve, reject, or reset from here.</p>
+    <h1>Everything <em>Enemind</em>, in one place.</h1>
+    <p class="lede">New accounts are Active immediately — use the Members tab to deactivate an account if needed. Everything else here (Entrepreneurs, Motivations) is content only admins can add.</p>
 
-    <div class="stat-strip" id="statStrip">
-      <div class="stat-cell pending">
-        <div class="stat-label">Pending</div>
-        <div class="stat-value" id="statPending">—</div>
-      </div>
-      <div class="stat-cell approved">
-        <div class="stat-label">Approved</div>
-        <div class="stat-value" id="statApproved">—</div>
-      </div>
-      <div class="stat-cell rejected">
-        <div class="stat-label">Rejected</div>
-        <div class="stat-value" id="statRejected">—</div>
-      </div>
+    <div class="tab-bar" role="tablist">
+      <button type="button" class="tab-btn active" data-tab="members">Members</button>
+      <button type="button" class="tab-btn" data-tab="entrepreneurs">Entrepreneurs</button>
+      <button type="button" class="tab-btn" data-tab="motivations">Motivations</button>
+      <button type="button" class="tab-btn" data-tab="payments">Payments</button>
     </div>
 
-    <div class="section-head">
-      <div class="heading">
-        <span class="sheet-no">01</span>
-        <h2>Members</h2>
+    <!-- ================= MEMBERS ================= -->
+    <div class="tab-panel active" id="tab-members">
+      <div class="stat-strip">
+        <div class="stat-cell active"><div class="stat-label">Active</div><div class="stat-value" id="statActive">—</div></div>
+        <div class="stat-cell inactive"><div class="stat-label">Inactive</div><div class="stat-value" id="statInactive">—</div></div>
       </div>
-      <div class="filters">
-        <input type="text" id="nameSearch" placeholder="Search by name or email">
-        <select id="statusFilter">
-          <option value="Pending" selected>Pending</option>
-          <option value="Approved">Approved</option>
-          <option value="Rejected">Rejected</option>
-          <option value="">All statuses</option>
-        </select>
-        <select id="typeFilter">
-          <option value="">All types</option>
-          <option value="secondaryStudent">Secondary Student</option>
-          <option value="tvetStudent">TVET Student</option>
-          <option value="universityStudent">University Student</option>
-          <option value="graduate">Graduate</option>
-          <option value="adult">Adult</option>
-        </select>
+
+      <div class="section-head">
+        <div class="heading"><span class="sheet-no">01</span><h2>Members</h2></div>
+        <div class="filters">
+          <input type="text" id="nameSearch" placeholder="Search by name or email">
+          <select id="statusFilter">
+            <option value="">All statuses</option>
+            <option value="Active" selected>Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+          <select id="typeFilter">
+            <option value="">All types</option>
+            <option value="secondaryStudent">Secondary Student</option>
+            <option value="tvetStudent">TVET Student</option>
+            <option value="universityStudent">University Student</option>
+            <option value="graduate">Graduate</option>
+            <option value="adult">Adult</option>
+          </select>
+        </div>
       </div>
+
+      <div class="refresh-row">
+        <span id="list-status" role="status" aria-live="polite"></span>
+        <button type="button" class="commit ghost" id="refreshBtn">Refresh</button>
+      </div>
+
+      <ul class="entry-list" id="entryList"></ul>
     </div>
 
-    <div class="refresh-row">
-      <span id="list-status" role="status" aria-live="polite"></span>
-      &nbsp;
-      <button type="button" class="commit ghost" id="refreshBtn">Refresh</button>
+    <!-- ================= ENTREPRENEURS ================= -->
+    <div class="tab-panel" id="tab-entrepreneurs">
+      <div class="section-head">
+        <div class="heading"><span class="sheet-no">01</span><h2 id="enFormHeading">Add a profile</h2></div>
+      </div>
+
+      <form class="form-card" id="enForm">
+        <div class="field-row">
+          <div class="field-index">01</div>
+          <div class="field-body">
+            <label for="enBusinessName">Business / entrepreneur name</label>
+            <input type="text" id="enBusinessName" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">02</div>
+          <div class="field-body">
+            <label for="enOwnerName">Owner name <span class="optional-tag">(optional)</span></label>
+            <input type="text" id="enOwnerName">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">03</div>
+          <div class="field-body">
+            <label for="enDescription">Description</label>
+            <textarea id="enDescription" required></textarea>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">04</div>
+          <div class="field-body">
+            <label for="enIndustry">Industry</label>
+            <select id="enIndustry" required><option value="" disabled selected>Select industry</option></select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">05</div>
+          <div class="field-body">
+            <label for="enCounty">County <span class="optional-tag">(optional)</span></label>
+            <select id="enCounty"><option value="">Select county</option></select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">06</div>
+          <div class="field-body">
+            <label for="enImageUrl">Image URL <span class="optional-tag">(optional)</span></label>
+            <input type="url" id="enImageUrl" placeholder="https://...">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">07</div>
+          <div class="field-body">
+            <label for="enLinkUrl">Website / link URL <span class="optional-tag">(optional)</span></label>
+            <input type="url" id="enLinkUrl" placeholder="https://...">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">08</div>
+          <div class="field-body">
+            <label for="enPhone">Phone <span class="optional-tag">(optional)</span></label>
+            <input type="tel" id="enPhone" placeholder="e.g. 0712345678">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-index">09</div>
+          <div class="field-body">
+            <label>Featured</label>
+            <div class="checkbox-row"><input type="checkbox" id="enFeatured"><span>Show at the top of the showcase</span></div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <span id="enForm-status" role="status" aria-live="polite"></span>
+          <button type="button" class="commit ghost" id="enCancelEditBtn" style="display:none;">Cancel edit</button>
+          <button type="submit" class="commit" id="enSubmitBtn">Add profile</button>
+        </div>
+      </form>
+
+      <div class="section-head">
+        <div class="heading"><span class="sheet-no">02</span><h2>Current profiles</h2></div>
+      </div>
+      <div class="refresh-row">
+        <span id="enList-status" role="status" aria-live="polite"></span>
+        <button type="button" class="commit ghost" id="enRefreshBtn">Refresh</button>
+      </div>
+      <ul class="entry-list" id="enList"></ul>
     </div>
 
-    <ul class="entry-list" id="entryList"></ul>
+    <!-- ================= MOTIVATIONS ================= -->
+    <div class="tab-panel" id="tab-motivations">
+      <div class="section-head">
+        <div class="heading"><span class="sheet-no">01</span><h2>Add a quote</h2></div>
+      </div>
+      <form class="form-card" id="mvForm">
+        <div class="field-row">
+          <div class="field-index">01</div>
+          <div class="field-body">
+            <label for="mvQuote">Quote</label>
+            <textarea id="mvQuote" required placeholder="e.g. Small steps daily beat big plans never started."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <span id="mvForm-status" role="status" aria-live="polite"></span>
+          <button type="submit" class="commit" id="mvSubmitBtn">Add quote</button>
+        </div>
+      </form>
+
+      <div class="section-head">
+        <div class="heading"><span class="sheet-no">02</span><h2>All quotes</h2></div>
+      </div>
+      <p class="lede" style="margin-top:0;">One active quote rotates in automatically each calendar week, the same for every visitor. Toggle a quote off to remove it from rotation without deleting it.</p>
+      <div class="refresh-row">
+        <span id="mvList-status" role="status" aria-live="polite"></span>
+        <button type="button" class="commit ghost" id="mvRefreshBtn">Refresh</button>
+      </div>
+      <ul class="entry-list" id="mvList"></ul>
+    </div>
+
+    <!-- ================= PAYMENTS ================= -->
+    <div class="tab-panel" id="tab-payments">
+      <div class="section-head">
+        <div class="heading"><span class="sheet-no">01</span><h2>Book payments</h2></div>
+      </div>
+      <div class="refresh-row">
+        <span id="pmList-status" role="status" aria-live="polite"></span>
+        <button type="button" class="commit ghost" id="pmRefreshBtn">Refresh</button>
+      </div>
+      <div class="table-scroll">
+        <table class="pay-table" id="pmTable">
+          <thead>
+            <tr>
+              <th>Date</th><th>Book</th><th>Payer</th><th>Email</th><th>Amount</th><th>Status</th><th>Merchant Ref</th><th>Order Tracking ID</th>
+            </tr>
+          </thead>
+          <tbody id="pmTableBody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </main>
 
@@ -417,10 +396,9 @@
 </footer>
 
 <script>
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzE9ipyiM7k2JcYc9WWKQTzocQesBkAMGriZHC0c3SvOHJB_ypxcgKnMITfoInU16IG/exec';
+  // Same deployed Apps Script Web App URL used by index.html / home.html / entrepreneurs.html / books.html.
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbweqIoXdbkqzo8d_zwlmRJB_SESWs14cWaI9OasGJlnGxYJCL2y4nr2QR5q-Pze9tcS/exec';
 
-  // Mirrors setup.gs's CATEGORIES — maps the human-readable Type label
-  // stored on each row back to the key updateRegistrationStatus() needs.
   const CATEGORY_KEY_BY_LABEL = {
     'Secondary Student': 'secondaryStudent',
     'TVET Student': 'tvetStudent',
@@ -429,16 +407,54 @@
     'Adult': 'adult'
   };
 
+  const COUNTIES = [
+    'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
+    'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado', 'Kakamega', 'Kericho',
+    'Kiambu', 'Kilifi', 'Kirinyaga', 'Kisii', 'Kisumu', 'Kitui', 'Kwale',
+    'Laikipia', 'Lamu', 'Machakos', 'Makueni', 'Mandera', 'Marsabit',
+    'Meru', 'Migori', 'Mombasa', "Murang'a", 'Nairobi', 'Nakuru', 'Nandi',
+    'Narok', 'Nyamira', 'Nyandarua', 'Nyeri', 'Samburu', 'Siaya',
+    'Taita-Taveta', 'Tana River', 'Tharaka-Nithi', 'Trans Nzoia', 'Turkana',
+    'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
+  ];
+
+  const INDUSTRIES = [
+    'Agribusiness', 'Technology', 'Fashion & Beauty', 'Food & Beverage',
+    'Retail & Trade', 'Manufacturing', 'Creative & Media',
+    'Transport & Logistics', 'Health & Wellness', 'Education & Training',
+    'Construction & Real Estate', 'Finance & Investment', 'Other'
+  ];
+
   let adminCode = '';
   let allMembers = [];
+  let allEntrepreneurs = [];
+  let allMotivations = [];
+  let editingEntrepreneurId = null;
 
   function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, ch => ({
+    return String(str == null ? '' : str).replace(/[&<>"']/g, ch => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
     }[ch]));
   }
 
-  /* ---------- Unlock gate ---------- */
+  function callApi(payload) {
+    return fetch(WEB_APP_URL, { method: 'POST', body: JSON.stringify(payload) }).then(res => res.json());
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleString('en-KE', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  }
+
+  /* Populate static selects */
+  const enIndustrySel = document.getElementById('enIndustry');
+  INDUSTRIES.forEach(i => enIndustrySel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(i)}">${escapeHtml(i)}</option>`));
+  const enCountySel = document.getElementById('enCounty');
+  COUNTIES.forEach(c => enCountySel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`));
+
+  /* ---------- Gate ---------- */
   const gateForm = document.getElementById('gateForm');
   const gateStatusEl = document.getElementById('gate-status');
   const gateBtn = document.getElementById('gateBtn');
@@ -447,32 +463,27 @@
 
   function setGateStatus(message, state) {
     gateStatusEl.textContent = message;
-    if (state) gateStatusEl.setAttribute('data-state', state);
-    else gateStatusEl.removeAttribute('data-state');
+    if (state) gateStatusEl.setAttribute('data-state', state); else gateStatusEl.removeAttribute('data-state');
   }
 
   gateForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const code = document.getElementById('adminCode').value;
     if (!code) return;
-
     setGateStatus('Checking…', '');
     gateBtn.disabled = true;
-
     try {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'listAllMemberNames', adminCode: code })
-      });
-      const result = await res.json();
-
+      const result = await callApi({ action: 'listAllMemberNames', adminCode: code });
       if (result.success) {
         adminCode = code;
         gateWrap.classList.add('hidden');
         dashboard.classList.add('open');
         allMembers = result.members || [];
-        renderEntries();
-        refreshCounts();
+        renderMembers();
+        refreshMemberCounts();
+        loadEntrepreneurs();
+        loadMotivations();
+        loadPayments();
       } else {
         setGateStatus(result.message || 'Invalid code.', 'err');
       }
@@ -483,7 +494,17 @@
     }
   });
 
-  /* ---------- Fetch + render members ---------- */
+  /* ---------- Tabs ---------- */
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  /* ================= MEMBERS ================= */
   const statusFilterEl = document.getElementById('statusFilter');
   const typeFilterEl = document.getElementById('typeFilter');
   const nameSearchEl = document.getElementById('nameSearch');
@@ -491,37 +512,28 @@
   const listStatusEl = document.getElementById('list-status');
   const refreshBtn = document.getElementById('refreshBtn');
 
-  function setListStatus(message, state) {
-    listStatusEl.textContent = message;
-    if (state) listStatusEl.setAttribute('data-state', state);
-    else listStatusEl.removeAttribute('data-state');
+  function setListStatus(el, message, state) {
+    el.textContent = message;
+    if (state) el.setAttribute('data-state', state); else el.removeAttribute('data-state');
   }
 
   async function fetchMembers() {
-    setListStatus('Loading…', '');
+    setListStatus(listStatusEl, 'Loading…', '');
     try {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'listAllMemberNames', adminCode })
-      });
-      const result = await res.json();
+      const result = await callApi({ action: 'listAllMemberNames', adminCode });
       if (result.success) {
         allMembers = result.members || [];
-        renderEntries();
+        renderMembers();
+        refreshMemberCounts();
       } else {
-        setListStatus(result.message || 'Could not load members.', 'err');
+        setListStatus(listStatusEl, result.message || 'Could not load members.', 'err');
       }
     } catch (err) {
-      setListStatus('Network error — check the Web App URL is set.', 'err');
+      setListStatus(listStatusEl, 'Network error — check the Web App URL is set.', 'err');
     }
   }
 
-  function badgeClassFor(status) {
-    const key = String(status).toLowerCase();
-    return key === 'approved' ? 'status-approved' : (key === 'rejected' ? 'status-rejected' : 'status-pending');
-  }
-
-  function renderEntries() {
+  function renderMembers() {
     const statusFilter = statusFilterEl.value;
     const typeFilter = typeFilterEl.value;
     const query = nameSearchEl.value.trim().toLowerCase();
@@ -536,35 +548,31 @@
       return true;
     });
 
-    setListStatus(filtered.length + ' member' + (filtered.length === 1 ? '' : 's') + '.', '');
+    setListStatus(listStatusEl, filtered.length + ' member' + (filtered.length === 1 ? '' : 's') + '.', '');
 
     if (filtered.length === 0) {
-      entryListEl.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">📭</div>
-          <p>No members match this filter.</p>
-        </div>`;
+      entryListEl.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><p>No members match this filter.</p></div>`;
       return;
     }
 
     entryListEl.innerHTML = filtered.map(m => {
-      const badgeClass = badgeClassFor(m.status);
-      const isApproved = m.status === 'Approved';
-      const isRejected = m.status === 'Rejected';
+      const badgeClass = m.status === 'Active' ? 'status-active' : 'status-inactive';
       const typeKey = CATEGORY_KEY_BY_LABEL[m.typeLabel] || '';
-
+      const nextStatus = m.status === 'Active' ? 'Inactive' : 'Active';
+      const actionLabel = m.status === 'Active' ? 'Deactivate' : 'Activate';
+      const actionClass = m.status === 'Active' ? 'reject' : 'approve-outline';
       return `
         <li class="entry-card" data-type="${escapeHtml(typeKey)}" data-email="${escapeHtml(m.email)}">
           <div class="entry-title">
             <span class="entry-name">${escapeHtml(m.name || m.email)}</span>
             <span class="entry-type">${escapeHtml(m.typeLabel)}</span>
+            <span class="entry-sub">${escapeHtml(m.email)}</span>
             <span class="status-badge ${badgeClass}">${escapeHtml(m.status)}</span>
           </div>
           <div class="entry-actions">
             ${!typeKey ? `<span class="entry-type">Unknown type — edit in the spreadsheet</span>` : `
-              ${!isApproved ? `<button type="button" class="commit approve-outline" data-action="Approved">Approve</button>` : ''}
-              ${!isRejected ? `<button type="button" class="commit reject" data-action="Rejected">Reject</button>` : ''}
-              ${(isApproved || isRejected) ? `<button type="button" class="commit ghost" data-action="Pending">Reset to pending</button>` : ''}
+              <button type="button" class="commit ${actionClass}" data-action="${escapeHtml(nextStatus)}">${escapeHtml(actionLabel)}</button>
+              <button type="button" class="commit ghost small" data-action="logo">Set logo</button>
             `}
           </div>
         </li>`;
@@ -572,51 +580,334 @@
 
     entryListEl.querySelectorAll('.entry-card').forEach(card => {
       card.querySelectorAll('button[data-action]').forEach(btn => {
-        btn.addEventListener('click', () => updateStatus(card, btn));
+        btn.addEventListener('click', () => {
+          if (btn.dataset.action === 'logo') promptSetLogo(card);
+          else updateStatus(card, btn.dataset.action);
+        });
       });
     });
   }
 
-  async function updateStatus(card, btn) {
+  async function updateStatus(card, status) {
     const type = card.dataset.type;
     const email = card.dataset.email;
-    const status = btn.dataset.action;
-
     card.querySelectorAll('button').forEach(b => b.disabled = true);
-    setListStatus('Updating…', '');
-
+    setListStatus(listStatusEl, 'Updating…', '');
     try {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'updateStatus', adminCode, type, email, status })
-      });
-      const result = await res.json();
+      const result = await callApi({ action: 'setAccountActive', adminCode, type, email, status });
       if (result.success) {
         await fetchMembers();
-        refreshCounts();
       } else {
-        setListStatus(result.message || 'Could not update status.', 'err');
+        setListStatus(listStatusEl, result.message || 'Could not update status.', 'err');
         card.querySelectorAll('button').forEach(b => b.disabled = false);
       }
     } catch (err) {
-      setListStatus('Network error — check the Web App URL is set.', 'err');
+      setListStatus(listStatusEl, 'Network error — check the Web App URL is set.', 'err');
       card.querySelectorAll('button').forEach(b => b.disabled = false);
     }
   }
 
-  /* ---------- Counts strip (independent of the active filter) ---------- */
-  function refreshCounts() {
-    const counts = { Pending: 0, Approved: 0, Rejected: 0 };
-    allMembers.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
-    document.getElementById('statPending').textContent = counts.Pending;
-    document.getElementById('statApproved').textContent = counts.Approved;
-    document.getElementById('statRejected').textContent = counts.Rejected;
+  async function promptSetLogo(card) {
+    const type = card.dataset.type;
+    const email = card.dataset.email;
+    const url = window.prompt('Paste a logo/profile image URL (https://...), or leave blank to clear it:');
+    if (url === null) return;
+    setListStatus(listStatusEl, 'Updating logo…', '');
+    try {
+      const result = await callApi({ action: 'updateLogo', adminCode, type, email, logoUrl: url.trim() });
+      setListStatus(listStatusEl, result.message || '', result.success ? '' : 'err');
+    } catch (err) {
+      setListStatus(listStatusEl, 'Network error — check the Web App URL is set.', 'err');
+    }
   }
 
-  statusFilterEl.addEventListener('change', renderEntries);
-  typeFilterEl.addEventListener('change', renderEntries);
-  nameSearchEl.addEventListener('input', renderEntries);
-  refreshBtn.addEventListener('click', () => { fetchMembers(); });
+  function refreshMemberCounts() {
+    const counts = { Active: 0, Inactive: 0 };
+    allMembers.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
+    document.getElementById('statActive').textContent = counts.Active;
+    document.getElementById('statInactive').textContent = counts.Inactive;
+  }
+
+  statusFilterEl.addEventListener('change', renderMembers);
+  typeFilterEl.addEventListener('change', renderMembers);
+  nameSearchEl.addEventListener('input', renderMembers);
+  refreshBtn.addEventListener('click', fetchMembers);
+
+  /* ================= ENTREPRENEURS ================= */
+  const enForm = document.getElementById('enForm');
+  const enFormStatusEl = document.getElementById('enForm-status');
+  const enSubmitBtn = document.getElementById('enSubmitBtn');
+  const enCancelEditBtn = document.getElementById('enCancelEditBtn');
+  const enFormHeading = document.getElementById('enFormHeading');
+  const enListStatusEl = document.getElementById('enList-status');
+  const enListEl = document.getElementById('enList');
+
+  function setEnFormStatus(message, state) {
+    enFormStatusEl.textContent = message;
+    if (state) enFormStatusEl.setAttribute('data-state', state); else enFormStatusEl.removeAttribute('data-state');
+  }
+
+  function resetEnForm() {
+    enForm.reset();
+    editingEntrepreneurId = null;
+    enFormHeading.textContent = 'Add a profile';
+    enSubmitBtn.textContent = 'Add profile';
+    enCancelEditBtn.style.display = 'none';
+  }
+
+  function startEditEntrepreneur(entry) {
+    editingEntrepreneurId = entry.id;
+    document.getElementById('enBusinessName').value = entry.businessName || '';
+    document.getElementById('enOwnerName').value = entry.ownerName || '';
+    document.getElementById('enDescription').value = entry.description || '';
+    document.getElementById('enIndustry').value = entry.industry || '';
+    document.getElementById('enCounty').value = entry.county || '';
+    document.getElementById('enImageUrl').value = entry.imageUrl || '';
+    document.getElementById('enLinkUrl').value = entry.linkUrl || '';
+    document.getElementById('enPhone').value = entry.phone || '';
+    document.getElementById('enFeatured').checked = !!entry.featured;
+    enFormHeading.textContent = 'Edit profile';
+    enSubmitBtn.textContent = 'Save changes';
+    enCancelEditBtn.style.display = '';
+    enForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  enCancelEditBtn.addEventListener('click', resetEnForm);
+
+  enForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      businessName: document.getElementById('enBusinessName').value.trim(),
+      ownerName: document.getElementById('enOwnerName').value.trim(),
+      description: document.getElementById('enDescription').value.trim(),
+      industry: document.getElementById('enIndustry').value,
+      county: document.getElementById('enCounty').value,
+      imageUrl: document.getElementById('enImageUrl').value.trim(),
+      linkUrl: document.getElementById('enLinkUrl').value.trim(),
+      phone: document.getElementById('enPhone').value.trim(),
+      featured: document.getElementById('enFeatured').checked
+    };
+    if (!data.businessName || !data.description || !data.industry) {
+      setEnFormStatus('Business name, description, and industry are required.', 'err');
+      return;
+    }
+
+    setEnFormStatus(editingEntrepreneurId ? 'Saving…' : 'Adding…', '');
+    enSubmitBtn.disabled = true;
+    try {
+      const payload = editingEntrepreneurId
+        ? Object.assign({ action: 'updateEntrepreneur', adminCode, id: editingEntrepreneurId }, data)
+        : Object.assign({ action: 'addEntrepreneur', adminCode }, data);
+      const result = await callApi(payload);
+      if (result.success) {
+        setEnFormStatus(result.message || 'Saved.', 'ok');
+        resetEnForm();
+        loadEntrepreneurs();
+      } else {
+        setEnFormStatus(result.message || 'Could not save.', 'err');
+      }
+    } catch (err) {
+      setEnFormStatus('Network error — check the Web App URL is set.', 'err');
+    } finally {
+      enSubmitBtn.disabled = false;
+    }
+  });
+
+  async function loadEntrepreneurs() {
+    setListStatus(enListStatusEl, 'Loading…', '');
+    try {
+      const result = await callApi({ action: 'listEntrepreneurs' });
+      if (result.success) {
+        allEntrepreneurs = result.entries || [];
+        renderEntrepreneurs();
+      } else {
+        setListStatus(enListStatusEl, result.message || 'Could not load profiles.', 'err');
+      }
+    } catch (err) {
+      setListStatus(enListStatusEl, 'Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  function renderEntrepreneurs() {
+    setListStatus(enListStatusEl, allEntrepreneurs.length + ' active profile' + (allEntrepreneurs.length === 1 ? '' : 's') + '.', '');
+    if (allEntrepreneurs.length === 0) {
+      enListEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🏪</div><p>No profiles yet — add one above.</p></div>`;
+      return;
+    }
+    enListEl.innerHTML = allEntrepreneurs.map(en => `
+      <li class="entry-card" data-id="${escapeHtml(en.id)}">
+        <div class="entry-title">
+          <span class="entry-name">${escapeHtml(en.businessName)}</span>
+          <span class="entry-type">${escapeHtml(en.industry)}</span>
+          ${en.county ? `<span class="entry-sub">${escapeHtml(en.county)}</span>` : ''}
+          ${en.featured ? `<span class="status-badge status-active">Featured</span>` : ''}
+        </div>
+        <div class="entry-actions">
+          <button type="button" class="commit ghost small" data-action="edit">Edit</button>
+          <button type="button" class="commit reject small" data-action="remove">Remove</button>
+        </div>
+      </li>`).join('');
+
+    enListEl.querySelectorAll('.entry-card').forEach(card => {
+      const id = card.dataset.id;
+      const entry = allEntrepreneurs.find(e => e.id === id);
+      card.querySelector('[data-action="edit"]').addEventListener('click', () => startEditEntrepreneur(entry));
+      card.querySelector('[data-action="remove"]').addEventListener('click', () => removeEntrepreneur(id));
+    });
+  }
+
+  async function removeEntrepreneur(id) {
+    if (!window.confirm('Remove this profile from the showcase?')) return;
+    setListStatus(enListStatusEl, 'Removing…', '');
+    try {
+      const result = await callApi({ action: 'removeEntrepreneur', adminCode, id });
+      if (result.success) loadEntrepreneurs();
+      else setListStatus(enListStatusEl, result.message || 'Could not remove.', 'err');
+    } catch (err) {
+      setListStatus(enListStatusEl, 'Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  document.getElementById('enRefreshBtn').addEventListener('click', loadEntrepreneurs);
+
+  /* ================= MOTIVATIONS ================= */
+  const mvForm = document.getElementById('mvForm');
+  const mvFormStatusEl = document.getElementById('mvForm-status');
+  const mvSubmitBtn = document.getElementById('mvSubmitBtn');
+  const mvListStatusEl = document.getElementById('mvList-status');
+  const mvListEl = document.getElementById('mvList');
+
+  function setMvFormStatus(message, state) {
+    mvFormStatusEl.textContent = message;
+    if (state) mvFormStatusEl.setAttribute('data-state', state); else mvFormStatusEl.removeAttribute('data-state');
+  }
+
+  mvForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const quote = document.getElementById('mvQuote').value.trim();
+    if (!quote) { setMvFormStatus('Quote text is required.', 'err'); return; }
+    setMvFormStatus('Adding…', '');
+    mvSubmitBtn.disabled = true;
+    try {
+      const result = await callApi({ action: 'addMotivation', adminCode, quote });
+      if (result.success) {
+        setMvFormStatus(result.message || 'Added.', 'ok');
+        mvForm.reset();
+        loadMotivations();
+      } else {
+        setMvFormStatus(result.message || 'Could not add.', 'err');
+      }
+    } catch (err) {
+      setMvFormStatus('Network error — check the Web App URL is set.', 'err');
+    } finally {
+      mvSubmitBtn.disabled = false;
+    }
+  });
+
+  async function loadMotivations() {
+    setListStatus(mvListStatusEl, 'Loading…', '');
+    try {
+      const result = await callApi({ action: 'listMotivations', adminCode });
+      if (result.success) {
+        allMotivations = result.quotes || [];
+        renderMotivations();
+      } else {
+        setListStatus(mvListStatusEl, result.message || 'Could not load quotes.', 'err');
+      }
+    } catch (err) {
+      setListStatus(mvListStatusEl, 'Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  function renderMotivations() {
+    setListStatus(mvListStatusEl, allMotivations.length + ' quote' + (allMotivations.length === 1 ? '' : 's') + '.', '');
+    if (allMotivations.length === 0) {
+      mvListEl.innerHTML = `<div class="empty-state"><div class="empty-icon">✦</div><p>No quotes yet — add one above.</p></div>`;
+      return;
+    }
+    mvListEl.innerHTML = allMotivations.map(q => `
+      <li class="entry-card" data-id="${escapeHtml(q.id)}">
+        <div class="entry-title">
+          <span class="entry-name">${escapeHtml(q.quote)}</span>
+          <span class="status-badge ${q.active ? 'status-active' : 'status-inactive'}">${q.active ? 'Active' : 'Off'}</span>
+        </div>
+        <div class="entry-actions">
+          <button type="button" class="commit ${q.active ? 'reject' : 'approve-outline'} small" data-action="toggle">${q.active ? 'Turn off' : 'Turn on'}</button>
+          <button type="button" class="commit ghost small" data-action="delete">Delete</button>
+        </div>
+      </li>`).join('');
+
+    mvListEl.querySelectorAll('.entry-card').forEach(card => {
+      const id = card.dataset.id;
+      const q = allMotivations.find(m => m.id === id);
+      card.querySelector('[data-action="toggle"]').addEventListener('click', () => toggleMotivation(id, !q.active));
+      card.querySelector('[data-action="delete"]').addEventListener('click', () => deleteMotivationEntry(id));
+    });
+  }
+
+  async function toggleMotivation(id, active) {
+    setListStatus(mvListStatusEl, 'Updating…', '');
+    try {
+      const result = await callApi({ action: 'setMotivationActive', adminCode, id, active });
+      if (result.success) loadMotivations();
+      else setListStatus(mvListStatusEl, result.message || 'Could not update.', 'err');
+    } catch (err) {
+      setListStatus(mvListStatusEl, 'Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  async function deleteMotivationEntry(id) {
+    if (!window.confirm('Delete this quote permanently?')) return;
+    setListStatus(mvListStatusEl, 'Deleting…', '');
+    try {
+      const result = await callApi({ action: 'deleteMotivation', adminCode, id });
+      if (result.success) loadMotivations();
+      else setListStatus(mvListStatusEl, result.message || 'Could not delete.', 'err');
+    } catch (err) {
+      setListStatus(mvListStatusEl, 'Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  document.getElementById('mvRefreshBtn').addEventListener('click', loadMotivations);
+
+  /* ================= PAYMENTS ================= */
+  const pmListStatusEl = document.getElementById('pmList-status');
+  const pmTableBody = document.getElementById('pmTableBody');
+
+  async function loadPayments() {
+    setListStatus(pmListStatusEl, 'Loading…', '');
+    try {
+      const result = await callApi({ action: 'listPayments', adminCode });
+      if (result.success) {
+        renderPayments(result.payments || []);
+      } else {
+        setListStatus(pmListStatusEl, result.message || 'Could not load payments.', 'err');
+      }
+    } catch (err) {
+      setListStatus(pmListStatusEl, 'Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  function renderPayments(payments) {
+    setListStatus(pmListStatusEl, payments.length + ' payment' + (payments.length === 1 ? '' : 's') + '.', '');
+    if (payments.length === 0) {
+      pmTableBody.innerHTML = `<tr><td colspan="8">No payments yet.</td></tr>`;
+      return;
+    }
+    pmTableBody.innerHTML = payments.map(p => `
+      <tr>
+        <td>${escapeHtml(formatDate(p.timestamp))}</td>
+        <td>${escapeHtml(p.bookTitle)}</td>
+        <td>${escapeHtml(p.payerName)}</td>
+        <td>${escapeHtml(p.payerEmail)}</td>
+        <td>KSh ${escapeHtml(p.amount)}</td>
+        <td><span class="pay-status ${escapeHtml(p.status)}">${escapeHtml(p.status)}</span></td>
+        <td>${escapeHtml(p.merchantRef)}</td>
+        <td>${escapeHtml(p.orderTrackingId)}</td>
+      </tr>`).join('');
+  }
+
+  document.getElementById('pmRefreshBtn').addEventListener('click', loadPayments);
 </script>
 
 </body>
