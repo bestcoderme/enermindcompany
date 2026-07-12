@@ -3,14 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Register — Enemind Company</title>
+<title>Enemind Company — Log in</title>
 <link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  /* ---------- Design tokens, lifted directly from the source site's
-     blueprint theme: navy ground, copper accent, engineering-drawing
-     grid, Space Grotesk / IBM Plex Sans / IBM Plex Mono. ---------- */
   :root {
     --blueprint-navy: #10243E;
     --blueprint-blue: #2E6F9E;
@@ -51,117 +48,6 @@
     position: relative;
   }
 
-  nav.top-links {
-    display: flex;
-    gap: 20px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-left: auto;
-    margin-right: 24px;
-  }
-  nav.top-links a {
-    text-decoration: none;
-    color: rgba(232,238,242,0.75);
-    border-bottom: 2px solid transparent;
-    padding-bottom: 2px;
-  }
-  nav.top-links a:hover { color: var(--copper); border-bottom-color: var(--copper); }
-
-  /* ---------- Account icon + dropdown ---------- */
-  .header-right {
-    position: relative;
-  }
-
-  .account-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: 2px solid var(--copper);
-    background: var(--paper);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    overflow: hidden;
-    padding: 0;
-    color: var(--blueprint-navy);
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 0.9rem;
-    transition: filter 0.15s ease;
-  }
-  .account-btn:hover { filter: brightness(0.95); }
-  .account-btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
-  .account-btn svg { width: 22px; height: 22px; }
-
-  .account-dropdown {
-    display: none;
-    position: absolute;
-    top: calc(100% + 12px);
-    right: 0;
-    width: 260px;
-    background: var(--blueprint-navy);
-    border: 1px solid rgba(232,238,242,0.35);
-    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
-    z-index: 20;
-  }
-  .account-dropdown.open { display: block; }
-
-  .account-dropdown .ad-header {
-    padding: 14px 18px;
-    border-bottom: 1px solid rgba(232,238,242,0.2);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-  }
-
-  .account-dropdown .ad-row {
-    padding: 10px 18px;
-    border-top: 1px solid rgba(232,238,242,0.15);
-  }
-  .account-dropdown .ad-row:first-of-type { border-top: none; }
-
-  .account-dropdown .ad-label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-    margin-bottom: 2px;
-  }
-  .account-dropdown .ad-value {
-    font-size: 0.9rem;
-    color: var(--paper);
-    word-break: break-word;
-  }
-
-  .account-dropdown .ad-empty {
-    padding: 18px;
-    font-size: 0.88rem;
-    color: rgba(232,238,242,0.75);
-  }
-
-  .account-dropdown .ad-actions {
-    padding: 14px 18px;
-    display: flex;
-    gap: 10px;
-  }
-
-  .account-dropdown button.commit,
-  .account-dropdown a.commit {
-    flex: 1;
-    text-align: center;
-    padding: 10px 12px;
-    font-size: 0.72rem;
-    text-decoration: none;
-    display: inline-block;
-  }
-
   .brandmark {
     display: flex;
     align-items: center;
@@ -173,54 +59,58 @@
     text-decoration: none;
   }
 
-  .brandmark .glyph {
-    width: 30px;
-    height: 30px;
-    border: 2px solid var(--copper);
+  /* ---------- Nav menu ---------- */
+  .nav-menu { position: relative; }
+
+  .menu-btn {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(232,238,242,0.35);
+    background: transparent;
+    color: var(--paper);
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    background: var(--paper);
-    flex-shrink: 0;
+    cursor: pointer;
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: border-color 0.15s ease, background 0.15s ease;
   }
-  .brandmark .glyph img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .menu-btn:hover { border-color: var(--copper); }
+  .menu-btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+
+  .nav-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    min-width: 220px;
+    background: var(--blueprint-navy);
+    border: 1px solid rgba(232,238,242,0.35);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    z-index: 20;
+  }
+  .nav-dropdown.open { display: block; }
+
+  .nav-dropdown a {
     display: block;
+    padding: 12px 18px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(232,238,242,0.8);
+    text-decoration: none;
+    border-top: 1px solid rgba(232,238,242,0.15);
   }
+  .nav-dropdown a:first-child { border-top: none; }
+  .nav-dropdown a:hover { color: var(--paper); background: rgba(232,238,242,0.05); }
+  .nav-dropdown a.current { color: var(--copper); }
 
   main {
-    max-width: 640px;
+    max-width: 520px;
     margin: 0 auto;
-    padding: 56px 32px 96px;
-  }
-
-  .hero-logo {
-    width: 96px;
-    height: 96px;
-    border-radius: 50%;
-    border: 3px solid var(--copper);
-    overflow: hidden;
-    background: var(--paper);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 28px;
-  }
-  .hero-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
-
-  .hero-text {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 64px 32px 96px;
   }
 
   .eyebrow {
@@ -230,198 +120,41 @@
     text-transform: uppercase;
     color: var(--blueprint-line);
     margin-bottom: 18px;
+    text-align: center;
   }
 
   h1 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(1.9rem, 4vw, 2.6rem);
-    line-height: 1.1;
-    max-width: 18ch;
+    font-size: clamp(1.7rem, 5vw, 2.2rem);
+    line-height: 1.15;
+    text-align: center;
   }
-
-  h1 em {
-    font-style: normal;
-    color: var(--copper);
-  }
+  h1 em { font-style: normal; color: var(--copper); }
 
   p.lede {
-    margin-top: 16px;
-    max-width: 52ch;
-    font-size: 1rem;
+    margin: 14px auto 0;
+    max-width: 42ch;
+    font-size: 0.95rem;
     color: rgba(232,238,242,0.8);
+    text-align: center;
   }
 
-  /* Title block, the same corner-stamp device as the source page */
-  .title-block {
+  /* ---------- Login card (spec-sheet rows, matches other pages) ---------- */
+  .form-card {
     margin-top: 40px;
-    border: 1px solid rgba(232,238,242,0.4);
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .title-block .cell {
-    border-right: 1px solid rgba(232,238,242,0.4);
-    border-top: 1px solid rgba(232,238,242,0.4);
-    padding: 12px 16px;
-  }
-  .title-block .cell:nth-child(2n) { border-right: none; }
-  .title-block .cell:nth-child(-n+2) { border-top: none; }
-
-  .title-block .label {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-    margin-bottom: 4px;
-  }
-
-  .title-block .value {
-    font-family: var(--font-mono);
-    font-size: 0.9rem;
-  }
-
-  /* ---------- Info banners (support / university) ---------- */
-  .info-banner {
-    margin-top: 20px;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px 18px;
-    background: rgba(232,238,242,0.04);
-    border: 1px solid rgba(232,238,242,0.25);
-    border-left: 3px solid var(--copper);
-  }
-
-  .info-banner .banner-icon {
-    flex-shrink: 0;
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgba(232,238,242,0.35);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    background: rgba(232,238,242,0.05);
-  }
-
-  .info-banner .banner-text {
-    font-size: 0.9rem;
-    color: rgba(232,238,242,0.85);
-  }
-
-  .info-banner .banner-text strong {
-    color: var(--paper);
-  }
-
-  .info-banner .banner-text a {
-    color: var(--copper);
-    text-decoration: underline;
-  }
-
-  .info-banner.university-banner {
-    border-left-color: var(--blueprint-line);
-  }
-
-  /* ---------- About section (vision / aim / motto) ---------- */
-  .about-intro {
-    margin-bottom: 24px;
-  }
-
-  .profile-value .motto-line {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--copper);
-  }
-
-  .motto-alts {
-    list-style: none;
-    margin-top: 4px;
-  }
-  .motto-alts li {
-    position: relative;
-    padding-left: 18px;
-    margin-top: 6px;
-    color: rgba(232,238,242,0.85);
-  }
-  .motto-alts li::before {
-    content: "—";
-    position: absolute;
-    left: 0;
-    color: var(--copper);
-  }
-
-  .section-head {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin: 48px 0 24px;
-    border-bottom: 1px solid rgba(232,238,242,0.2);
-    padding-bottom: 16px;
-  }
-
-  .sheet-no {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--copper);
-    flex-shrink: 0;
-  }
-
-  .section-head h2 {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.4rem;
-  }
-
-  .mode-toggle {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    border: 1px solid rgba(232,238,242,0.4);
-    margin-bottom: 32px;
-  }
-
-  .mode-toggle button {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    background: transparent;
-    color: rgba(232,238,242,0.6);
-    border: none;
-    padding: 14px 12px;
-    cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
-  }
-  .mode-toggle button:first-child { border-right: 1px solid rgba(232,238,242,0.4); }
-  .mode-toggle button.active {
-    background: var(--copper);
-    color: var(--blueprint-navy);
-    font-weight: 600;
-  }
-  .mode-toggle button:not(.active):hover { background: rgba(232,238,242,0.08); color: var(--paper); }
-  .mode-toggle button:focus-visible { outline: 2px solid var(--copper); outline-offset: -2px; }
-
-  .form-panel { display: none; }
-  .form-panel.active { display: block; }
-
-  #login-status[data-state="ok"] { color: var(--ok); }
-  #login-status[data-state="err"] { color: var(--err); }
-
-  .profile-card {
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.3);
   }
 
-  .profile-row {
+  .form-row {
     display: grid;
     grid-template-columns: 44px 1fr;
     border-top: 1px solid rgba(232,238,242,0.25);
   }
-  .profile-row:first-child { border-top: none; }
+  .form-row:first-child { border-top: none; }
 
-  .profile-row .field-index {
+  .form-row .field-index {
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--blueprint-line);
@@ -431,73 +164,9 @@
     border-right: 1px solid rgba(232,238,242,0.25);
   }
 
-  .profile-row .profile-body { padding: 14px 20px; }
+  .form-row .field-body { padding: 14px 20px; }
 
-  .profile-row .profile-label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-    margin-bottom: 4px;
-  }
-
-  .profile-row .profile-value {
-    font-size: 1rem;
-    color: var(--paper);
-  }
-
-  .status-badge {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border: 1px solid currentColor;
-  }
-  .status-badge.status-approved { color: var(--ok); }
-  .status-badge.status-pending { color: var(--copper); }
-  .status-badge.status-rejected { color: var(--err); }
-
-  .profile-actions {
-    padding: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  button.commit.ghost {
-    background: transparent;
-    color: var(--paper);
-    border: 1px solid var(--copper);
-  }
-
-  form.spec-sheet {
-    background: rgba(232,238,242,0.04);
-    border: 1px solid rgba(232,238,242,0.3);
-  }
-
-  .field-row {
-    display: grid;
-    grid-template-columns: 44px 1fr;
-    border-top: 1px solid rgba(232,238,242,0.25);
-  }
-  .field-row:first-child { border-top: none; }
-
-  .field-index {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--blueprint-line);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-right: 1px solid rgba(232,238,242,0.25);
-  }
-
-  .field-body { padding: 16px 20px; }
-
-  .field-body label {
+  .form-row label {
     display: block;
     font-family: var(--font-mono);
     font-size: 0.7rem;
@@ -507,68 +176,36 @@
     margin-bottom: 8px;
   }
 
-  .field-body .hint {
-    margin-top: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: rgba(232,238,242,0.45);
-  }
-
-  .field-body input,
-  .field-body select {
+  .form-row input {
     width: 100%;
     background: transparent;
-    border: none;
-    border-bottom: 1px solid rgba(232,238,242,0.35);
+    border: 1px solid rgba(232,238,242,0.35);
     color: var(--paper);
     font-family: var(--font-body);
-    font-size: 1rem;
-    padding: 6px 2px;
-    outline: none;
+    font-size: 0.95rem;
+    padding: 10px 12px;
   }
+  .form-row input:focus { outline: 1px solid var(--copper); }
 
-  .password-wrap {
-    position: relative;
-    display: flex;
-    align-items: center;
+  .form-msg {
+    margin: 0 20px 20px;
+    padding: 12px 14px;
+    font-size: 0.85rem;
+    border-left: 3px solid var(--blueprint-line);
+    background: rgba(232,238,242,0.05);
+    display: none;
   }
-  .password-wrap input { padding-right: 52px; }
+  .form-msg.show { display: block; }
+  .form-msg.ok { border-left-color: var(--ok); color: var(--ok); }
+  .form-msg.err { border-left-color: var(--err); color: #E6A79E; }
 
-  .toggle-visibility {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    color: var(--blueprint-line);
-    font-family: var(--font-mono);
-    font-size: 0.68rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    padding: 4px 2px;
-  }
-  .toggle-visibility:hover, .toggle-visibility:focus-visible { color: var(--copper); }
-
-  .field-body input:focus,
-  .field-body select:focus {
-    border-color: var(--copper);
-  }
-
-  .field-body select option { background: var(--blueprint-navy); color: var(--paper); }
-  .field-body select optgroup { background: var(--blueprint-navy); color: var(--blueprint-line); font-style: normal; }
-
-  .submit-row {
+  .form-actions {
     padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
+    border-top: 1px solid rgba(232,238,242,0.25);
   }
 
   button.commit {
+    width: 100%;
     font-family: var(--font-mono);
     font-size: 0.85rem;
     letter-spacing: 0.06em;
@@ -576,7 +213,7 @@
     background: var(--copper);
     color: var(--blueprint-navy);
     border: none;
-    padding: 14px 28px;
+    padding: 13px 24px;
     cursor: pointer;
     font-weight: 600;
     transition: filter 0.15s ease, transform 0.1s ease;
@@ -584,11 +221,18 @@
   button.commit:hover { filter: brightness(1.1); }
   button.commit:active { transform: translateY(1px); }
   button.commit:disabled { opacity: 0.5; cursor: not-allowed; }
-  button.commit:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
 
-  #form-status { font-family: var(--font-mono); font-size: 0.82rem; min-height: 1.2em; }
-  #form-status[data-state="ok"] { color: var(--ok); }
-  #form-status[data-state="err"] { color: var(--err); }
+  .signup-prompt {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 0.88rem;
+    color: rgba(232,238,242,0.7);
+  }
+  .signup-prompt a {
+    color: var(--copper);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 
   footer {
     border-top: 1px solid rgba(232,238,242,0.2);
@@ -598,729 +242,142 @@
     color: rgba(232,238,242,0.55);
     text-align: center;
   }
-
-  footer .footer-banners {
-    max-width: 640px;
-    margin: 0 auto 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    text-align: left;
-    font-family: var(--font-body);
-  }
-
-  footer .info-banner {
-    margin-top: 0;
-  }
 </style>
 </head>
 <body>
 
 <header>
-  <a href="#top" class="brandmark">
-    ENEMIND COMPANY
-  </a>
-
-  <nav class="top-links">
-    <a href="marketplace.html">Marketplace</a>
-  </nav>
-
-  <div class="header-right">
-    <button type="button" id="accountToggle" class="account-btn" aria-haspopup="true" aria-expanded="false" title="Account">
-      <svg id="accountIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
-        <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
-    </button>
-
-    <div class="account-dropdown" id="accountDropdown" role="menu">
-      <div class="ad-empty">
-        You're not logged in.
-        <div class="ad-actions">
-          <button type="button" class="commit" id="adLoginBtn">Log in</button>
-        </div>
-      </div>
+  <a href="index.html" class="brandmark">ENEMIND COMPANY</a>
+  <div class="nav-menu">
+    <button type="button" id="navMenuToggle" class="menu-btn" aria-haspopup="true" aria-expanded="false" title="Menu">☰</button>
+    <div class="nav-dropdown" id="navDropdown" role="menu">
+      <a href="marketplace.html">Marketplace</a>
+      <a href="resources.html">Notes &amp; Attachments</a>
+      <a href="register.html">Register</a>
     </div>
   </div>
 </header>
 
-<main id="top">
-  <div class="hero-logo">
-    <img src="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2" alt="Enemind Company logo">
-  </div>
-  <div class="hero-text">
-    <p class="eyebrow">Registration</p>
-    <h1>Create your <em>account</em> on the register.</h1>
-    <p class="lede">
-      Choose what you're registering as, then fill in your details below.
-      Every registration starts with a <strong>Pending</strong> status until
-      an admin reviews and approves it.
-    </p>
-  </div>
-
-  <div class="title-block">
-    <div class="cell">
-      <div class="label">Sheet</div>
-      <div class="value">1 unified sheet for all 10 registration types</div>
-    </div>
-    <div class="cell">
-      <div class="label">Status</div>
-      <div class="value">Open for registration</div>
-    </div>
-  </div>
-
-  <div class="section-head" id="mainSectionHead">
-    <span class="sheet-no">01</span>
-    <h2 id="formTitle">Registration form</h2>
-  </div>
-
-  <div class="mode-toggle" role="tablist">
-    <button type="button" id="tabRegister" class="active" role="tab" aria-selected="true" aria-controls="registerPanel">Register</button>
-    <button type="button" id="tabLogin" role="tab" aria-selected="false" aria-controls="loginPanel">Login</button>
-  </div>
-
-  <div class="form-panel active" id="registerPanel">
-  <form class="spec-sheet" id="registerForm" novalidate>
-    <div class="field-row">
-      <div class="field-index">01</div>
-      <div class="field-body">
-        <label for="regType">I am registering as</label>
-        <select id="regType" name="regType" required>
-          <option value="" disabled selected>Select registration type</option>
-          <optgroup label="Students">
-            <option value="secondaryStudent">Secondary Student</option>
-            <option value="tvetStudent">TVET Student</option>
-            <option value="universityStudent">University Student</option>
-            <option value="graduate">Graduate</option>
-          </optgroup>
-          <optgroup label="Educators">
-            <option value="teacher">Teacher</option>
-            <option value="lecturer">Lecturer</option>
-          </optgroup>
-          <optgroup label="Business &amp; Mentorship">
-            <option value="company">Company</option>
-            <option value="hrManager">HR Manager</option>
-            <option value="mentor">Mentor</option>
-            <option value="entrepreneur">Entrepreneur</option>
-          </optgroup>
-        </select>
-        <div class="hint" id="regTypeHint">Pick a type to reveal the rest of the form.</div>
-      </div>
-    </div>
-
-    <div id="dynamicFields"></div>
-
-    <div class="submit-row">
-      <span id="form-status" role="status" aria-live="polite"></span>
-      <button type="submit" class="commit" id="submitBtn">Submit registration</button>
-    </div>
-  </form>
-  </div>
-
-  <div class="form-panel" id="loginPanel">
-  <form class="spec-sheet" id="loginForm" novalidate>
-    <div class="field-row">
-      <div class="field-index">01</div>
-      <div class="field-body">
-        <label for="loginEmail">Email</label>
-        <input type="email" id="loginEmail" name="loginEmail" autocomplete="email" required>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field-index">02</div>
-      <div class="field-body">
-        <label for="loginPassword">Password</label>
-        <div class="password-wrap">
-          <input type="password" id="loginPassword" name="loginPassword" autocomplete="current-password" required>
-          <button type="button" class="toggle-visibility" data-target="loginPassword">Show</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="submit-row">
-      <span id="login-status" role="status" aria-live="polite"></span>
-      <button type="submit" class="commit" id="loginBtn">Log in</button>
-    </div>
-  </form>
-  </div>
-
-  <div class="section-head">
-    <span class="sheet-no">02</span>
-    <h2>About EnerMind</h2>
-  </div>
-
-  <p class="lede about-intro">
-    EnerMind is built for the whole Kenyan learning-and-work pipeline — secondary
-    and TVET students, university students and graduates, teachers and lecturers,
-    companies and HR managers, mentors, and entrepreneurs — connecting them all
-    around attachments, notes, mentorship, hiring, and hands-on training.
+<main>
+  <p class="eyebrow">Sheet 00 — Log in</p>
+  <h1>Welcome back to <em>Enemind</em></h1>
+  <p class="lede">
+    Log in with the email and password you registered with. New here?
+    Head to the registration page to sign up first.
   </p>
 
-  <div class="profile-card">
-    <div class="profile-row">
+  <form class="form-card" id="loginForm">
+    <div class="form-row">
       <div class="field-index">01</div>
-      <div class="profile-body">
-        <span class="profile-label">Vision</span>
-        <span class="profile-value">To empower students, businesses, and communities across Kenyan universities through innovative technology, renewable energy, and hands-on entrepreneurship — connecting students and helping them find attachments, notes, and exams, while turning ideas into skills, and skills into sustainable livelihoods.</span>
+      <div class="field-body">
+        <label for="lEmail">Email</label>
+        <input type="email" id="lEmail" required autocomplete="email">
       </div>
     </div>
-    <div class="profile-row">
+    <div class="form-row">
       <div class="field-index">02</div>
-      <div class="profile-body">
-        <span class="profile-label">Aim</span>
-        <span class="profile-value">EnerMind exists to close the gap between learning and earning. Our aim is to equip people with practical technology, AI, and renewable energy skills, connect them to real mentors and real work through the Hustler Market, and help them build businesses and careers that last — while delivering professional-grade energy, software, and consulting solutions to the clients and partners who need them.</span>
+      <div class="field-body">
+        <label for="lPassword">Password</label>
+        <input type="password" id="lPassword" required autocomplete="current-password">
       </div>
     </div>
-    <div class="profile-row">
-      <div class="field-index">03</div>
-      <div class="profile-body">
-        <span class="profile-label">Motto</span>
-        <span class="profile-value"><span class="motto-line">Learn. Hustle. Build.</span></span>
-      </div>
+
+    <div class="form-msg" id="loginMsg"></div>
+
+    <div class="form-actions">
+      <button type="submit" class="commit" id="loginSubmitBtn">Log in</button>
     </div>
-    <div class="profile-row">
-      <div class="field-index">04</div>
-      <div class="profile-body">
-        <span class="profile-label">Alternate mottos</span>
-        <span class="profile-value">
-          <ul class="motto-alts">
-            <li>Powering Ideas. Building Futures.</li>
-            <li>From Ideas to Impact.</li>
-            <li>Innovate. Hustle. Empower.</li>
-          </ul>
-        </span>
-      </div>
-    </div>
-  </div>
+  </form>
+
+  <p class="signup-prompt">Don't have an account yet? <a href="register.html">Register here</a>.</p>
 </main>
 
 <footer>
-  <div class="footer-banners">
-    <div class="info-banner support-banner">
-      <span class="banner-icon">🛟</span>
-      <div class="banner-text">
-        <strong>Need help?</strong> If you run into any trouble registering or logging in, email us at
-        <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> or call
-        <a href="tel:+254711629600">+254 711 629 600</a>. We usually respond within one business day.
-      </div>
-    </div>
-
-    <div class="info-banner university-banner">
-      <span class="banner-icon">🎓</span>
-      <div class="banner-text">
-        <strong>Ten account types, one sheet:</strong> select "I am registering as" above to reveal the
-        right fields for you — student, educator, or business/mentorship. All ten types share a single
-        Registrations sheet behind the scenes, and category-specific updates go out once your
-        registration is approved.
-      </div>
-    </div>
-  </div>
-   <a href="admin.html">Admin page</a> · <a href="marketplace.html">Marketplace</a>
   Enemind Company — built on Google Sheets + Apps Script
 </footer>
 
 <script>
-  // Replace with your deployed Apps Script Web App URL from setup.gs
-  // (Deploy > New deployment > Web app > copy the /exec URL).
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbydFqKfhrKoFFbUX-wA5ffeggxWXQt6ne2H792kw4yYHDhsEjpKRtYuCtLRWX7HWL2K/exec';
+  /* ------------------------------------------------------------------
+   * Point this at your deployed Apps Script Web App URL
+   * (Deploy > New deployment > Web app > /exec) from setup.gs.
+   * ---------------------------------------------------------------- */
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbydFqKfhrKoFFbUX-wA5ffeggxWXQt6ne2H792kw4yYHDhsEjpKRtYuCtLRWX7HWL2K/exec';
 
-  const COUNTIES = [
-    'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
-    'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado', 'Kakamega', 'Kericho',
-    'Kiambu', 'Kilifi', 'Kirinyaga', 'Kisii', 'Kisumu', 'Kitui', 'Kwale',
-    'Laikipia', 'Lamu', 'Machakos', 'Makueni', 'Mandera', 'Marsabit',
-    'Meru', 'Migori', 'Mombasa', "Murang'a", 'Nairobi', 'Nakuru', 'Nandi',
-    'Narok', 'Nyamira', 'Nyandarua', 'Nyeri', 'Samburu', 'Siaya',
-    'Taita-Taveta', 'Tana River', 'Tharaka-Nithi', 'Trans Nzoia', 'Turkana',
-    'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
-  ];
-
-  const UNIVERSITIES = [
-    'University of Nairobi (UoN)', 'Maseno University', 'Moi University',
-    'Chuka University', 'Kisii University',
-    'Masinde Muliro University of Science and Technology (MMUST)',
-    'University of Eldoret', 'Tharaka University', 'University of Kabianga',
-    'Rongo University', 'University of Embu',
-    'Jaramogi Oginga Odinga University of Science and Technology (JOOUST)',
-    'Bomet University', 'Kibabii University', 'Pwani University',
-    'Maasai Mara University', 'Turkana University', 'Kaimosi Friends University',
-    'Garissa University'
-  ];
-
-  const INDUSTRIES = [
-    'Agriculture', 'Construction & Real Estate', 'Education', 'Energy & Utilities',
-    'Finance & Insurance', 'Healthcare', 'Hospitality & Tourism', 'ICT / Software',
-    'Logistics & Transport', 'Manufacturing', 'Media & Communications',
-    'Retail & E-commerce', 'Telecommunications', 'Other'
-  ];
-
-  const EXPERTISE_AREAS = [
-    'Business & Entrepreneurship', 'Career Coaching', 'Engineering', 'Finance & Investment',
-    'Leadership & Management', 'Marketing & Sales', 'Renewable Energy',
-    'Software Development', 'Data & AI', 'Design (UI/UX, Graphics)', 'Other'
-  ];
-
-  const EXPERIENCE_YEARS = ['Less than 1 year', '1-3 years', '3-5 years', '5-10 years', '10+ years'];
-
-  const FORM_GRADE_LEVELS = [
-    'Form 1', 'Form 2', 'Form 3', 'Form 4',
-    'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'
-  ];
-
-  const TVET_COURSES = [
-    'Building & Construction', 'Automotive Engineering', 'Electrical Installation',
-    'ICT / Computer Studies', 'Fashion Design & Tailoring', 'Catering & Hospitality',
-    'Agriculture', 'Hairdressing & Beauty Therapy', 'Welding & Fabrication',
-    'Plumbing', 'Other'
-  ];
-
-  const SUBJECTS = [
-    'Mathematics', 'English', 'Kiswahili', 'Biology', 'Chemistry', 'Physics',
-    'Geography', 'History & Government', 'CRE / IRE / HRE', 'Business Studies',
-    'Agriculture', 'Computer Studies / ICT', 'Home Science', 'Art & Design',
-    'French', 'German', 'Music', 'Physical Education', 'Other'
-  ];
-
-  const DEPARTMENTS = [
-    'Sciences', 'Engineering & Technology', 'Business & Economics',
-    'Arts & Humanities', 'Social Sciences', 'Health Sciences', 'Agriculture',
-    'Law', 'Education', 'Computing & IT', 'Other'
-  ];
-
-  function getRecentYears(count) {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let y = currentYear; y >= currentYear - count + 1; y--) years.push(String(y));
-    return years;
-  }
-  const GRADUATION_YEARS = getRecentYears(15);
-
-  /* ---------- Registration category config (mirrors setup.gs CATEGORIES) ---------- */
-  const CATEGORY_CONFIG = {
-    secondaryStudent: {
-      label: 'Secondary Student',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'school', label: 'School name', type: 'text' },
-        { key: 'level', label: 'Form / Grade', type: 'select', options: FORM_GRADE_LEVELS }
-      ]
-    },
-    tvetStudent: {
-      label: 'TVET Student',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'institution', label: 'TVET institution', type: 'text' },
-        { key: 'course', label: 'Course', type: 'select', options: TVET_COURSES }
-      ]
-    },
-    universityStudent: {
-      label: 'University Student',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'university', label: 'University', type: 'select', options: UNIVERSITIES },
-        { key: 'courseOfStudy', label: 'Course of study', type: 'text' }
-      ]
-    },
-    graduate: {
-      label: 'Graduate',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'institution', label: 'Institution attended', type: 'text' },
-        { key: 'fieldOfStudy', label: 'Field of study', type: 'text' },
-        { key: 'graduationYear', label: 'Graduation year', type: 'select', options: GRADUATION_YEARS }
-      ]
-    },
-    teacher: {
-      label: 'Teacher',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'institution', label: 'School / institution', type: 'text' },
-        { key: 'subject', label: 'Subject taught', type: 'select', options: SUBJECTS }
-      ]
-    },
-    lecturer: {
-      label: 'Lecturer',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'university', label: 'University', type: 'select', options: UNIVERSITIES },
-        { key: 'department', label: 'Department / field', type: 'select', options: DEPARTMENTS }
-      ]
-    },
-    company: {
-      label: 'Company',
-      fields: [
-        { key: 'companyName', label: 'Company name', type: 'text' },
-        { key: 'contactPerson', label: 'Contact person', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Company email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'industry', label: 'Industry', type: 'select', options: INDUSTRIES }
-      ]
-    },
-    hrManager: {
-      label: 'HR Manager',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'companyName', label: 'Company name', type: 'text' },
-        { key: 'industry', label: 'Industry', type: 'select', options: INDUSTRIES }
-      ]
-    },
-    mentor: {
-      label: 'Mentor',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'expertise', label: 'Area of expertise', type: 'select', options: EXPERTISE_AREAS },
-        { key: 'experience', label: 'Years of experience', type: 'select', options: EXPERIENCE_YEARS }
-      ]
-    },
-    entrepreneur: {
-      label: 'Entrepreneur',
-      fields: [
-        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
-        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
-        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
-        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
-        { key: 'businessName', label: 'Business name', type: 'text' },
-        { key: 'businessSector', label: 'Business sector', type: 'select', options: INDUSTRIES }
-      ]
-    }
-  };
-
-  function escapeHtml(str) {
-    return String(str).replace(/[&<>"']/g, ch => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[ch]));
+  function callApi(payload) {
+    return fetch(WEBAPP_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    }).then(res => res.json());
   }
 
-  function fieldRowHTML(index, field) {
-    const idx = String(index).padStart(2, '0');
-    if (field.type === 'select') {
-      const options = field.options.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
-      return `
-        <div class="field-row">
-          <div class="field-index">${idx}</div>
-          <div class="field-body">
-            <label for="f_${field.key}">${escapeHtml(field.label)}</label>
-            <select id="f_${field.key}" name="${field.key}" required>
-              <option value="" disabled selected>Select ${escapeHtml(field.label.toLowerCase())}</option>
-              ${options}
-            </select>
-          </div>
-        </div>`;
-    }
-    return `
-      <div class="field-row">
-        <div class="field-index">${idx}</div>
-        <div class="field-body">
-          <label for="f_${field.key}">${escapeHtml(field.label)}</label>
-          <input type="${field.type}" id="f_${field.key}" name="${field.key}"
-            ${field.autocomplete ? `autocomplete="${field.autocomplete}"` : ''}
-            ${field.placeholder ? `placeholder="${escapeHtml(field.placeholder)}"` : ''} required>
-        </div>
-      </div>`;
+  function showMsg(el, text, ok) {
+    el.textContent = text;
+    el.className = 'form-msg show ' + (ok ? 'ok' : 'err');
   }
 
-  function passwordRowHTML(index, key, label, autocomplete, withHint) {
-    const idx = String(index).padStart(2, '0');
-    return `
-      <div class="field-row">
-        <div class="field-index">${idx}</div>
-        <div class="field-body">
-          <label for="${key}">${label}</label>
-          <div class="password-wrap">
-            <input type="password" id="${key}" name="${key}" autocomplete="${autocomplete}" required>
-            <button type="button" class="toggle-visibility" data-target="${key}">Show</button>
-          </div>
-          ${withHint ? '<div class="hint">At least 8 characters, with a letter and a number.</div>' : ''}
-        </div>
-      </div>`;
-  }
-
-  function bindPasswordToggles(scope) {
-    scope.querySelectorAll('.toggle-visibility').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const input = document.getElementById(btn.dataset.target);
-        const isHidden = input.type === 'password';
-        input.type = isHidden ? 'text' : 'password';
-        btn.textContent = isHidden ? 'Hide' : 'Show';
-      });
+  function buildQueryString(obj) {
+    const params = new URLSearchParams();
+    Object.keys(obj).forEach(key => {
+      const value = obj[key];
+      if (value !== undefined && value !== null) params.set(key, value);
     });
+    return params.toString();
   }
 
-  const dynamicFieldsEl = document.getElementById('dynamicFields');
-  const regTypeSelect = document.getElementById('regType');
-  const regTypeHint = document.getElementById('regTypeHint');
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const btn = document.getElementById('loginSubmitBtn');
+    const msg = document.getElementById('loginMsg');
+    btn.disabled = true;
+    btn.textContent = 'Logging in…';
 
-  function renderCategoryFields(type) {
-    const config = CATEGORY_CONFIG[type];
-    if (!config) {
-      dynamicFieldsEl.innerHTML = '';
-      return;
-    }
-
-    let html = '';
-    let index = 2;
-    config.fields.forEach(f => {
-      html += fieldRowHTML(index, f);
-      index++;
+    callApi({
+      action: 'login',
+      email: document.getElementById('lEmail').value,
+      password: document.getElementById('lPassword').value
+    }).then(result => {
+      if (result.success) {
+        showMsg(msg, result.message, true);
+        // Hand off every returned field (type, typeLabel, status, and the
+        // category's own fields) to home.html via the URL, same shape
+        // home.html's getParams() already expects.
+        window.location.href = 'home.html?' + buildQueryString(result.data);
+      } else {
+        showMsg(msg, result.message, false);
+        btn.disabled = false;
+        btn.textContent = 'Log in';
+      }
+    }).catch(() => {
+      showMsg(msg, 'Network error — check WEBAPP_URL and try again.', false);
+      btn.disabled = false;
+      btn.textContent = 'Log in';
     });
-    html += passwordRowHTML(index, 'password', 'Password', 'new-password', true);
-    index++;
-    html += passwordRowHTML(index, 'confirmPassword', 'Confirm password', 'new-password', false);
-
-    dynamicFieldsEl.innerHTML = html;
-    bindPasswordToggles(dynamicFieldsEl);
-    regTypeHint.textContent = 'Registering as: ' + config.label + '.';
-  }
-
-  regTypeSelect.addEventListener('change', (e) => {
-    renderCategoryFields(e.target.value);
   });
 
-  /* ---------- REGISTER / LOGIN TAB TOGGLE ---------- */
+  /* ---------- Nav menu toggle ---------- */
+  const navMenuToggle = document.getElementById('navMenuToggle');
+  const navDropdown = document.getElementById('navDropdown');
 
-  const tabRegister = document.getElementById('tabRegister');
-  const tabLogin = document.getElementById('tabLogin');
-  const registerPanel = document.getElementById('registerPanel');
-  const loginPanel = document.getElementById('loginPanel');
-  const modeToggle = document.querySelector('.mode-toggle');
-  const formTitle = document.getElementById('formTitle');
-
-  function showRegister() {
-    tabRegister.classList.add('active');
-    tabLogin.classList.remove('active');
-    tabRegister.setAttribute('aria-selected', 'true');
-    tabLogin.setAttribute('aria-selected', 'false');
-    registerPanel.classList.add('active');
-    loginPanel.classList.remove('active');
-    modeToggle.style.display = '';
-    formTitle.textContent = 'Registration form';
+  function closeNavDropdown() {
+    navDropdown.classList.remove('open');
+    navMenuToggle.setAttribute('aria-expanded', 'false');
   }
 
-  function showLogin() {
-    tabLogin.classList.add('active');
-    tabRegister.classList.remove('active');
-    tabLogin.setAttribute('aria-selected', 'true');
-    tabRegister.setAttribute('aria-selected', 'false');
-    loginPanel.classList.add('active');
-    registerPanel.classList.remove('active');
-    modeToggle.style.display = '';
-    formTitle.textContent = 'Log in';
-  }
-
-  // Sends the person to the dashboard, passing their account details
-  // along as URL query parameters so home.html can render them.
-  // Opened as a brand-new page/tab rather than replacing this one, so the
-  // register/login page stays put in its own tab.
-  function goToHome(user) {
-    const params = {
-      type: user.type || '',
-      typeLabel: user.typeLabel || '',
-      status: user.status || 'Pending'
-    };
-    Object.keys(user).forEach(k => {
-      if (['type', 'typeLabel', 'status'].indexOf(k) === -1) {
-        params[k] = user[k] != null ? user[k] : '';
-      }
-    });
-    const qs = new URLSearchParams(params);
-    const homeUrl = 'home.html?' + qs.toString();
-    const newTab = window.open(homeUrl, '_blank');
-    if (!newTab) {
-      // Pop-up blocked — fall back to navigating in the same tab.
-      window.location.href = homeUrl;
-    }
-  }
-
-  tabRegister.addEventListener('click', showRegister);
-  tabLogin.addEventListener('click', showLogin);
-
-  /* ---------- ACCOUNT ICON + DROPDOWN ---------- */
-
-  const accountToggle = document.getElementById('accountToggle');
-  const accountDropdown = document.getElementById('accountDropdown');
-
-  function openDropdown() {
-    accountDropdown.classList.add('open');
-    accountToggle.setAttribute('aria-expanded', 'true');
-  }
-
-  function closeDropdown() {
-    accountDropdown.classList.remove('open');
-    accountToggle.setAttribute('aria-expanded', 'false');
-  }
-
-  accountToggle.addEventListener('click', (e) => {
+  navMenuToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (accountDropdown.classList.contains('open')) {
-      closeDropdown();
-    } else {
-      openDropdown();
+    if (navDropdown.classList.contains('open')) closeNavDropdown();
+    else {
+      navDropdown.classList.add('open');
+      navMenuToggle.setAttribute('aria-expanded', 'true');
     }
   });
-
   document.addEventListener('click', (e) => {
-    if (!accountDropdown.contains(e.target) && e.target !== accountToggle) {
-      closeDropdown();
-    }
+    if (!navDropdown.contains(e.target) && e.target !== navMenuToggle) closeNavDropdown();
   });
-
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeDropdown();
+    if (e.key === 'Escape') closeNavDropdown();
   });
-
-  document.getElementById('adLoginBtn').addEventListener('click', () => {
-    closeDropdown();
-    showLogin();
-  });
-
-  /* ---------- LOGIN FORM ---------- */
-
-  const loginForm = document.getElementById('loginForm');
-  const loginStatusEl = document.getElementById('login-status');
-  const loginBtn = document.getElementById('loginBtn');
-
-  // Static toggle for the login password field (register-panel toggles
-  // are bound dynamically in bindPasswordToggles()).
-  bindPasswordToggles(loginForm);
-
-  loginForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-
-    if (!email || !password) {
-      setLoginStatus('Please enter your email and password.', 'err');
-      return;
-    }
-
-    setLoginStatus('Logging in…', '');
-    loginBtn.disabled = true;
-
-    try {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'login', email, password })
-      });
-      const result = await res.json();
-
-      if (result.success) {
-        setLoginStatus(result.message || 'Login successful.', 'ok');
-        if (result.data) {
-          goToHome(result.data);
-        }
-      } else {
-        setLoginStatus(result.message || 'Login failed.', 'err');
-      }
-    } catch (err) {
-      setLoginStatus('Network error — check the Web App URL is set.', 'err');
-    } finally {
-      loginBtn.disabled = false;
-    }
-  });
-
-  function setLoginStatus(message, state) {
-    loginStatusEl.textContent = message;
-    if (state) loginStatusEl.setAttribute('data-state', state);
-    else loginStatusEl.removeAttribute('data-state');
-  }
-
-  /* ---------- REGISTER FORM ---------- */
-
-  const form = document.getElementById('registerForm');
-  const statusEl = document.getElementById('form-status');
-  const submitBtn = document.getElementById('submitBtn');
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-
-    const type = regTypeSelect.value;
-    const config = CATEGORY_CONFIG[type];
-    if (!type || !config) {
-      setStatus('Please select what you are registering as.', 'err');
-      return;
-    }
-
-    const data = { action: 'register', type };
-    let missing = false;
-
-    config.fields.forEach(f => {
-      const el = document.getElementById('f_' + f.key);
-      const val = el ? el.value.trim() : '';
-      if (!val) missing = true;
-      data[f.key] = val;
-    });
-
-    const passwordEl = document.getElementById('password');
-    const confirmEl = document.getElementById('confirmPassword');
-    const password = passwordEl ? passwordEl.value : '';
-    const confirmPassword = confirmEl ? confirmEl.value : '';
-    data.password = password;
-
-    if (missing || !password || !confirmPassword) {
-      setStatus('Please fill in every field.', 'err');
-      return;
-    }
-    if (password !== confirmPassword) {
-      setStatus('Passwords do not match.', 'err');
-      return;
-    }
-
-    setStatus('Submitting…', '');
-    submitBtn.disabled = true;
-
-    try {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
-
-      if (result.success) {
-        setStatus(result.message || 'Registered — pending review.', 'ok');
-        form.reset();
-        dynamicFieldsEl.innerHTML = '';
-        regTypeHint.textContent = 'Pick a type to reveal the rest of the form.';
-      } else {
-        setStatus(result.message || 'Something went wrong.', 'err');
-      }
-    } catch (err) {
-      setStatus('Network error — check the Web App URL is set.', 'err');
-    } finally {
-      submitBtn.disabled = false;
-    }
-  });
-
-  function setStatus(message, state) {
-    statusEl.textContent = message;
-    if (state) statusEl.setAttribute('data-state', state);
-    else statusEl.removeAttribute('data-state');
-  }
 </script>
 
 </body>
