@@ -479,7 +479,7 @@
 
   .directory-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 14px;
     padding: 12px 14px;
     border: 1px solid rgba(232,238,242,0.25);
@@ -501,10 +501,11 @@
     justify-content: center;
     overflow: hidden;
     font-size: 0.95rem;
+    margin-top: 2px;
   }
   .directory-avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-  .directory-info { min-width: 0; }
+  .directory-info { min-width: 0; flex: 1; }
 
   .directory-name {
     font-family: var(--font-display);
@@ -531,6 +532,80 @@
     color: rgba(232,238,242,0.7);
   }
   .directory-meta a { color: var(--copper); text-decoration: underline; }
+
+  /* ---------- Postings (notes/attachments + listings) inside a search result ---------- */
+  .directory-postings {
+    margin-top: 12px;
+    border: 1px dashed rgba(232,238,242,0.3);
+  }
+  .directory-postings summary {
+    cursor: pointer;
+    padding: 9px 12px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(232,238,242,0.65);
+    list-style: none;
+  }
+  .directory-postings summary::-webkit-details-marker { display: none; }
+  .directory-postings summary:hover { color: var(--paper); }
+  .directory-postings summary::before { content: '▸ '; }
+  .directory-postings[open] summary::before { content: '▾ '; }
+
+  .posting-group { padding: 4px 12px 12px; }
+  .posting-group-title {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin: 10px 0 6px;
+  }
+
+  .posting-item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-top: 1px solid rgba(232,238,242,0.12);
+    font-size: 0.84rem;
+  }
+  .posting-item:first-child { border-top: none; }
+
+  .posting-item-tag {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border: 1px solid var(--copper);
+    color: var(--copper);
+    flex-shrink: 0;
+  }
+
+  .posting-item-title { font-weight: 600; }
+
+  .posting-item-meta {
+    color: rgba(232,238,242,0.55);
+    font-size: 0.78rem;
+  }
+
+  .posting-item-link {
+    margin-left: auto;
+    color: var(--copper);
+    text-decoration: underline;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    white-space: nowrap;
+  }
+
+  .posting-empty {
+    margin-top: 10px;
+    font-size: 0.8rem;
+    color: rgba(232,238,242,0.45);
+  }
 
   footer {
     border-top: 1px solid rgba(232,238,242,0.2);
@@ -614,7 +689,7 @@
       <input type="text" id="directorySearchInput" placeholder="Search by name, email, or TikTok username">
       <button type="button" class="commit" id="directorySearchBtn">Search</button>
     </div>
-    <div class="search-hint">Only Approved accounts show up in results. Matches by name, email, or TikTok username.</div>
+    <div class="search-hint">Only Approved accounts show up in results. Matches by name, email, or TikTok username — each result also shows everything that person has posted to the Marketplace and Notes &amp; Attachments.</div>
     <div id="directoryResults"></div>
   </div>
 </main>
@@ -629,7 +704,7 @@
    * (Deploy > New deployment > Web app > /exec) from setup.gs.
    * Must be the same deployment used by index.html / register.html.
    * ---------------------------------------------------------------- */
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwh-S_B1eqGrNZY9m18mzNANHSXJD6DMYovHDSfVpkV-B6J8AhfzeXh-7YLEGxIMt2k/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbw9nyLI__DjY3fmWd5090uvvxSx8nEirVJosA_0blMgH7GHYiPmPrpxmswT3azBNJId/exec';
 
   /* ---------- Field-label config, mirrors setup.gs / register.html ---------- */
   const CATEGORY_CONFIG = {
@@ -984,6 +1059,60 @@
   const directoryBtn = document.getElementById('directorySearchBtn');
   const directoryResultsEl = document.getElementById('directoryResults');
 
+  function formatDate(ts) {
+    if (!ts) return '';
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  /**
+   * Builds the HTML for the "notes/attachments + marketplace listings"
+   * disclosure under a single directory search result. Renders nothing
+   * beyond a small "nothing posted yet" note if the person hasn't
+   * posted anything Active in either sheet.
+   */
+  function buildPostingsHtml(result) {
+    const resources = result.resources || [];
+    const listings = result.listings || [];
+    const total = resources.length + listings.length;
+
+    if (total === 0) {
+      return `<div class="posting-empty">No notes, attachments, or listings posted yet.</div>`;
+    }
+
+    const resourceItems = resources.map(r => {
+      const metaBits = [r.course, r.campus].filter(Boolean).map(escapeHtml).join(' · ');
+      const openLink = r.fileUrl
+        ? `<a class="posting-item-link" href="${escapeHtml(r.fileUrl)}" target="_blank" rel="noopener">Open →</a>`
+        : '';
+      return `
+        <div class="posting-item">
+          <span class="posting-item-tag">${escapeHtml(r.resourceType)}</span>
+          <span class="posting-item-title">${escapeHtml(r.title)}</span>
+          ${metaBits ? `<span class="posting-item-meta">${metaBits}</span>` : ''}
+          ${openLink}
+        </div>`;
+    }).join('');
+
+    const listingItems = listings.map(l => {
+      const metaBits = [l.price, l.campus || l.county].filter(Boolean).map(escapeHtml).join(' · ');
+      return `
+        <div class="posting-item">
+          <span class="posting-item-tag">${escapeHtml(l.listingType)}</span>
+          <span class="posting-item-title">${escapeHtml(l.title)}</span>
+          ${metaBits ? `<span class="posting-item-meta">${metaBits}</span>` : ''}
+        </div>`;
+    }).join('');
+
+    return `
+      <details class="directory-postings">
+        <summary>View everything posted (${total})</summary>
+        ${resourceItems ? `<div class="posting-group"><div class="posting-group-title">Notes &amp; Attachments (${resources.length})</div>${resourceItems}</div>` : ''}
+        ${listingItems ? `<div class="posting-group"><div class="posting-group-title">Marketplace Listings (${listings.length})</div>${listingItems}</div>` : ''}
+      </details>`;
+  }
+
   function renderDirectoryResults(results) {
     if (!results || !results.length) {
       directoryResultsEl.innerHTML = `
@@ -1008,6 +1137,7 @@
             <div class="directory-name">${escapeHtml(r.name || 'Unnamed')}<span class="type-tag">${escapeHtml(r.typeLabel || '')}</span></div>
             ${metaLine ? `<div class="directory-meta">${metaLine}</div>` : ''}
             ${r.tiktokUsername ? `<div class="directory-meta"><a href="https://www.tiktok.com/@${encodeURIComponent(r.tiktokUsername)}" target="_blank" rel="noopener">@${escapeHtml(r.tiktokUsername)}</a></div>` : ''}
+            ${buildPostingsHtml(r)}
           </div>
         </div>`;
     }).join('');
