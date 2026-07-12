@@ -3,138 +3,764 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home — Enemind Company</title>
+<title>Dashboard — Enemind Company</title>
 <link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="enemind.css">
+<style>
+  :root {
+    --blueprint-navy: #10243E;
+    --blueprint-blue: #2E6F9E;
+    --blueprint-line: #4C86AE;
+    --paper: #E8EEF2;
+    --copper: #C97B3D;
+    --ink: #0B1B2B;
+    --ok: #3F8F5F;
+    --err: #B4453A;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background:
+      repeating-linear-gradient(0deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      var(--blueprint-navy);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  a { color: inherit; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    background: rgba(16,36,62,0.92);
+    border-bottom: 1px solid rgba(232,238,242,0.15);
+    position: relative;
+  }
+
+  .header-right { position: relative; }
+
+  .account-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid var(--copper);
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0;
+    color: var(--blueprint-navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: filter 0.15s ease;
+  }
+  .account-btn:hover { filter: brightness(0.95); }
+  .account-btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+
+  .account-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 260px;
+    background: var(--blueprint-navy);
+    border: 1px solid rgba(232,238,242,0.35);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    z-index: 20;
+  }
+  .account-dropdown.open { display: block; }
+
+  .account-dropdown .ad-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+  }
+
+  .account-dropdown .ad-row {
+    padding: 10px 18px;
+    border-top: 1px solid rgba(232,238,242,0.15);
+  }
+  .account-dropdown .ad-row:first-of-type { border-top: none; }
+
+  .account-dropdown .ad-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 2px;
+  }
+  .account-dropdown .ad-value {
+    font-size: 0.9rem;
+    color: var(--paper);
+    word-break: break-word;
+  }
+
+  .account-dropdown .ad-actions {
+    padding: 14px 18px;
+    display: flex;
+    gap: 10px;
+  }
+
+  .account-dropdown button.commit,
+  .account-dropdown a.commit {
+    flex: 1;
+    text-align: center;
+    padding: 10px 12px;
+    font-size: 0.72rem;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .brandmark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    line-height: 1.15;
+  }
+
+  h1 em {
+    font-style: normal;
+    color: var(--copper);
+  }
+
+  p.lede {
+    margin-top: 14px;
+    max-width: 56ch;
+    font-size: 1rem;
+    color: rgba(232,238,242,0.8);
+  }
+
+  /* ---------- Status banners ---------- */
+  .status-banner {
+    margin-top: 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.25);
+    border-left: 3px solid var(--copper);
+  }
+  .status-banner.ok { border-left-color: var(--ok); }
+  .status-banner.pending { border-left-color: var(--copper); }
+  .status-banner.rejected { border-left-color: var(--err); }
+
+  .status-banner .banner-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(232,238,242,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background: rgba(232,238,242,0.05);
+  }
+
+  .status-banner .banner-text {
+    font-size: 0.9rem;
+    color: rgba(232,238,242,0.85);
+  }
+  .status-banner .banner-text strong { color: var(--paper); }
+  .status-banner .banner-text a { color: var(--copper); text-decoration: underline; }
+
+  .status-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid currentColor;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+  .status-badge.status-approved { color: var(--ok); }
+  .status-badge.status-pending { color: var(--copper); }
+  .status-badge.status-rejected { color: var(--err); }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 48px 0 24px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    padding-bottom: 16px;
+  }
+
+  .sheet-no {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--copper);
+    flex-shrink: 0;
+  }
+
+  .section-head h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+  }
+
+  /* ---------- Profile card (spec-sheet style, matches register.html) ---------- */
+  .profile-card {
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+  }
+
+  .profile-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    border-top: 1px solid rgba(232,238,242,0.25);
+  }
+  .profile-row:first-child { border-top: none; }
+
+  .profile-row .field-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--blueprint-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(232,238,242,0.25);
+  }
+
+  .profile-row .profile-body { padding: 14px 20px; }
+
+  .profile-row .profile-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 4px;
+  }
+
+  .profile-row .profile-value {
+    font-size: 1rem;
+    color: var(--paper);
+  }
+
+  /* ---------- Roadmap / next steps ---------- */
+  .roadmap {
+    list-style: none;
+  }
+
+  .roadmap li {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    border-top: 1px solid rgba(232,238,242,0.25);
+    background: rgba(232,238,242,0.04);
+    border-left: 1px solid rgba(232,238,242,0.3);
+    border-right: 1px solid rgba(232,238,242,0.3);
+  }
+  .roadmap li:first-child { border-top: 1px solid rgba(232,238,242,0.3); }
+  .roadmap li:last-child { border-bottom: 1px solid rgba(232,238,242,0.3); }
+
+  .roadmap .step-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--copper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(232,238,242,0.25);
+  }
+
+  .roadmap .step-body { padding: 14px 20px; }
+
+  .roadmap .step-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .roadmap .step-desc {
+    margin-top: 3px;
+    font-size: 0.85rem;
+    color: rgba(232,238,242,0.75);
+  }
+
+  .profile-actions {
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  button.commit {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--copper);
+    color: var(--blueprint-navy);
+    border: none;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  button.commit:hover { filter: brightness(1.1); }
+  button.commit:active { transform: translateY(1px); }
+  button.commit:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
+
+  button.commit.ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid var(--copper);
+  }
+
+  a.commit {
+    display: inline-block;
+    text-decoration: none;
+  }
+
+  .empty-state {
+    padding: 40px 24px;
+    text-align: center;
+    border: 1px dashed rgba(232,238,242,0.35);
+  }
+  .empty-state p { color: rgba(232,238,242,0.75); margin-top: 8px; }
+  .empty-state .empty-icon { font-size: 1.6rem; }
+
+  footer {
+    border-top: 1px solid rgba(232,238,242,0.2);
+    padding: 28px 32px 32px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(232,238,242,0.55);
+    text-align: center;
+  }
+</style>
 </head>
 <body>
 
 <header>
-  <a href="home.html" class="brandmark" data-carry>ENEMIND COMPANY</a>
+  <a href="register.html" class="brandmark">
+    ENEMIND COMPANY
+  </a>
 
   <div class="header-right">
     <button type="button" id="accountToggle" class="account-btn" aria-haspopup="true" aria-expanded="false" title="Account">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/>
-        <path d="M4 20c0-3.6 3.6-6 8-6s8 2.4 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-      </svg>
+      <span id="accountInitial">?</span>
     </button>
 
     <div class="account-dropdown" id="accountDropdown" role="menu">
-      <div class="ad-header">Your account</div>
+      <div class="ad-header" id="adHeaderType">Account</div>
       <div class="ad-row">
-        <span class="ad-label">Full name</span>
-        <span class="ad-value" id="adName"></span>
+        <span class="ad-label">Name</span>
+        <span class="ad-value" id="adName">—</span>
       </div>
       <div class="ad-row">
         <span class="ad-label">Email</span>
-        <span class="ad-value" id="adEmail"></span>
+        <span class="ad-value" id="adEmail">—</span>
       </div>
       <div class="ad-row">
         <span class="ad-label">Status</span>
-        <span class="ad-value"><span class="status-badge" id="adStatus"></span></span>
+        <span class="ad-value" id="adStatus">—</span>
       </div>
       <div class="ad-actions">
-        <a class="commit" href="profile.html" data-carry>Profile</a>
-        <button type="button" class="commit ghost" id="adLogoutBtn">Log out</button>
+        <a href="register.html" class="commit ghost">Log out</a>
       </div>
     </div>
   </div>
 </header>
 
 <main id="top">
-  <div class="hero-logo">
-    <img src="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2" alt="Enemind Company logo">
-  </div>
-  <div class="hero-text">
-    <p class="eyebrow">Dashboard</p>
-    <h1>Welcome back, <em id="welcomeName">there</em>.</h1>
-    <p class="lede">Where do you want to go?</p>
-  </div>
+  <p class="eyebrow" id="typeEyebrow">Dashboard</p>
+  <h1 id="welcomeHeading">Welcome back<span id="statusBadgeSlot"></span></h1>
+  <p class="lede" id="welcomeLede">Loading your profile…</p>
+
+  <div id="statusBanners"></div>
 
   <div class="section-head">
-    <span class="sheet-no">00</span>
-    <h2>Menu</h2>
+    <span class="sheet-no">01</span>
+    <h2>Your profile</h2>
   </div>
 
-  <div class="menu-list">
-    <a class="menu-row" href="profile.html" data-carry>
-      <span class="field-index">01</span>
-      <span>
-        <span class="menu-label">Profile</span>
-        <span class="menu-hint">Your details and registration status</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
-    <a class="menu-row" href="campus.html" data-carry>
-      <span class="field-index">02</span>
-      <span>
-        <span class="menu-label">My Campus</span>
-        <span class="menu-hint">Attachments, notes, and past exams</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
-    <a class="menu-row" href="hustler-market.html" data-carry>
-      <span class="field-index">03</span>
-      <span>
-        <span class="menu-label">Hustler Market</span>
-        <span class="menu-hint">Mentors, real work, and gigs</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
-    <a class="menu-row" href="skills-training.html" data-carry>
-      <span class="field-index">04</span>
-      <span>
-        <span class="menu-label">Skills training</span>
-        <span class="menu-hint">Technology, AI, and renewable energy</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
-    <a class="menu-row" href="energy-solutions.html" data-carry>
-      <span class="field-index">05</span>
-      <span>
-        <span class="menu-label">Energy solutions</span>
-        <span class="menu-hint">Renewable energy consulting and services</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
-    <a class="menu-row" href="software-consulting.html" data-carry>
-      <span class="field-index">06</span>
-      <span>
-        <span class="menu-label">Software &amp; consulting</span>
-        <span class="menu-hint">Professional-grade software solutions</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
-    <a class="menu-row" href="support.html" data-carry>
-      <span class="field-index">07</span>
-      <span>
-        <span class="menu-label">Support</span>
-        <span class="menu-hint">Email and phone for help</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
-    <a class="menu-row" href="about.html" data-carry>
-      <span class="field-index">08</span>
-      <span>
-        <span class="menu-label">About EnerMind</span>
-        <span class="menu-hint">Vision, aim, and motto</span>
-      </span>
-      <span class="menu-arrow">→</span>
-    </a>
+  <div class="profile-card" id="profileCard"></div>
+
+  <div class="section-head">
+    <span class="sheet-no">02</span>
+    <h2 id="roadmapHeading">Next on your roadmap</h2>
   </div>
+
+  <ul class="roadmap" id="roadmapList"></ul>
 </main>
 
 <footer>
   Enemind Company — built on Google Sheets + Apps Script
 </footer>
 
-<script src="enemind.js"></script>
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('welcomeName').textContent = currentUser.name || currentUser.email;
+  /* ---------- Field-label config, mirrors setup.gs / register.html ---------- */
+  const CATEGORY_CONFIG = {
+    secondaryStudent: {
+      label: 'Secondary Student',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'school', label: 'School name' },
+        { key: 'level', label: 'Form / Grade' }
+      ],
+      roadmap: [
+        { title: 'Browse the notes library', desc: 'Find revision notes for your subjects once notes go live.' },
+        { title: 'Get matched with a mentor', desc: 'Mentorship pairing opens once your account is approved.' },
+        { title: 'Explore the AI study assistant', desc: 'Coming in a future release.' }
+      ]
+    },
+    tvetStudent: {
+      label: 'TVET Student',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'institution', label: 'TVET institution' },
+        { key: 'course', label: 'Course' }
+      ],
+      roadmap: [
+        { title: 'Find an attachment', desc: 'Attachment listings for your course open once approved.' },
+        { title: 'Build your CV', desc: 'CV tools are on the roadmap for a future release.' },
+        { title: 'Connect with a mentor', desc: 'Get guidance from professionals in your field.' }
+      ]
+    },
+    universityStudent: {
+      label: 'University Student',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'university', label: 'University' },
+        { key: 'courseOfStudy', label: 'Course of study' }
+      ],
+      roadmap: [
+        { title: 'Find notes and past papers', desc: 'Search the notes library for your course.' },
+        { title: 'Apply for attachments', desc: 'Browse attachment and internship listings.' },
+        { title: 'Get a mentor', desc: 'Match with a mentor in your field of study.' }
+      ]
+    },
+    graduate: {
+      label: 'Graduate',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'institution', label: 'Institution attended' },
+        { key: 'fieldOfStudy', label: 'Field of study' },
+        { key: 'graduationYear', label: 'Graduation year' }
+      ],
+      roadmap: [
+        { title: 'Browse graduate jobs', desc: 'Job listings matched to your field open once approved.' },
+        { title: 'Build your CV', desc: 'CV and LinkedIn tools are on the roadmap.' },
+        { title: 'Start learning to invest', desc: 'The Investment Academy opens in a later phase.' }
+      ]
+    },
+    teacher: {
+      label: 'Teacher',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'institution', label: 'School / institution' },
+        { key: 'subject', label: 'Subject taught' }
+      ],
+      roadmap: [
+        { title: 'Upload your notes', desc: 'Notes uploads open once your account is approved.' },
+        { title: 'List a course', desc: 'Course creation tools are on the roadmap.' },
+        { title: 'Build your reputation', desc: 'Public teacher profiles are coming soon.' }
+      ]
+    },
+    lecturer: {
+      label: 'Lecturer',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'university', label: 'University' },
+        { key: 'department', label: 'Department / field' }
+      ],
+      roadmap: [
+        { title: 'Upload course materials', desc: 'Materials uploads open once approved.' },
+        { title: 'Mentor students', desc: 'Opt in to student mentorship requests.' },
+        { title: 'List a research collaboration', desc: 'Coming in a later phase.' }
+      ]
+    },
+    company: {
+      label: 'Company',
+      fields: [
+        { key: 'name', label: 'Company name' },
+        { key: 'contactPerson', label: 'Contact person' },
+        { key: 'email', label: 'Company email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'industry', label: 'Industry' }
+      ],
+      roadmap: [
+        { title: 'Post a job or attachment', desc: 'Recruitment tools open once your account is approved.' },
+        { title: 'Set up your talent dashboard', desc: 'On the roadmap for a future release.' },
+        { title: 'Sponsor a competition', desc: 'Reach students directly through EnerMind events.' }
+      ]
+    },
+    hrManager: {
+      label: 'HR Manager',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'companyName', label: 'Company name' },
+        { key: 'industry', label: 'Industry' }
+      ],
+      roadmap: [
+        { title: 'Post openings', desc: 'Recruitment tools open once your account is approved.' },
+        { title: 'Manage internships', desc: 'Internship management is on the roadmap.' },
+        { title: 'Search talent', desc: 'Talent search tools coming in a later phase.' }
+      ]
+    },
+    mentor: {
+      label: 'Mentor',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'expertise', label: 'Area of expertise' },
+        { key: 'experience', label: 'Years of experience' }
+      ],
+      roadmap: [
+        { title: 'Set your availability', desc: 'Mentee matching opens once your account is approved.' },
+        { title: 'Build your professional profile', desc: 'Public mentor profiles are on the roadmap.' },
+        { title: 'Offer a coaching session', desc: 'Coming in a later phase.' }
+      ]
+    },
+    entrepreneur: {
+      label: 'Entrepreneur',
+      fields: [
+        { key: 'name', label: 'Full name' },
+        { key: 'email', label: 'Email' },
+        { key: 'phone', label: 'Phone number' },
+        { key: 'county', label: 'County' },
+        { key: 'businessName', label: 'Business name' },
+        { key: 'businessSector', label: 'Business sector' }
+      ],
+      roadmap: [
+        { title: 'Find partners and mentors', desc: 'Connections open once your account is approved.' },
+        { title: 'List your business', desc: 'Business marketplace listings are on the roadmap.' },
+        { title: 'Access funding opportunities', desc: 'Investor introductions coming in a later phase.' }
+      ]
+    }
+  };
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+  }
+
+  function getParams() {
+    const params = new URLSearchParams(window.location.search);
+    const obj = {};
+    params.forEach((value, key) => { obj[key] = value; });
+    return obj;
+  }
+
+  const user = getParams();
+  const config = CATEGORY_CONFIG[user.type];
+
+  const typeLabel = user.typeLabel || (config ? config.label : 'Account');
+  const status = user.status || 'Pending';
+  const statusKey = status.toLowerCase();
+
+  // Primary display name: "name" field, or "Name" store column for
+  // company-style categories where the person's name IS the company name.
+  const displayName = user.name || 'there';
+
+  document.title = 'Dashboard — ' + typeLabel + ' — Enemind Company';
+
+  /* ---------- Header / account dropdown ---------- */
+  document.getElementById('accountInitial').textContent = displayName.trim().charAt(0).toUpperCase() || '?';
+  document.getElementById('adHeaderType').textContent = typeLabel;
+  document.getElementById('adName').textContent = displayName;
+  document.getElementById('adEmail').textContent = user.email || '—';
+  document.getElementById('adStatus').textContent = status;
+
+  /* ---------- Hero ---------- */
+  document.getElementById('typeEyebrow').textContent = typeLabel + ' Dashboard';
+
+  const badgeClass = statusKey === 'approved' ? 'status-approved' : (statusKey === 'rejected' ? 'status-rejected' : 'status-pending');
+  const badgeHtml = `<span class="status-badge ${badgeClass}">${escapeHtml(status)}</span>`;
+  document.getElementById('welcomeHeading').innerHTML = `Welcome back, <em>${escapeHtml(displayName)}</em>${badgeHtml}`;
+
+  document.getElementById('welcomeLede').textContent = config
+    ? `Here's your ${config.label.toLowerCase()} profile, exactly as it was submitted at registration.`
+    : `We couldn't match this link to a known registration type. Try logging in again.`;
+
+  /* ---------- Status banners ---------- */
+  const bannersEl = document.getElementById('statusBanners');
+  let bannerHtml = '';
+  if (statusKey === 'pending') {
+    bannerHtml = `
+      <div class="status-banner pending">
+        <span class="banner-icon">⏳</span>
+        <div class="banner-text">
+          <strong>Your registration is pending review.</strong> An admin needs to approve your
+          account before the rest of the platform unlocks. This usually takes one business day —
+          check back soon, or email
+          <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> if it's been a while.
+        </div>
+      </div>`;
+  } else if (statusKey === 'rejected') {
+    bannerHtml = `
+      <div class="status-banner rejected">
+        <span class="banner-icon">⚠</span>
+        <div class="banner-text">
+          <strong>Your registration was not approved.</strong> If you think this is a mistake, email
+          <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> or call
+          <a href="tel:+254711629600">+254 711 629 600</a> and we'll help sort it out.
+        </div>
+      </div>`;
+  } else if (statusKey === 'approved') {
+    bannerHtml = `
+      <div class="status-banner ok">
+        <span class="banner-icon">✓</span>
+        <div class="banner-text">
+          <strong>You're approved and fully signed in.</strong> Your account is active as a ${escapeHtml(typeLabel)}.
+        </div>
+      </div>`;
+  }
+  bannersEl.innerHTML = bannerHtml;
+
+  /* ---------- Profile card ---------- */
+  const profileCardEl = document.getElementById('profileCard');
+  if (config) {
+    let rows = '';
+    config.fields.forEach((f, i) => {
+      const idx = String(i + 1).padStart(2, '0');
+      const value = user[f.key] && user[f.key].length ? user[f.key] : '—';
+      rows += `
+        <div class="profile-row">
+          <div class="field-index">${idx}</div>
+          <div class="profile-body">
+            <span class="profile-label">${escapeHtml(f.label)}</span>
+            <span class="profile-value">${escapeHtml(value)}</span>
+          </div>
+        </div>`;
+    });
+    profileCardEl.innerHTML = rows;
+  } else {
+    profileCardEl.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <p>No profile data found. Log in again from the registration page.</p>
+      </div>`;
+  }
+
+  /* ---------- Roadmap ---------- */
+  const roadmapEl = document.getElementById('roadmapList');
+  document.getElementById('roadmapHeading').textContent = config ? 'Next on your roadmap' : 'Next steps';
+  if (config) {
+    let steps = '';
+    config.roadmap.forEach((s, i) => {
+      const idx = String(i + 1).padStart(2, '0');
+      steps += `
+        <li>
+          <div class="step-index">${idx}</div>
+          <div class="step-body">
+            <div class="step-title">${escapeHtml(s.title)}</div>
+            <div class="step-desc">${escapeHtml(s.desc)}</div>
+          </div>
+        </li>`;
+    });
+    roadmapEl.innerHTML = steps;
+  } else {
+    roadmapEl.innerHTML = `
+      <li>
+        <div class="step-index">01</div>
+        <div class="step-body">
+          <div class="step-title">Log in again</div>
+          <div class="step-desc">Head back to the registration page and sign in.</div>
+        </div>
+      </li>`;
+  }
+
+  /* ---------- Account dropdown toggle ---------- */
+  const accountToggle = document.getElementById('accountToggle');
+  const accountDropdown = document.getElementById('accountDropdown');
+
+  function openDropdown() {
+    accountDropdown.classList.add('open');
+    accountToggle.setAttribute('aria-expanded', 'true');
+  }
+  function closeDropdown() {
+    accountDropdown.classList.remove('open');
+    accountToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  accountToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (accountDropdown.classList.contains('open')) closeDropdown();
+    else openDropdown();
+  });
+  document.addEventListener('click', (e) => {
+    if (!accountDropdown.contains(e.target) && e.target !== accountToggle) closeDropdown();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeDropdown();
   });
 </script>
 
