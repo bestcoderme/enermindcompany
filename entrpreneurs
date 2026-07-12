@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrepreneurs & Best Businesses — Enemind Company</title>
+<link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blueprint-navy: #10243E;
+    --blueprint-blue: #2E6F9E;
+    --blueprint-line: #4C86AE;
+    --paper: #E8EEF2;
+    --copper: #C97B3D;
+    --ink: #0B1B2B;
+    --ok: #3F8F5F;
+    --err: #B4453A;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background:
+      repeating-linear-gradient(0deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      var(--blueprint-navy);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  a { color: inherit; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 32px; background: rgba(16,36,62,0.92); border-bottom: 1px solid rgba(232,238,242,0.15); position: relative; }
+  .brandmark { display: flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.02em; text-decoration: none; }
+
+  .nav-menu { position: relative; }
+  .menu-btn { width: 38px; height: 38px; border: 1px solid rgba(232,238,242,0.35); background: transparent; color: var(--paper); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.05rem; line-height: 1; transition: border-color 0.15s ease, background 0.15s ease; }
+  .menu-btn:hover { border-color: var(--copper); }
+  .menu-btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+  .nav-dropdown { display: none; position: absolute; top: calc(100% + 12px); right: 0; min-width: 240px; background: var(--blueprint-navy); border: 1px solid rgba(232,238,242,0.35); box-shadow: 0 12px 28px rgba(0,0,0,0.35); z-index: 20; }
+  .nav-dropdown.open { display: block; }
+  .nav-dropdown a { display: block; padding: 12px 18px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(232,238,242,0.8); text-decoration: none; border-top: 1px solid rgba(232,238,242,0.15); }
+  .nav-dropdown a:first-child { border-top: none; }
+  .nav-dropdown a:hover { color: var(--paper); background: rgba(232,238,242,0.05); }
+  .nav-dropdown a.current { color: var(--copper); }
+
+  main { max-width: 1040px; margin: 0 auto; padding: 56px 32px 96px; }
+  .eyebrow { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blueprint-line); margin-bottom: 18px; }
+  h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.9rem, 4vw, 2.6rem); line-height: 1.1; max-width: 22ch; }
+  h1 em { font-style: normal; color: var(--copper); }
+  p.lede { margin-top: 16px; max-width: 62ch; font-size: 1rem; color: rgba(232,238,242,0.8); }
+
+  .quote-banner { margin-top: 28px; padding: 20px 24px; background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.25); border-left: 3px solid var(--blueprint-line); display: none; }
+  .quote-banner.show { display: block; }
+  .quote-banner .quote-eyebrow { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blueprint-line); margin-bottom: 8px; }
+  .quote-banner .quote-text { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; color: var(--copper); }
+
+  .info-banner { margin-top: 20px; display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.25); border-left: 3px solid var(--ok); }
+  .info-banner .banner-icon { flex-shrink: 0; width: 30px; height: 30px; border: 1px solid rgba(232,238,242,0.35); display: flex; align-items: center; justify-content: center; font-size: 1rem; background: rgba(232,238,242,0.05); }
+  .info-banner .banner-text { font-size: 0.9rem; color: rgba(232,238,242,0.85); }
+  .info-banner .banner-text strong { color: var(--paper); }
+
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin: 48px 0 24px; border-bottom: 1px solid rgba(232,238,242,0.2); padding-bottom: 16px; flex-wrap: wrap; }
+  .section-head .heading { display: flex; align-items: baseline; gap: 16px; }
+  .sheet-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--copper); flex-shrink: 0; }
+  .section-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; }
+
+  .filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 8px; }
+  .filter-field label { display: block; font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blueprint-line); margin-bottom: 8px; }
+  .filter-field select { width: 100%; background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.35); color: var(--paper); font-family: var(--font-body); font-size: 0.92rem; padding: 10px 10px; outline: none; }
+  .filter-field select option { background: var(--blueprint-navy); color: var(--paper); }
+  .filter-field select:focus { border-color: var(--copper); }
+
+  .active-filters { margin-top: 14px; font-family: var(--font-mono); font-size: 0.78rem; color: rgba(232,238,242,0.6); }
+  .active-filters button { background: transparent; border: none; color: var(--copper); font-family: var(--font-mono); font-size: 0.78rem; text-decoration: underline; cursor: pointer; padding: 0; margin-left: 10px; }
+
+  .biz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; margin-top: 28px; }
+
+  .biz-card { background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.3); display: flex; flex-direction: column; position: relative; }
+  .biz-card.featured { border-color: var(--copper); }
+  .featured-tag { position: absolute; top: 12px; right: 12px; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; background: var(--copper); color: var(--blueprint-navy); font-weight: 600; }
+
+  .biz-image { width: 100%; height: 160px; object-fit: cover; display: block; background: rgba(232,238,242,0.08); }
+  .biz-image-placeholder { width: 100%; height: 160px; display: flex; align-items: center; justify-content: center; background: rgba(232,238,242,0.06); font-family: var(--font-mono); font-size: 0.75rem; color: rgba(232,238,242,0.4); }
+
+  .biz-body { padding: 16px 18px; flex-grow: 1; display: flex; flex-direction: column; gap: 8px; }
+  .biz-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--blueprint-line); color: var(--blueprint-line); align-self: flex-start; }
+  .biz-name { font-family: var(--font-display); font-weight: 600; font-size: 1.08rem; }
+  .biz-owner { font-family: var(--font-mono); font-size: 0.75rem; color: rgba(232,238,242,0.55); }
+  .biz-desc { font-size: 0.88rem; color: rgba(232,238,242,0.82); }
+
+  .biz-meta { padding: 12px 18px 16px; border-top: 1px solid rgba(232,238,242,0.15); font-family: var(--font-mono); font-size: 0.75rem; color: rgba(232,238,242,0.65); display: flex; flex-direction: column; gap: 6px; }
+  .biz-meta a { color: var(--copper); text-decoration: underline; }
+
+  .empty-state { padding: 48px 24px; text-align: center; border: 1px dashed rgba(232,238,242,0.35); margin-top: 28px; }
+  .empty-state .empty-icon { font-size: 1.6rem; }
+  .empty-state p { color: rgba(232,238,242,0.75); margin-top: 8px; }
+
+  #list-status { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(232,238,242,0.6); }
+  #list-status[data-state="err"] { color: var(--err); }
+
+  footer { border-top: 1px solid rgba(232,238,242,0.2); padding: 28px 32px 32px; font-family: var(--font-mono); font-size: 0.75rem; color: rgba(232,238,242,0.55); text-align: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="index.html" class="brandmark">ENEMIND COMPANY</a>
+  <div class="nav-menu">
+    <button type="button" id="navMenuToggle" class="menu-btn" aria-haspopup="true" aria-expanded="false" title="Menu">☰</button>
+    <div class="nav-dropdown" id="navDropdown" role="menu">
+      <a href="index.html">Register / Log in</a>
+      <a href="entrepreneurs.html" class="current">Entrepreneurs & Best Businesses</a>
+      <a href="books.html">Books</a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+  <p class="eyebrow">Sheet 02 — Entrepreneurs &amp; Best Businesses</p>
+  <h1>A curated showcase of <em>Kenyan hustle</em>.</h1>
+  <p class="lede">
+    A hand-picked selection of standout entrepreneurs and businesses from the
+    Enemind community. Featured picks appear first.
+  </p>
+
+  <div class="quote-banner" id="quoteBanner">
+    <div class="quote-eyebrow">This week's motivation</div>
+    <div class="quote-text" id="quoteText"></div>
+  </div>
+
+  <div class="info-banner">
+    <span class="banner-icon">★</span>
+    <div class="banner-text">
+      <strong>These profiles are curated by the Enemind team.</strong> There's no
+      posting form here — if you'd like your business featured, reach out at
+      <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a>.
+    </div>
+  </div>
+
+  <div class="section-head">
+    <div class="heading"><span class="sheet-no">01</span><h2>Filter</h2></div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-field">
+      <label for="industryFilter">Industry</label>
+      <select id="industryFilter"><option value="">All industries</option></select>
+    </div>
+    <div class="filter-field">
+      <label for="countyFilter">County</label>
+      <select id="countyFilter"><option value="">All counties</option></select>
+    </div>
+  </div>
+  <div class="active-filters" id="activeFiltersLine"></div>
+
+  <div class="section-head">
+    <div class="heading"><span class="sheet-no">02</span><h2>Showcase</h2></div>
+    <span id="list-status" role="status" aria-live="polite"></span>
+  </div>
+
+  <div class="biz-grid" id="bizGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <div class="empty-icon">🏪</div>
+    <p>No profiles match these filters yet.</p>
+  </div>
+</main>
+
+<footer>
+  Enemind Company — built on Google Sheets + Apps Script
+</footer>
+
+<script>
+  // Same deployed Apps Script Web App URL used by index.html / home.html / admin.html / books.html.
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbweqIoXdbkqzo8d_zwlmRJB_SESWs14cWaI9OasGJlnGxYJCL2y4nr2QR5q-Pze9tcS/exec';
+
+  const COUNTIES = [
+    'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
+    'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado', 'Kakamega', 'Kericho',
+    'Kiambu', 'Kilifi', 'Kirinyaga', 'Kisii', 'Kisumu', 'Kitui', 'Kwale',
+    'Laikipia', 'Lamu', 'Machakos', 'Makueni', 'Mandera', 'Marsabit',
+    'Meru', 'Migori', 'Mombasa', "Murang'a", 'Nairobi', 'Nakuru', 'Nandi',
+    'Narok', 'Nyamira', 'Nyandarua', 'Nyeri', 'Samburu', 'Siaya',
+    'Taita-Taveta', 'Tana River', 'Tharaka-Nithi', 'Trans Nzoia', 'Turkana',
+    'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
+  ];
+
+  const INDUSTRIES = [
+    'Agribusiness', 'Technology', 'Fashion & Beauty', 'Food & Beverage',
+    'Retail & Trade', 'Manufacturing', 'Creative & Media',
+    'Transport & Logistics', 'Health & Wellness', 'Education & Training',
+    'Construction & Real Estate', 'Finance & Investment', 'Other'
+  ];
+
+  function escapeHtml(str) {
+    return String(str == null ? '' : str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+  }
+
+  function callApi(payload) {
+    return fetch(WEB_APP_URL, { method: 'POST', body: JSON.stringify(payload) }).then(res => res.json());
+  }
+
+  // Converts a Google Drive "share" link into a direct hotlinkable image URL.
+  function toDirectImageUrl(url) {
+    if (!url) return url;
+    const trimmed = String(url).trim();
+    let match = trimmed.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (match) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+    match = trimmed.match(/drive\.google\.com\/open\?id=([^&]+)/);
+    if (match) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+    return trimmed;
+  }
+
+  function buildImageHtml(imageUrl, name) {
+    if (!imageUrl) return `<div class="biz-image-placeholder">No image</div>`;
+    const src = escapeHtml(toDirectImageUrl(imageUrl));
+    const alt = escapeHtml(name || '');
+    const fallback = `this.outerHTML='<div class=&quot;biz-image-placeholder&quot;>Image unavailable</div>'`;
+    return `<img class="biz-image" src="${src}" alt="${alt}" onerror="${fallback}">`;
+  }
+
+  const industryFilterEl = document.getElementById('industryFilter');
+  const countyFilterEl = document.getElementById('countyFilter');
+  INDUSTRIES.forEach(i => industryFilterEl.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(i)}">${escapeHtml(i)}</option>`));
+  COUNTIES.forEach(c => countyFilterEl.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`));
+
+  let allEntries = [];
+  const bizGridEl = document.getElementById('bizGrid');
+  const emptyStateEl = document.getElementById('emptyState');
+  const listStatusEl = document.getElementById('list-status');
+  const activeFiltersLineEl = document.getElementById('activeFiltersLine');
+  const quoteBannerEl = document.getElementById('quoteBanner');
+  const quoteTextEl = document.getElementById('quoteText');
+
+  function setListStatus(message, state) {
+    listStatusEl.textContent = message;
+    if (state) listStatusEl.setAttribute('data-state', state); else listStatusEl.removeAttribute('data-state');
+  }
+
+  function loadWeeklyMotivation() {
+    callApi({ action: 'getWeeklyMotivation' }).then(result => {
+      if (result.success && result.quote) {
+        quoteTextEl.textContent = result.quote;
+        quoteBannerEl.classList.add('show');
+      }
+    }).catch(() => {});
+  }
+
+  async function fetchEntries() {
+    setListStatus('Loading…', '');
+    try {
+      const result = await callApi({ action: 'listEntrepreneurs' });
+      if (result.success) {
+        allEntries = result.entries || [];
+        renderEntries();
+        setListStatus(allEntries.length + ' profile' + (allEntries.length === 1 ? '' : 's') + '.', '');
+      } else {
+        setListStatus(result.message || 'Could not load profiles.', 'err');
+      }
+    } catch (err) {
+      setListStatus('Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  function renderEntries() {
+    const industry = industryFilterEl.value;
+    const county = countyFilterEl.value;
+
+    const filtered = allEntries.filter(en => {
+      if (industry && en.industry !== industry) return false;
+      if (county && en.county !== county) return false;
+      return true;
+    });
+
+    const activeParts = [];
+    if (industry) activeParts.push('Industry: ' + industry);
+    if (county) activeParts.push('County: ' + county);
+    activeFiltersLineEl.innerHTML = activeParts.length
+      ? 'Showing ' + activeParts.join(' · ') + '<button type="button" id="clearFiltersBtn">Clear filters</button>'
+      : '';
+    const clearBtn = document.getElementById('clearFiltersBtn');
+    if (clearBtn) clearBtn.addEventListener('click', () => {
+      industryFilterEl.value = ''; countyFilterEl.value = '';
+      renderEntries();
+    });
+
+    if (filtered.length === 0) {
+      bizGridEl.innerHTML = '';
+      emptyStateEl.style.display = '';
+      return;
+    }
+    emptyStateEl.style.display = 'none';
+
+    bizGridEl.innerHTML = filtered.map(en => {
+      const imageHtml = buildImageHtml(en.imageUrl, en.businessName);
+      const featuredTag = en.featured ? `<span class="featured-tag">Featured</span>` : '';
+      const ownerLine = en.ownerName ? `<div class="biz-owner">${escapeHtml(en.ownerName)}</div>` : '';
+      const linkLine = en.linkUrl ? `<div><a href="${escapeHtml(en.linkUrl)}" target="_blank" rel="noopener">Visit site / page →</a></div>` : '';
+      const phoneLine = en.phone ? `<div>Phone: <strong>${escapeHtml(en.phone)}</strong></div>` : '';
+      const countyLine = en.county ? `<div>${escapeHtml(en.county)}</div>` : '';
+      return `
+        <div class="biz-card ${en.featured ? 'featured' : ''}">
+          ${featuredTag}
+          ${imageHtml}
+          <div class="biz-body">
+            <span class="biz-tag">${escapeHtml(en.industry)}</span>
+            <div class="biz-name">${escapeHtml(en.businessName)}</div>
+            ${ownerLine}
+            <div class="biz-desc">${escapeHtml(en.description)}</div>
+          </div>
+          <div class="biz-meta">
+            ${countyLine}
+            ${phoneLine}
+            ${linkLine}
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  industryFilterEl.addEventListener('change', renderEntries);
+  countyFilterEl.addEventListener('change', renderEntries);
+
+  /* ---------- Nav menu toggle ---------- */
+  const navMenuToggle = document.getElementById('navMenuToggle');
+  const navDropdown = document.getElementById('navDropdown');
+  function closeNavDropdown() { navDropdown.classList.remove('open'); navMenuToggle.setAttribute('aria-expanded', 'false'); }
+  navMenuToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (navDropdown.classList.contains('open')) closeNavDropdown();
+    else { navDropdown.classList.add('open'); navMenuToggle.setAttribute('aria-expanded', 'true'); }
+  });
+  document.addEventListener('click', (e) => { if (!navDropdown.contains(e.target) && e.target !== navMenuToggle) closeNavDropdown(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeNavDropdown(); });
+
+  /* ---------- Init ---------- */
+  loadWeeklyMotivation();
+  fetchEntries();
+</script>
+
+</body>
+</html>
