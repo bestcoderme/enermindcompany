@@ -74,7 +74,7 @@
     position: absolute;
     top: calc(100% + 12px);
     left: 0;
-    min-width: 220px;
+    min-width: 240px;
     background: var(--blueprint-navy);
     border: 1px solid rgba(232,238,242,0.35);
     box-shadow: 0 12px 28px rgba(0,0,0,0.35);
@@ -166,6 +166,7 @@
     padding: 14px 18px;
     display: flex;
     gap: 10px;
+    flex-wrap: wrap;
   }
 
   .account-dropdown button.commit,
@@ -223,7 +224,7 @@
     color: rgba(232,238,242,0.8);
   }
 
-  /* ---------- Daily motivation banner ---------- */
+  /* ---------- Weekly motivation banner ---------- */
   .motivation-banner {
     margin-top: 24px;
     display: flex;
@@ -250,7 +251,7 @@
   .motivation-banner .banner-text { font-size: 0.9rem; color: rgba(232,238,242,0.85); }
   .motivation-banner .banner-text strong { color: var(--paper); }
 
-  /* ---------- Status banners ---------- */
+  /* ---------- Status banner ---------- */
   .status-banner {
     margin-top: 16px;
     display: flex;
@@ -259,11 +260,9 @@
     padding: 16px 18px;
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.25);
-    border-left: 3px solid var(--copper);
+    border-left: 3px solid var(--ok);
   }
-  .status-banner.ok { border-left-color: var(--ok); }
-  .status-banner.pending { border-left-color: var(--copper); }
-  .status-banner.rejected { border-left-color: var(--err); }
+  .status-banner.inactive { border-left-color: var(--err); }
 
   .status-banner .banner-icon {
     flex-shrink: 0;
@@ -295,9 +294,8 @@
     margin-left: 10px;
     vertical-align: middle;
   }
-  .status-badge.status-approved { color: var(--ok); }
-  .status-badge.status-pending { color: var(--copper); }
-  .status-badge.status-rejected { color: var(--err); }
+  .status-badge.status-active { color: var(--ok); }
+  .status-badge.status-inactive { color: var(--err); }
 
   .section-head {
     display: flex;
@@ -560,7 +558,7 @@
   }
   .directory-meta a { color: var(--copper); text-decoration: underline; }
 
-  /* ---------- Postings (notes + listings) inside a search result ---------- */
+  /* ---------- Books posted by a directory result ---------- */
   .directory-postings {
     margin-top: 12px;
     border: 1px dashed rgba(232,238,242,0.3);
@@ -619,15 +617,6 @@
     font-size: 0.78rem;
   }
 
-  .posting-item-link {
-    margin-left: auto;
-    color: var(--copper);
-    text-decoration: underline;
-    font-family: var(--font-mono);
-    font-size: 0.74rem;
-    white-space: nowrap;
-  }
-
   .posting-empty {
     margin-top: 10px;
     font-size: 0.8rem;
@@ -655,8 +644,8 @@
     <div class="nav-menu">
       <button type="button" id="navMenuToggle" class="menu-btn" aria-haspopup="true" aria-expanded="false" title="Menu">☰</button>
       <div class="nav-dropdown" id="navDropdown" role="menu">
-        <a href="marketplace.html">Marketplace</a>
-        <a href="resources.html">Notes</a>
+        <a href="entrepreneurs.html">Entrepreneurs &amp; Best Businesses</a>
+        <a href="books.html">Books</a>
       </div>
     </div>
 
@@ -692,7 +681,7 @@
 
   <div class="motivation-banner" id="motivationBanner">
     <span class="banner-icon">✦</span>
-    <div class="banner-text"><strong>Today's motivation:</strong> <span id="motivationText"></span></div>
+    <div class="banner-text"><strong>This week's motivation:</strong> <span id="motivationText"></span></div>
   </div>
 
   <div id="statusBanners"></div>
@@ -721,7 +710,7 @@
       <input type="text" id="directorySearchInput" placeholder="Search by name, email, or TikTok username">
       <button type="button" class="commit" id="directorySearchBtn">Search</button>
     </div>
-    <div class="search-hint">Only Approved accounts show up in results. Matches by name, email, or TikTok username — each result also shows everything that person has posted to the Marketplace and Notes.</div>
+    <div class="search-hint">Only Active accounts show up in results. Matches by name, email, or TikTok username — each result also shows the books that person has uploaded.</div>
     <div id="directoryResults"></div>
   </div>
 </main>
@@ -734,9 +723,9 @@
   /* ------------------------------------------------------------------
    * Point this at your deployed Apps Script Web App URL
    * (Deploy > New deployment > Web app > /exec) from setup.gs.
-   * Must be the same deployment used by index.html / register.html.
+   * Must be the same deployment used by index.html / entrepreneurs.html / books.html / admin.html.
    * ---------------------------------------------------------------- */
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzE9ipyiM7k2JcYc9WWKQTzocQesBkAMGriZHC0c3SvOHJB_ypxcgKnMITfoInU16IG/exec';
+  const WEBAPP_URL = ''https://script.google.com/macros/s/AKfycbzE9ipyiM7k2JcYc9WWKQTzocQesBkAMGriZHC0c3SvOHJB_ypxcgKnMITfoInU16IG/exec';
 
   /* ---------- Field-label config, mirrors setup.gs / register.html ---------- */
   const CATEGORY_CONFIG = {
@@ -751,9 +740,9 @@
         { key: 'level', label: 'Form / Grade' }
       ],
       roadmap: [
-        { title: 'Browse the notes library', desc: 'Find revision notes for your subjects once notes go live.' },
-        { title: 'Get matched with a mentor', desc: 'Mentorship pairing opens once your account is approved.' },
-        { title: 'Explore the AI study assistant', desc: 'Coming in a future release.' }
+        { title: 'Browse the book library', desc: 'Find books and revision notes for your subjects.' },
+        { title: 'Check out the Entrepreneurs showcase', desc: 'Get inspired by curated Kenyan businesses.' },
+        { title: 'Complete your profile', desc: 'Add a logo/profile image and TikTok handle any time from Edit Profile.' }
       ]
     },
     tvetStudent: {
@@ -767,9 +756,9 @@
         { key: 'course', label: 'Course' }
       ],
       roadmap: [
-        { title: 'Find an attachment placement', desc: 'Industrial attachment listings for your course open once approved.' },
-        { title: 'Build your CV', desc: 'CV tools are on the roadmap for a future release.' },
-        { title: 'Connect with a mentor', desc: 'Get guidance from professionals in your field.' }
+        { title: 'Browse the book library', desc: 'Find books and past papers for your course.' },
+        { title: 'Check out the Entrepreneurs showcase', desc: 'Get inspired by curated Kenyan businesses.' },
+        { title: 'Complete your profile', desc: 'Add a logo/profile image and TikTok handle any time from Edit Profile.' }
       ]
     },
     universityStudent: {
@@ -783,9 +772,9 @@
         { key: 'courseOfStudy', label: 'Course of study' }
       ],
       roadmap: [
-        { title: 'Find notes and past papers', desc: 'Search the notes library for your course.' },
-        { title: 'Apply for attachments', desc: 'Browse attachment and internship listings.' },
-        { title: 'Get a mentor', desc: 'Match with a mentor in your field of study.' }
+        { title: 'Browse the book library', desc: 'Find books and past papers for your course.' },
+        { title: 'Check out the Entrepreneurs showcase', desc: 'Get inspired by curated Kenyan businesses.' },
+        { title: 'Complete your profile', desc: 'Add a logo/profile image and TikTok handle any time from Edit Profile.' }
       ]
     },
     graduate: {
@@ -800,9 +789,9 @@
         { key: 'graduationYear', label: 'Graduation year' }
       ],
       roadmap: [
-        { title: 'Browse graduate jobs', desc: 'Job listings matched to your field open once approved.' },
-        { title: 'Build your CV', desc: 'CV and LinkedIn tools are on the roadmap.' },
-        { title: 'Start learning to invest', desc: 'The Investment Academy opens in a later phase.' }
+        { title: 'Browse the book library', desc: 'Find books relevant to your field.' },
+        { title: 'Check out the Entrepreneurs showcase', desc: 'Get inspired by curated Kenyan businesses.' },
+        { title: 'Complete your profile', desc: 'Add a logo/profile image and TikTok handle any time from Edit Profile.' }
       ]
     },
     adult: {
@@ -812,8 +801,8 @@
         { key: 'email', label: 'Email' }
       ],
       roadmap: [
-        { title: 'Browse the Marketplace', desc: 'List a product or gig, or find one nearby, once approved.' },
-        { title: 'Browse Notes', desc: 'See what students and graduates are sharing.' },
+        { title: 'Browse the Entrepreneurs showcase', desc: 'See curated best businesses and entrepreneurs.' },
+        { title: 'Browse the book library', desc: 'See what students and graduates are sharing.' },
         { title: 'Complete your profile', desc: 'Add a logo/profile image and TikTok handle any time from your account.' }
       ]
     }
@@ -839,13 +828,6 @@
     }).then(res => res.json());
   }
 
-  /**
-   * Renders a profile image into `container` if `logoUrl` is set and
-   * loads successfully; otherwise (or on load failure) falls back to
-   * the first letter of `name`. Used for the account button, the
-   * profile card's logo row, and every directory search result, so a
-   * broken/missing image never leaves a blank box.
-   */
   function renderAvatar(container, name, logoUrl) {
     if (!container) return;
     container.innerHTML = '';
@@ -868,17 +850,15 @@
   const config = CATEGORY_CONFIG[user.type];
 
   const typeLabel = user.typeLabel || (config ? config.label : 'Account');
-  const status = user.status || 'Pending';
+  const status = user.status || 'Active';
   const statusKey = status.toLowerCase();
 
-  // Primary display name: "name" field, or "Name" store column for
-  // company-style categories where the person's name IS the company name.
   const displayName = user.name || 'there';
 
   document.title = 'Dashboard — ' + typeLabel + ' — Enemind Company';
 
-  /* ---------- Daily motivation ---------- */
-  callApi({ action: 'getDailyMotivation' }).then(result => {
+  /* ---------- Weekly motivation ---------- */
+  callApi({ action: 'getWeeklyMotivation' }).then(result => {
     if (result.success && result.quote) {
       document.getElementById('motivationText').textContent = result.quote;
       document.getElementById('motivationBanner').classList.add('show');
@@ -895,7 +875,7 @@
   /* ---------- Hero ---------- */
   document.getElementById('typeEyebrow').textContent = typeLabel + ' Dashboard';
 
-  const badgeClass = statusKey === 'approved' ? 'status-approved' : (statusKey === 'rejected' ? 'status-rejected' : 'status-pending');
+  const badgeClass = statusKey === 'active' ? 'status-active' : 'status-inactive';
   const badgeHtml = `<span class="status-badge ${badgeClass}">${escapeHtml(status)}</span>`;
   document.getElementById('welcomeHeading').innerHTML = `Welcome back, <em>${escapeHtml(displayName)}</em>${badgeHtml}`;
 
@@ -903,36 +883,25 @@
     ? `Here's your ${config.label.toLowerCase()} profile, exactly as it was submitted at registration.`
     : `We couldn't match this link to a known registration type. Try logging in again.`;
 
-  /* ---------- Status banners ---------- */
+  /* ---------- Status banner ---------- */
   const bannersEl = document.getElementById('statusBanners');
   let bannerHtml = '';
-  if (statusKey === 'pending') {
+  if (statusKey === 'inactive') {
     bannerHtml = `
-      <div class="status-banner pending">
-        <span class="banner-icon">⏳</span>
-        <div class="banner-text">
-          <strong>Your registration is pending review.</strong> An admin needs to approve your
-          account before the rest of the platform unlocks. This usually takes one business day —
-          check back soon, or email
-          <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> if it's been a while.
-        </div>
-      </div>`;
-  } else if (statusKey === 'rejected') {
-    bannerHtml = `
-      <div class="status-banner rejected">
+      <div class="status-banner inactive">
         <span class="banner-icon">⚠</span>
         <div class="banner-text">
-          <strong>Your registration was not approved.</strong> If you think this is a mistake, email
-          <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a> or call
-          <a href="tel:+254711629600">+254 711 629 600</a> and we'll help sort it out.
+          <strong>Your account is Inactive.</strong> An admin has paused access.
+          Email <a href="mailto:enemindcompany@gmail.com">enemindcompany@gmail.com</a>
+          or call <a href="tel:+254711629600">+254 711 629 600</a> if you think this is a mistake.
         </div>
       </div>`;
-  } else if (statusKey === 'approved') {
+  } else {
     bannerHtml = `
-      <div class="status-banner ok">
+      <div class="status-banner">
         <span class="banner-icon">✓</span>
         <div class="banner-text">
-          <strong>You're approved and fully signed in.</strong> Your account is active as a(n) ${escapeHtml(typeLabel)}.
+          <strong>Your account is Active.</strong> You're fully signed in as a(n) ${escapeHtml(typeLabel)} — no approval needed.
         </div>
       </div>`;
   }
@@ -943,8 +912,6 @@
   if (config) {
     let rows = '';
 
-    // Logo + TikTok are generic optional fields (see setup.gs / register.html),
-    // not part of CATEGORY_CONFIG.fields, so they're rendered here first.
     rows += `
       <div class="profile-row">
         <div class="field-index">◆</div>
@@ -1017,75 +984,34 @@
       </li>`;
   }
 
-  /* ---------- Directory search (find other approved users) ---------- */
+  /* ---------- Directory search ---------- */
   const directoryInput = document.getElementById('directorySearchInput');
   const directoryBtn = document.getElementById('directorySearchBtn');
   const directoryResultsEl = document.getElementById('directoryResults');
 
-  function formatDate(ts) {
-    if (!ts) return '';
-    const d = new Date(ts);
-    if (isNaN(d.getTime())) return '';
-    return d.toLocaleDateString('en-KE', { day: 'numeric', month: 'short', year: 'numeric' });
-  }
-
-  /**
-   * Builds the HTML for the "notes + marketplace listings" disclosure
-   * under a single directory search result. Renders nothing beyond a
-   * small "nothing posted yet" note if the person hasn't posted
-   * anything Active in either sheet.
-   */
   function buildPostingsHtml(result) {
-    const resources = result.resources || [];
-    const listings = result.listings || [];
-    const total = resources.length + listings.length;
-
-    if (total === 0) {
-      return `<div class="posting-empty">No notes or listings posted yet.</div>`;
+    const books = result.books || [];
+    if (books.length === 0) {
+      return `<div class="posting-empty">No books posted yet.</div>`;
     }
-
-    const resourceItems = resources.map(r => {
-      const metaBits = [r.course, r.campus].filter(Boolean).map(escapeHtml).join(' · ');
-      const openLink = r.fileUrl
-        ? `<a class="posting-item-link" href="${escapeHtml(r.fileUrl)}" target="_blank" rel="noopener">Open →</a>`
-        : '';
-      return `
-        <div class="posting-item">
-          <span class="posting-item-tag">${escapeHtml(r.resourceType)}</span>
-          <span class="posting-item-title">${escapeHtml(r.title)}</span>
-          ${metaBits ? `<span class="posting-item-meta">${metaBits}</span>` : ''}
-          ${openLink}
-        </div>`;
-    }).join('');
-
-    const listingItems = listings.map(l => {
-      const metaBits = [l.price, l.campus || l.county].filter(Boolean).map(escapeHtml).join(' · ');
-      const fileLink = l.fileUrl
-        ? `<a class="posting-item-link" href="${escapeHtml(l.fileUrl)}" target="_blank" rel="noopener">File →</a>`
-        : '';
-      return `
-        <div class="posting-item">
-          <span class="posting-item-tag">${escapeHtml(l.listingType)}</span>
-          <span class="posting-item-title">${escapeHtml(l.title)}</span>
-          ${metaBits ? `<span class="posting-item-meta">${metaBits}</span>` : ''}
-          ${fileLink}
-        </div>`;
-    }).join('');
+    const bookItems = books.map(b => `
+      <div class="posting-item">
+        <span class="posting-item-tag">Book</span>
+        <span class="posting-item-title">${escapeHtml(b.title)}</span>
+        <span class="posting-item-meta">${[b.course, b.campus].filter(Boolean).map(escapeHtml).join(' · ')}</span>
+        <span class="posting-item-meta">KSh ${escapeHtml(b.price)}</span>
+      </div>`).join('');
 
     return `
       <details class="directory-postings">
-        <summary>View everything posted (${total})</summary>
-        ${resourceItems ? `<div class="posting-group"><div class="posting-group-title">Notes (${resources.length})</div>${resourceItems}</div>` : ''}
-        ${listingItems ? `<div class="posting-group"><div class="posting-group-title">Marketplace Listings (${listings.length})</div>${listingItems}</div>` : ''}
+        <summary>View books posted (${books.length})</summary>
+        <div class="posting-group">${bookItems}</div>
       </details>`;
   }
 
   function renderDirectoryResults(results) {
     if (!results || !results.length) {
-      directoryResultsEl.innerHTML = `
-        <div class="empty-state">
-          <p>No matching people found.</p>
-        </div>`;
+      directoryResultsEl.innerHTML = `<div class="empty-state"><p>No matching people found.</p></div>`;
       return;
     }
 
@@ -1117,33 +1043,21 @@
   function runDirectorySearch() {
     const q = directoryInput.value.trim();
     if (!q) {
-      directoryResultsEl.innerHTML = `
-        <div class="empty-state">
-          <p>Type a name, email, or TikTok username to search.</p>
-        </div>`;
+      directoryResultsEl.innerHTML = `<div class="empty-state"><p>Type a name, email, or TikTok username to search.</p></div>`;
       return;
     }
 
     directoryBtn.disabled = true;
-    directoryResultsEl.innerHTML = `
-      <div class="empty-state">
-        <p>Searching…</p>
-      </div>`;
+    directoryResultsEl.innerHTML = `<div class="empty-state"><p>Searching…</p></div>`;
 
     callApi({ action: 'searchDirectory', query: q }).then(result => {
       if (result.success) {
         renderDirectoryResults(result.results);
       } else {
-        directoryResultsEl.innerHTML = `
-          <div class="empty-state">
-            <p>${escapeHtml(result.message || 'Search failed.')}</p>
-          </div>`;
+        directoryResultsEl.innerHTML = `<div class="empty-state"><p>${escapeHtml(result.message || 'Search failed.')}</p></div>`;
       }
     }).catch(() => {
-      directoryResultsEl.innerHTML = `
-        <div class="empty-state">
-          <p>Network error — check the Web App URL is set.</p>
-        </div>`;
+      directoryResultsEl.innerHTML = `<div class="empty-state"><p>Network error — check the Web App URL is set.</p></div>`;
     }).finally(() => {
       directoryBtn.disabled = false;
     });
