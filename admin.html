@@ -354,7 +354,7 @@
 <body>
 
 <header>
-  <a href="register.html" class="brandmark">ENEMIND COMPANY</a>
+  <a href="index.html" class="brandmark">ENEMIND COMPANY</a>
   <span class="header-tag">Admin</span>
 </header>
 
@@ -448,7 +448,7 @@
 </footer>
 
 <script>
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzmFuqZe4v6Dp21-kliOkzKa1jYP3IIhYAZRgmQ5CW6Z65EuHkDKn5-9cTlcNODX_by/exec';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbydFqKfhrKoFFbUX-wA5ffeggxWXQt6ne2H792kw4yYHDhsEjpKRtYuCtLRWX7HWL2K/exec';
 
   let adminCode = '';
 
@@ -565,9 +565,6 @@
   }
 
   function renderEntries(entries) {
-    // Update the always-visible pending/approved/rejected counts using
-    // whatever the current result set implies isn't accurate across filters,
-    // so pull fresh unfiltered counts in the background.
     if (!entries || entries.length === 0) {
       entryListEl.innerHTML = `
         <div class="empty-state">
@@ -579,7 +576,6 @@
 
     entryListEl.innerHTML = entries.map(entry => {
       const badgeClass = badgeClassFor(entry.status);
-      const isPending = entry.status === 'Pending';
       const isApproved = entry.status === 'Approved';
       const isRejected = entry.status === 'Rejected';
 
@@ -663,7 +659,6 @@
   refreshBtn.addEventListener('click', () => { fetchEntries(); refreshCounts(); });
 
   // Kick off the counts strip once unlocked (called again after every status change).
-  const originalRenderEntries = renderEntries;
   document.getElementById('gateForm').addEventListener('submit', () => {
     setTimeout(refreshCounts, 400);
   });
