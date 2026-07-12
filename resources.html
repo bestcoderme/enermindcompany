@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Notes & Attachments — Enemind Company</title>
+<title>Notes — Enemind Company</title>
 <link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -171,17 +171,16 @@
     gap: 10px;
     margin-bottom: 24px;
   }
-  .toolbar input, .toolbar select {
+  .toolbar input {
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.3);
     color: var(--paper);
     font-family: var(--font-body);
     font-size: 0.88rem;
     padding: 10px 12px;
+    flex: 1 1 220px;
   }
-  .toolbar input { flex: 1 1 220px; }
-  .toolbar select { flex: 0 0 auto; min-width: 150px; }
-  .toolbar input:focus, .toolbar select:focus { outline: 1px solid var(--copper); }
+  .toolbar input:focus { outline: 1px solid var(--copper); }
 
   /* ---------- Resource cards ---------- */
   .resource-grid {
@@ -196,7 +195,6 @@
     border-left: 3px solid var(--blueprint-line);
     padding: 18px 20px;
   }
-  .resource-card.type-attachment { border-left-color: var(--copper); }
 
   .rc-top {
     display: flex;
@@ -216,7 +214,6 @@
     color: var(--blueprint-line);
     flex-shrink: 0;
   }
-  .resource-card.type-attachment .rc-tag { color: var(--copper); }
 
   .rc-title {
     font-family: var(--font-display);
@@ -322,7 +319,6 @@
   }
 
   .form-row input,
-  .form-row select,
   .form-row textarea {
     width: 100%;
     background: transparent;
@@ -334,40 +330,12 @@
   }
   .form-row textarea { resize: vertical; min-height: 72px; }
   .form-row input:focus,
-  .form-row select:focus,
   .form-row textarea:focus { outline: 1px solid var(--copper); }
 
   .form-row .hint {
     margin-top: 6px;
     font-size: 0.78rem;
     color: rgba(232,238,242,0.5);
-  }
-
-  .type-switch {
-    display: flex;
-    gap: 10px;
-  }
-  .type-switch label {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    border: 1px solid rgba(232,238,242,0.35);
-    padding: 10px 12px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    cursor: pointer;
-    margin-bottom: 0;
-    color: rgba(232,238,242,0.75);
-  }
-  .type-switch input { width: auto; padding: 0; }
-  .type-switch label:has(input:checked) {
-    border-color: var(--copper);
-    color: var(--paper);
-    background: rgba(201,123,61,0.1);
   }
 
   .form-actions {
@@ -448,62 +416,44 @@
     <button type="button" id="navMenuToggle" class="menu-btn" aria-haspopup="true" aria-expanded="false" title="Menu">☰</button>
     <div class="nav-dropdown" id="navDropdown" role="menu">
       <a href="marketplace.html">Marketplace</a>
-      <a href="resources.html" class="current">Notes &amp; Attachments</a>
+      <a href="resources.html" class="current">Notes</a>
       <a href="index.html">Register / Log in</a>
     </div>
   </div>
 </header>
 
 <main>
-  <p class="eyebrow">Sheet 03 — Notes &amp; Attachments</p>
-  <h1>Study notes and <em>work attachments</em>, in one place</h1>
+  <p class="eyebrow">Sheet 03 — Notes</p>
+  <h1>Study notes, <em>shared by the community</em></h1>
   <p class="lede">
-    Browse notes, past papers, job postings, and templates shared by approved
-    students, teachers, lecturers, and companies. Anyone can browse — posting
-    requires an approved Enemind account.
+    Browse notes and past papers shared by approved students and adults.
+    Anyone can browse — posting requires an approved Enemind account.
   </p>
 
   <!-- ---------- Browse ---------- -->
   <div class="section-head">
     <span class="sheet-no">01</span>
-    <h2>Browse resources</h2>
+    <h2>Browse notes</h2>
     <span class="section-sub" id="resultCount"></span>
   </div>
 
   <div class="toolbar">
     <input type="text" id="searchInput" placeholder="Search by title, course, or campus…">
-    <select id="typeFilter">
-      <option value="">All types</option>
-      <option value="Note">Notes</option>
-      <option value="Attachment">Attachments</option>
-    </select>
   </div>
 
   <div class="resource-grid" id="resourceGrid">
-    <div class="empty-state"><div class="empty-icon">⋯</div><p>Loading resources…</p></div>
+    <div class="empty-state"><div class="empty-icon">⋯</div><p>Loading notes…</p></div>
   </div>
 
   <!-- ---------- Share ---------- -->
   <div class="section-head">
     <span class="sheet-no">02</span>
-    <h2>Share a note or attachment</h2>
+    <h2>Share a note</h2>
   </div>
 
   <form class="form-card" id="postForm">
     <div class="form-row">
       <div class="field-index">01</div>
-      <div class="field-body">
-        <label>Resource type</label>
-        <div class="type-switch">
-          <label><input type="radio" name="resourceType" value="Note" checked> Note</label>
-          <label><input type="radio" name="resourceType" value="Attachment"> Attachment</label>
-        </div>
-        <p class="hint">A Note is study material (summary, past paper, template). An Attachment is a job/internship posting or opportunity.</p>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="field-index">02</div>
       <div class="field-body">
         <label for="rTitle">Title</label>
         <input type="text" id="rTitle" required placeholder="e.g. Form 3 Chemistry — Organic Reactions Summary">
@@ -511,7 +461,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">03</div>
+      <div class="field-index">02</div>
       <div class="field-body">
         <label for="rDescription">Description</label>
         <textarea id="rDescription" required placeholder="What is this, and who is it useful for?"></textarea>
@@ -519,7 +469,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">04</div>
+      <div class="field-index">03</div>
       <div class="field-body">
         <label for="rCourse">Course</label>
         <input type="text" id="rCourse" required placeholder="e.g. Chemistry, Computer Science, Electrical Installation">
@@ -527,7 +477,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">05</div>
+      <div class="field-index">04</div>
       <div class="field-body">
         <label for="rCampus">Campus / institution</label>
         <input type="text" id="rCampus" required placeholder="e.g. University of Nairobi, Alliance Girls High School">
@@ -535,7 +485,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">06</div>
+      <div class="field-index">05</div>
       <div class="field-body">
         <label for="rFile">Attach a file (optional)</label>
         <input type="file" id="rFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.zip,.txt">
@@ -550,7 +500,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">07</div>
+      <div class="field-index">06</div>
       <div class="field-body">
         <label for="rName">Your name</label>
         <input type="text" id="rName" required placeholder="Full name">
@@ -558,7 +508,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">08</div>
+      <div class="field-index">07</div>
       <div class="field-body">
         <label for="rEmail">Your account email</label>
         <input type="email" id="rEmail" required placeholder="the email you registered with">
@@ -566,7 +516,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">09</div>
+      <div class="field-index">08</div>
       <div class="field-body">
         <label for="rPhone">Phone number (optional)</label>
         <input type="tel" id="rPhone" placeholder="0712345678">
@@ -574,7 +524,7 @@
     </div>
 
     <div class="form-row">
-      <div class="field-index">10</div>
+      <div class="field-index">09</div>
       <div class="field-body">
         <label for="rPassword">Account password</label>
         <input type="password" id="rPassword" required placeholder="Verifies your approved account">
@@ -585,20 +535,20 @@
     <div class="form-msg" id="postMsg"></div>
 
     <div class="form-actions">
-      <button type="submit" class="commit" id="postSubmitBtn">Post resource</button>
+      <button type="submit" class="commit" id="postSubmitBtn">Post note</button>
     </div>
   </form>
 
   <!-- ---------- Remove ---------- -->
   <details class="manage">
-    <summary>Remove a resource you posted</summary>
+    <summary>Remove a note you posted</summary>
     <form class="form-card" id="removeForm" style="border-top: none;">
       <div class="form-row">
         <div class="field-index">01</div>
         <div class="field-body">
-          <label for="xId">Resource</label>
+          <label for="xId">Note</label>
           <select id="xId" required>
-            <option value="">Select the resource to remove…</option>
+            <option value="">Select the note to remove…</option>
           </select>
         </div>
       </div>
@@ -618,7 +568,7 @@
       </div>
       <div class="form-msg" id="removeMsg"></div>
       <div class="form-actions">
-        <button type="submit" class="commit ghost" id="removeSubmitBtn">Remove resource</button>
+        <button type="submit" class="commit ghost" id="removeSubmitBtn">Remove note</button>
       </div>
     </form>
   </details>
@@ -633,7 +583,7 @@
    * Point this at your deployed Apps Script Web App URL
    * (Deploy > New deployment > Web app > /exec) from setup.gs.
    * ---------------------------------------------------------------- */
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxCDRjj6eL2X8Pd5TQ2pXL8n1fyIosegQZkWMkiMjDbCY9wWL6jDHZ8Zl8_4I0mWmd9/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzE9ipyiM7k2JcYc9WWKQTzocQesBkAMGriZHC0c3SvOHJB_ypxcgKnMITfoInU16IG/exec';
 
   function escapeHtml(str) {
     return String(str || '').replace(/[&<>"']/g, ch => ({
@@ -661,17 +611,15 @@
   function renderResources() {
     const grid = document.getElementById('resourceGrid');
     const query = document.getElementById('searchInput').value.trim().toLowerCase();
-    const typeFilter = document.getElementById('typeFilter').value;
 
     const filtered = allResources.filter(r => {
-      if (typeFilter && r.resourceType !== typeFilter) return false;
       if (!query) return true;
-      const haystack = [r.title, r.course, r.campus, r.company, r.description].join(' ').toLowerCase();
+      const haystack = [r.title, r.course, r.campus, r.description].join(' ').toLowerCase();
       return haystack.includes(query);
     });
 
     document.getElementById('resultCount').textContent =
-      filtered.length + (filtered.length === 1 ? ' resource' : ' resources');
+      filtered.length + (filtered.length === 1 ? ' note' : ' notes');
 
     if (filtered.length === 0) {
       grid.innerHTML = `
@@ -683,8 +631,6 @@
     }
 
     grid.innerHTML = filtered.map(r => {
-      const typeClass = r.resourceType === 'Attachment' ? 'type-attachment' : '';
-      const companyLine = r.company ? `<span>${escapeHtml(r.company)}</span>` : '';
       // "Open" button: only rendered when a file/link actually exists,
       // styled and sized as a clear call-to-action rather than a plain
       // inline text link, so it's easy to spot and tap on any device.
@@ -692,17 +638,16 @@
         ? `<a class="rc-file" href="${escapeHtml(r.fileUrl)}" target="_blank" rel="noopener">Open →</a>`
         : '';
       return `
-        <div class="resource-card ${typeClass}">
+        <div class="resource-card">
           <div class="rc-top">
             <div>
-              <span class="rc-tag">${escapeHtml(r.resourceType)}</span>
+              <span class="rc-tag">Note</span>
               <div class="rc-title">${escapeHtml(r.title)}</div>
             </div>
           </div>
           <div class="rc-meta">
             <span>${escapeHtml(r.course)}</span>
             <span>${escapeHtml(r.campus)}</span>
-            ${companyLine}
             <span>${formatDate(r.timestamp)}</span>
           </div>
           <div class="rc-desc">${escapeHtml(r.description)}</div>
@@ -716,8 +661,8 @@
 
   function populateRemoveSelect() {
     const select = document.getElementById('xId');
-    select.innerHTML = '<option value="">Select the resource to remove…</option>' +
-      allResources.map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.title)} — ${escapeHtml(r.resourceType)}</option>`).join('');
+    select.innerHTML = '<option value="">Select the note to remove…</option>' +
+      allResources.map(r => `<option value="${escapeHtml(r.id)}">${escapeHtml(r.title)}</option>`).join('');
   }
 
   function loadResources() {
@@ -728,7 +673,7 @@
         populateRemoveSelect();
       } else {
         document.getElementById('resourceGrid').innerHTML = `
-          <div class="empty-state"><p>Couldn't load resources: ${escapeHtml(result.message)}</p></div>`;
+          <div class="empty-state"><p>Couldn't load notes: ${escapeHtml(result.message)}</p></div>`;
       }
     }).catch(() => {
       document.getElementById('resourceGrid').innerHTML = `
@@ -739,7 +684,6 @@
   }
 
   document.getElementById('searchInput').addEventListener('input', renderResources);
-  document.getElementById('typeFilter').addEventListener('change', renderResources);
 
   function showMsg(el, text, ok) {
     el.textContent = text;
@@ -815,7 +759,7 @@
         if (!uploadResult.success) {
           showMsg(msg, uploadResult.message, false);
           btn.disabled = false;
-          btn.textContent = 'Post resource';
+          btn.textContent = 'Post note';
           return;
         }
         fileUrl = uploadResult.fileUrl;
@@ -825,7 +769,7 @@
       btn.textContent = 'Posting…';
       const payload = {
         action: 'createResource',
-        resourceType: document.querySelector('input[name="resourceType"]:checked').value,
+        resourceType: 'Note',
         title: document.getElementById('rTitle').value,
         description: document.getElementById('rDescription').value,
         course: document.getElementById('rCourse').value,
@@ -849,7 +793,7 @@
       showMsg(msg, 'Network error — check WEBAPP_URL and try again.', false);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Post resource';
+      btn.textContent = 'Post note';
     }
   });
 
@@ -877,7 +821,7 @@
       showMsg(msg, 'Network error — check WEBAPP_URL and try again.', false);
     }).finally(() => {
       btn.disabled = false;
-      btn.textContent = 'Remove resource';
+      btn.textContent = 'Remove note';
     });
   });
 
