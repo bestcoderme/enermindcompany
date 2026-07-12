@@ -105,9 +105,24 @@
     text-align: center;
   }
 
-  /* ---------- Daily motivation banner ---------- */
+  .active-note {
+    margin: 18px auto 0;
+    max-width: 48ch;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.25);
+    border-left: 3px solid var(--ok);
+    font-size: 0.85rem;
+    color: rgba(232,238,242,0.85);
+    text-align: left;
+  }
+
+  /* ---------- Weekly motivation banner ---------- */
   .motivation-banner {
-    margin-top: 28px;
+    margin-top: 20px;
     padding: 16px 20px;
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.25);
@@ -162,7 +177,6 @@
   .form-panel { display: none; margin-top: 24px; }
   .form-panel.active { display: block; }
 
-  /* ---------- Spec-sheet form card, shared by both panels ---------- */
   .form-card, form.spec-sheet {
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.3);
@@ -315,14 +329,18 @@
   <p class="eyebrow" id="pageEyebrow">Sheet 00 — Access your account</p>
   <h1 id="pageHeading">Welcome to <em>Enemind</em></h1>
   <p class="lede" id="pageLede">
-    Already registered? Log in below. New here? Switch to Register to create
-    an account — every registration starts as Pending until an admin approves it.
-    Registration is open to students (secondary, TVET, university, graduate)
-    and to adults, who can sign up with just a name, email, and password.
+    Already registered? Log in below. New here? Switch to Register — accounts are
+    active immediately, so you can log in and start using Enemind right after you sign up.
+    Open to students (secondary, TVET, university, graduate) and to adults, who can
+    sign up with just a name, email, and password.
   </p>
 
+  <div class="active-note">
+    <span>✓</span>&nbsp;<span>No waiting for approval — every new account is Active from the moment you register.</span>
+  </div>
+
   <div class="motivation-banner" id="motivationBanner">
-    <div class="mb-eyebrow">Today's motivation</div>
+    <div class="mb-eyebrow">This week's motivation</div>
     <div class="mb-text" id="motivationText"></div>
   </div>
 
@@ -388,7 +406,7 @@
 
       <div class="submit-row">
         <span id="form-status" role="status" aria-live="polite"></span>
-        <button type="submit" class="commit" id="submitBtn">Submit registration</button>
+        <button type="submit" class="commit" id="submitBtn">Create account</button>
       </div>
     </form>
   </div>
@@ -402,9 +420,10 @@
   /* ------------------------------------------------------------------
    * Point this at your deployed Apps Script Web App URL
    * (Deploy > New deployment > Web app > /exec) from setup.gs.
-   * Must be the same deployment used by home.html / marketplace.html / etc.
+   * Must be the same deployment used by home.html / entrepreneurs.html /
+   * books.html / admin.html / profile.html.
    * ---------------------------------------------------------------- */
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzE9ipyiM7k2JcYc9WWKQTzocQesBkAMGriZHC0c3SvOHJB_ypxcgKnMITfoInU16IG/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbweqIoXdbkqzo8d_zwlmRJB_SESWs14cWaI9OasGJlnGxYJCL2y4nr2QR5q-Pze9tcS/exec';
 
   function callApi(payload) {
     return fetch(WEBAPP_URL, {
@@ -440,8 +459,8 @@
     });
   }
 
-  /* ---------- Daily motivation ---------- */
-  callApi({ action: 'getDailyMotivation' }).then(result => {
+  /* ---------- Weekly motivation ---------- */
+  callApi({ action: 'getWeeklyMotivation' }).then(result => {
     if (result.success && result.quote) {
       document.getElementById('motivationText').textContent = result.quote;
       document.getElementById('motivationBanner').classList.add('show');
@@ -478,7 +497,7 @@
     loginPanel.classList.remove('active');
     pageEyebrow.textContent = 'Sheet 00 — Register';
     pageHeading.innerHTML = 'Create your <em>account</em>';
-    pageLede.textContent = 'Choose what you\'re registering as, then fill in your details. Every registration starts as Pending until an admin reviews and approves it.';
+    pageLede.textContent = 'Choose what you\'re registering as, then fill in your details. Your account is Active the moment you submit — no waiting for approval.';
   }
 
   tabLogin.addEventListener('click', showLogin);
@@ -499,14 +518,13 @@
     btn.disabled = true;
     btn.textContent = 'Logging in…';
 
-    callApi({
-      action: 'login',
-      email: document.getElementById('lEmail').value,
-      password: document.getElementById('lPassword').value
-    }).then(result => {
+    const email = document.getElementById('lEmail').value;
+    const password = document.getElementById('lPassword').value;
+
+    callApi({ action: 'login', email, password }).then(result => {
       if (result.success) {
         showMsg(msg, result.message, true);
-        window.location.href = 'home.html?' + buildQueryString(result.data);
+        window.location.href = 'home.html?' + buildQueryString(Object.assign({}, result.data, { email, password }));
       } else {
         showMsg(msg, result.message, false);
         btn.disabled = false;
@@ -646,11 +664,6 @@
       </div>`;
   }
 
-  /**
-   * Renders a row for an OPTIONAL, generic field (not required, no
-   * category-specific validation) — used for Logo URL and TikTok
-   * username, which are offered to every registration category.
-   */
   function optionalFieldRowHTML(index, key, label, type, placeholder, hint) {
     const idx = String(index).padStart(2, '0');
     return `
@@ -698,11 +711,10 @@
       index++;
     });
 
-    // Generic optional fields, offered to every category.
     html += optionalFieldRowHTML(
       index, 'logoUrl', 'Logo / profile image URL', 'url',
       'https://...',
-      'Link to an image people will see on your listings and posts. You can add or change this later.'
+      'Link to an image people will see on your profile. You can add or change this any time from Edit Profile.'
     );
     index++;
     html += optionalFieldRowHTML(
@@ -753,7 +765,6 @@
       data[f.key] = val;
     });
 
-    // Optional generic fields — included if present, but never required.
     const logoUrlEl = document.getElementById('f_logoUrl');
     const tiktokEl = document.getElementById('f_tiktokUsername');
     data.logoUrl = logoUrlEl ? logoUrlEl.value.trim() : '';
@@ -774,18 +785,23 @@
       return;
     }
 
-    setStatus('Submitting…', '');
+    setStatus('Creating your account…', '');
     submitBtn.disabled = true;
 
     try {
-      const res = await fetch(WEBAPP_URL, {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
-      const result = await res.json();
+      const result = await callApi(data);
 
       if (result.success) {
-        setStatus(result.message || 'Registered — pending review.', 'ok');
+        setStatus('Account created! Logging you in…', 'ok');
+        // Auto-login: the account is Active immediately, so log straight in
+        // and land on the dashboard instead of asking the person to log in
+        // again with the details they just typed.
+        const loginResult = await callApi({ action: 'login', email: data.email, password: data.password });
+        if (loginResult.success) {
+          window.location.href = 'home.html?' + buildQueryString(Object.assign({}, loginResult.data, { email: data.email, password: data.password }));
+          return;
+        }
+        setStatus(result.message + ' You can now log in from the Log in tab.', 'ok');
         registerForm.reset();
         dynamicFieldsEl.innerHTML = '';
         regTypeHint.textContent = 'Pick a type to reveal the rest of the form.';
