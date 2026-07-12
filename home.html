@@ -223,9 +223,36 @@
     color: rgba(232,238,242,0.8);
   }
 
+  /* ---------- Daily motivation banner ---------- */
+  .motivation-banner {
+    margin-top: 24px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.25);
+    border-left: 3px solid var(--ok);
+    display: none;
+  }
+  .motivation-banner.show { display: flex; }
+  .motivation-banner .banner-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(232,238,242,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background: rgba(232,238,242,0.05);
+  }
+  .motivation-banner .banner-text { font-size: 0.9rem; color: rgba(232,238,242,0.85); }
+  .motivation-banner .banner-text strong { color: var(--paper); }
+
   /* ---------- Status banners ---------- */
   .status-banner {
-    margin-top: 28px;
+    margin-top: 16px;
     display: flex;
     align-items: flex-start;
     gap: 14px;
@@ -533,7 +560,7 @@
   }
   .directory-meta a { color: var(--copper); text-decoration: underline; }
 
-  /* ---------- Postings (notes/attachments + listings) inside a search result ---------- */
+  /* ---------- Postings (notes + listings) inside a search result ---------- */
   .directory-postings {
     margin-top: 12px;
     border: 1px dashed rgba(232,238,242,0.3);
@@ -629,7 +656,7 @@
       <button type="button" id="navMenuToggle" class="menu-btn" aria-haspopup="true" aria-expanded="false" title="Menu">☰</button>
       <div class="nav-dropdown" id="navDropdown" role="menu">
         <a href="marketplace.html">Marketplace</a>
-        <a href="resources.html">Notes &amp; Attachments</a>
+        <a href="resources.html">Notes</a>
       </div>
     </div>
 
@@ -663,6 +690,11 @@
   <h1 id="welcomeHeading">Welcome back<span id="statusBadgeSlot"></span></h1>
   <p class="lede" id="welcomeLede">Loading your profile…</p>
 
+  <div class="motivation-banner" id="motivationBanner">
+    <span class="banner-icon">✦</span>
+    <div class="banner-text"><strong>Today's motivation:</strong> <span id="motivationText"></span></div>
+  </div>
+
   <div id="statusBanners"></div>
 
   <div class="section-head">
@@ -689,7 +721,7 @@
       <input type="text" id="directorySearchInput" placeholder="Search by name, email, or TikTok username">
       <button type="button" class="commit" id="directorySearchBtn">Search</button>
     </div>
-    <div class="search-hint">Only Approved accounts show up in results. Matches by name, email, or TikTok username — each result also shows everything that person has posted to the Marketplace and Notes &amp; Attachments.</div>
+    <div class="search-hint">Only Approved accounts show up in results. Matches by name, email, or TikTok username — each result also shows everything that person has posted to the Marketplace and Notes.</div>
     <div id="directoryResults"></div>
   </div>
 </main>
@@ -704,7 +736,7 @@
    * (Deploy > New deployment > Web app > /exec) from setup.gs.
    * Must be the same deployment used by index.html / register.html.
    * ---------------------------------------------------------------- */
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbw9nyLI__DjY3fmWd5090uvvxSx8nEirVJosA_0blMgH7GHYiPmPrpxmswT3azBNJId/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbzE9ipyiM7k2JcYc9WWKQTzocQesBkAMGriZHC0c3SvOHJB_ypxcgKnMITfoInU16IG/exec';
 
   /* ---------- Field-label config, mirrors setup.gs / register.html ---------- */
   const CATEGORY_CONFIG = {
@@ -735,7 +767,7 @@
         { key: 'course', label: 'Course' }
       ],
       roadmap: [
-        { title: 'Find an attachment', desc: 'Attachment listings for your course open once approved.' },
+        { title: 'Find an attachment placement', desc: 'Industrial attachment listings for your course open once approved.' },
         { title: 'Build your CV', desc: 'CV tools are on the roadmap for a future release.' },
         { title: 'Connect with a mentor', desc: 'Get guidance from professionals in your field.' }
       ]
@@ -773,100 +805,16 @@
         { title: 'Start learning to invest', desc: 'The Investment Academy opens in a later phase.' }
       ]
     },
-    teacher: {
-      label: 'Teacher',
+    adult: {
+      label: 'Adult',
       fields: [
         { key: 'name', label: 'Full name' },
-        { key: 'email', label: 'Email' },
-        { key: 'phone', label: 'Phone number' },
-        { key: 'county', label: 'County' },
-        { key: 'institution', label: 'School / institution' },
-        { key: 'subject', label: 'Subject taught' }
+        { key: 'email', label: 'Email' }
       ],
       roadmap: [
-        { title: 'Upload your notes', desc: 'Notes uploads open once your account is approved.' },
-        { title: 'List a course', desc: 'Course creation tools are on the roadmap.' },
-        { title: 'Build your reputation', desc: 'Public teacher profiles are coming soon.' }
-      ]
-    },
-    lecturer: {
-      label: 'Lecturer',
-      fields: [
-        { key: 'name', label: 'Full name' },
-        { key: 'email', label: 'Email' },
-        { key: 'phone', label: 'Phone number' },
-        { key: 'county', label: 'County' },
-        { key: 'university', label: 'University' },
-        { key: 'department', label: 'Department / field' }
-      ],
-      roadmap: [
-        { title: 'Upload course materials', desc: 'Materials uploads open once approved.' },
-        { title: 'Mentor students', desc: 'Opt in to student mentorship requests.' },
-        { title: 'List a research collaboration', desc: 'Coming in a later phase.' }
-      ]
-    },
-    company: {
-      label: 'Company',
-      fields: [
-        { key: 'name', label: 'Company name' },
-        { key: 'contactPerson', label: 'Contact person' },
-        { key: 'email', label: 'Company email' },
-        { key: 'phone', label: 'Phone number' },
-        { key: 'county', label: 'County' },
-        { key: 'industry', label: 'Industry' }
-      ],
-      roadmap: [
-        { title: 'Post a job or attachment', desc: 'Recruitment tools open once your account is approved.' },
-        { title: 'Set up your talent dashboard', desc: 'On the roadmap for a future release.' },
-        { title: 'Sponsor a competition', desc: 'Reach students directly through EnerMind events.' }
-      ]
-    },
-    hrManager: {
-      label: 'HR Manager',
-      fields: [
-        { key: 'name', label: 'Full name' },
-        { key: 'email', label: 'Email' },
-        { key: 'phone', label: 'Phone number' },
-        { key: 'county', label: 'County' },
-        { key: 'companyName', label: 'Company name' },
-        { key: 'industry', label: 'Industry' }
-      ],
-      roadmap: [
-        { title: 'Post openings', desc: 'Recruitment tools open once your account is approved.' },
-        { title: 'Manage internships', desc: 'Internship management is on the roadmap.' },
-        { title: 'Search talent', desc: 'Talent search tools coming in a later phase.' }
-      ]
-    },
-    mentor: {
-      label: 'Mentor',
-      fields: [
-        { key: 'name', label: 'Full name' },
-        { key: 'email', label: 'Email' },
-        { key: 'phone', label: 'Phone number' },
-        { key: 'county', label: 'County' },
-        { key: 'expertise', label: 'Area of expertise' },
-        { key: 'experience', label: 'Years of experience' }
-      ],
-      roadmap: [
-        { title: 'Set your availability', desc: 'Mentee matching opens once your account is approved.' },
-        { title: 'Build your professional profile', desc: 'Public mentor profiles are on the roadmap.' },
-        { title: 'Offer a coaching session', desc: 'Coming in a later phase.' }
-      ]
-    },
-    entrepreneur: {
-      label: 'Entrepreneur',
-      fields: [
-        { key: 'name', label: 'Full name' },
-        { key: 'email', label: 'Email' },
-        { key: 'phone', label: 'Phone number' },
-        { key: 'county', label: 'County' },
-        { key: 'businessName', label: 'Business name' },
-        { key: 'businessSector', label: 'Business sector' }
-      ],
-      roadmap: [
-        { title: 'Find partners and mentors', desc: 'Connections open once your account is approved.' },
-        { title: 'List your business', desc: 'Business marketplace listings are on the roadmap.' },
-        { title: 'Access funding opportunities', desc: 'Investor introductions coming in a later phase.' }
+        { title: 'Browse the Marketplace', desc: 'List a product or gig, or find one nearby, once approved.' },
+        { title: 'Browse Notes', desc: 'See what students and graduates are sharing.' },
+        { title: 'Complete your profile', desc: 'Add a logo/profile image and TikTok handle any time from your account.' }
       ]
     }
   };
@@ -882,6 +830,13 @@
     const obj = {};
     params.forEach((value, key) => { obj[key] = value; });
     return obj;
+  }
+
+  function callApi(payload) {
+    return fetch(WEBAPP_URL, {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    }).then(res => res.json());
   }
 
   /**
@@ -921,6 +876,14 @@
   const displayName = user.name || 'there';
 
   document.title = 'Dashboard — ' + typeLabel + ' — Enemind Company';
+
+  /* ---------- Daily motivation ---------- */
+  callApi({ action: 'getDailyMotivation' }).then(result => {
+    if (result.success && result.quote) {
+      document.getElementById('motivationText').textContent = result.quote;
+      document.getElementById('motivationBanner').classList.add('show');
+    }
+  }).catch(() => {});
 
   /* ---------- Header / account dropdown ---------- */
   renderAvatar(document.getElementById('accountToggle'), displayName, user.logoUrl);
@@ -969,7 +932,7 @@
       <div class="status-banner ok">
         <span class="banner-icon">✓</span>
         <div class="banner-text">
-          <strong>You're approved and fully signed in.</strong> Your account is active as a ${escapeHtml(typeLabel)}.
+          <strong>You're approved and fully signed in.</strong> Your account is active as a(n) ${escapeHtml(typeLabel)}.
         </div>
       </div>`;
   }
@@ -1067,10 +1030,10 @@
   }
 
   /**
-   * Builds the HTML for the "notes/attachments + marketplace listings"
-   * disclosure under a single directory search result. Renders nothing
-   * beyond a small "nothing posted yet" note if the person hasn't
-   * posted anything Active in either sheet.
+   * Builds the HTML for the "notes + marketplace listings" disclosure
+   * under a single directory search result. Renders nothing beyond a
+   * small "nothing posted yet" note if the person hasn't posted
+   * anything Active in either sheet.
    */
   function buildPostingsHtml(result) {
     const resources = result.resources || [];
@@ -1078,7 +1041,7 @@
     const total = resources.length + listings.length;
 
     if (total === 0) {
-      return `<div class="posting-empty">No notes, attachments, or listings posted yet.</div>`;
+      return `<div class="posting-empty">No notes or listings posted yet.</div>`;
     }
 
     const resourceItems = resources.map(r => {
@@ -1097,18 +1060,22 @@
 
     const listingItems = listings.map(l => {
       const metaBits = [l.price, l.campus || l.county].filter(Boolean).map(escapeHtml).join(' · ');
+      const fileLink = l.fileUrl
+        ? `<a class="posting-item-link" href="${escapeHtml(l.fileUrl)}" target="_blank" rel="noopener">File →</a>`
+        : '';
       return `
         <div class="posting-item">
           <span class="posting-item-tag">${escapeHtml(l.listingType)}</span>
           <span class="posting-item-title">${escapeHtml(l.title)}</span>
           ${metaBits ? `<span class="posting-item-meta">${metaBits}</span>` : ''}
+          ${fileLink}
         </div>`;
     }).join('');
 
     return `
       <details class="directory-postings">
         <summary>View everything posted (${total})</summary>
-        ${resourceItems ? `<div class="posting-group"><div class="posting-group-title">Notes &amp; Attachments (${resources.length})</div>${resourceItems}</div>` : ''}
+        ${resourceItems ? `<div class="posting-group"><div class="posting-group-title">Notes (${resources.length})</div>${resourceItems}</div>` : ''}
         ${listingItems ? `<div class="posting-group"><div class="posting-group-title">Marketplace Listings (${listings.length})</div>${listingItems}</div>` : ''}
       </details>`;
   }
@@ -1163,10 +1130,7 @@
         <p>Searching…</p>
       </div>`;
 
-    fetch(WEBAPP_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'searchDirectory', query: q })
-    }).then(res => res.json()).then(result => {
+    callApi({ action: 'searchDirectory', query: q }).then(result => {
       if (result.success) {
         renderDirectoryResults(result.results);
       } else {
