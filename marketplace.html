@@ -122,6 +122,61 @@
   .sheet-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--copper); flex-shrink: 0; }
   .section-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; }
 
+  /* ---------- Entrepreneur spotlight ---------- */
+  .spotlight-section { margin-top: 8px; }
+
+  .spotlight-card {
+    background: rgba(201,123,61,0.08);
+    border: 1px solid var(--copper);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .spotlight-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--copper);
+  }
+
+  .spotlight-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+
+  .spotlight-price {
+    font-family: var(--font-mono);
+    color: var(--ok);
+    font-size: 0.95rem;
+  }
+
+  .spotlight-desc {
+    font-size: 0.95rem;
+    color: rgba(232,238,242,0.85);
+  }
+
+  .spotlight-meta {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: rgba(232,238,242,0.65);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .spotlight-meta strong { color: var(--paper); }
+
+  .spotlight-empty {
+    padding: 32px 24px;
+    text-align: center;
+    border: 1px dashed rgba(232,238,242,0.35);
+    color: rgba(232,238,242,0.7);
+    font-size: 0.9rem;
+  }
+
   /* ---------- Filters ---------- */
   .filters {
     display: grid;
@@ -437,6 +492,18 @@
   <div class="section-head">
     <div class="heading">
       <span class="sheet-no">01</span>
+      <h2>Entrepreneur spotlight</h2>
+    </div>
+  </div>
+  <p class="lede" style="margin-top:0;">
+    A different approved Entrepreneur listing, featured here each week —
+    everyone sees the same spotlight for the week, and it rotates automatically.
+  </p>
+  <div class="spotlight-section" id="spotlightSection"></div>
+
+  <div class="section-head">
+    <div class="heading">
+      <span class="sheet-no">02</span>
       <h2>Filter listings</h2>
     </div>
   </div>
@@ -467,7 +534,7 @@
 
   <div class="section-head">
     <div class="heading">
-      <span class="sheet-no">02</span>
+      <span class="sheet-no">03</span>
       <h2>Listings</h2>
     </div>
     <span id="list-status" role="status" aria-live="polite"></span>
@@ -481,7 +548,7 @@
 
   <div class="section-head post-toggle-row">
     <div class="heading">
-      <span class="sheet-no">03</span>
+      <span class="sheet-no">04</span>
       <h2>Post a listing</h2>
     </div>
     <button type="button" class="commit ghost" id="postToggleBtn">Post a listing</button>
@@ -590,7 +657,7 @@
 
   <div class="section-head">
     <div class="heading">
-      <span class="sheet-no">04</span>
+      <span class="sheet-no">05</span>
       <h2>Remove a listing</h2>
     </div>
   </div>
@@ -619,6 +686,11 @@
     'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
   ];
 
+  // Must match the "label" used for the entrepreneur category in setup.gs
+  // (CATEGORIES.entrepreneur.label), since that's what's stored as
+  // posterType on each marketplace listing.
+  const ENTREPRENEUR_LABEL = 'Entrepreneur';
+
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, ch => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -642,6 +714,7 @@
   const emptyStateEl = document.getElementById('emptyState');
   const listStatusEl = document.getElementById('list-status');
   const activeFiltersLineEl = document.getElementById('activeFiltersLine');
+  const spotlightSectionEl = document.getElementById('spotlightSection');
 
   function setListStatus(message, state) {
     listStatusEl.textContent = message;
@@ -662,6 +735,7 @@
         allListings = result.listings || [];
         rebuildCampusOptions();
         renderListings();
+        renderSpotlight();
         setListStatus(allListings.length + ' total listing' + (allListings.length === 1 ? '' : 's') + '.', '');
       } else {
         setListStatus(result.message || 'Could not load listings.', 'err');
@@ -680,6 +754,46 @@
     campusFilterEl.innerHTML = '<option value="">All campuses / institutions</option>' +
       campuses.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
     if (campuses.indexOf(current) !== -1) campusFilterEl.value = current;
+  }
+
+  /* ---------- Entrepreneur spotlight ----------
+     Picks one Active Entrepreneur listing to feature. The pick is based
+     on a week counter (days since the Unix epoch / 7), so every visitor
+     sees the same spotlight for a given calendar week, and it moves on
+     to the next entrepreneur listing automatically once a week passes —
+     no manual admin step required. */
+  function getWeekIndex() {
+    return Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));
+  }
+
+  function renderSpotlight() {
+    const entrepreneurListings = allListings.filter(l => l.posterType === ENTREPRENEUR_LABEL);
+
+    if (entrepreneurListings.length === 0) {
+      spotlightSectionEl.innerHTML = `
+        <div class="spotlight-empty">
+          No entrepreneur listings yet — check back once one is posted.
+        </div>`;
+      return;
+    }
+
+    const idx = getWeekIndex() % entrepreneurListings.length;
+    const l = entrepreneurListings[idx];
+
+    const priceHtml = l.price ? `<div class="spotlight-price">${escapeHtml(l.price)}</div>` : '';
+    const phoneHtml = l.posterPhone ? ` · Phone: <strong>${escapeHtml(l.posterPhone)}</strong>` : '';
+
+    spotlightSectionEl.innerHTML = `
+      <div class="spotlight-card">
+        <span class="spotlight-eyebrow">This week's entrepreneur spotlight</span>
+        <div class="spotlight-title">${escapeHtml(l.title)}</div>
+        ${priceHtml}
+        <div class="spotlight-desc">${escapeHtml(l.description)}</div>
+        <div class="spotlight-meta">
+          <span>Posted by <strong>${escapeHtml(l.posterName)}</strong></span>
+          <span>${escapeHtml(l.campus)} · ${escapeHtml(l.county)}${phoneHtml}</span>
+        </div>
+      </div>`;
   }
 
   /* ---------- Render ---------- */
