@@ -629,15 +629,16 @@
     <p class="eyebrow">Registration</p>
     <h1>Create your <em>account</em> on the register.</h1>
     <p class="lede">
-      Fill in your details below. Your registration starts with a
-      <strong>Pending</strong> status until an admin reviews and approves it.
+      Choose what you're registering as, then fill in your details below.
+      Every registration starts with a <strong>Pending</strong> status until
+      an admin reviews and approves it.
     </p>
   </div>
 
   <div class="title-block">
     <div class="cell">
       <div class="label">Sheet</div>
-      <div class="value">Registrations</div>
+      <div class="value">Registrations / Companies / Mentors / TechTeachers</div>
     </div>
     <div class="cell">
       <div class="label">Status</div>
@@ -660,63 +661,19 @@
     <div class="field-row">
       <div class="field-index">01</div>
       <div class="field-body">
-        <label for="fullName">Full name</label>
-        <input type="text" id="fullName" name="fullName" autocomplete="name" required>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field-index">02</div>
-      <div class="field-body">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" autocomplete="email" required>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field-index">03</div>
-      <div class="field-body">
-        <label for="phone">Phone number</label>
-        <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="e.g. 0712345678" required>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field-index">04</div>
-      <div class="field-body">
-        <label for="county">County</label>
-        <select id="county" name="county" required>
-          <option value="" disabled selected>Select county</option>
+        <label for="regType">I am registering as</label>
+        <select id="regType" name="regType" required>
+          <option value="" disabled selected>Select registration type</option>
+          <option value="student">Campus Student</option>
+          <option value="company">Company</option>
+          <option value="mentor">Program / Mentor</option>
+          <option value="techTeacher">Tech Skill Teacher</option>
         </select>
+        <div class="hint" id="regTypeHint">Pick a type to reveal the rest of the form.</div>
       </div>
     </div>
-    <div class="field-row">
-      <div class="field-index">05</div>
-      <div class="field-body">
-        <label for="university">University</label>
-        <select id="university" name="university" required>
-          <option value="" disabled selected>Select university</option>
-        </select>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field-index">06</div>
-      <div class="field-body">
-        <label for="password">Password</label>
-        <div class="password-wrap">
-          <input type="password" id="password" name="password" autocomplete="new-password" required>
-          <button type="button" class="toggle-visibility" data-target="password">Show</button>
-        </div>
-        <div class="hint">At least 8 characters, with a letter and a number.</div>
-      </div>
-    </div>
-    <div class="field-row">
-      <div class="field-index">07</div>
-      <div class="field-body">
-        <label for="confirmPassword">Confirm password</label>
-        <div class="password-wrap">
-          <input type="password" id="confirmPassword" name="confirmPassword" autocomplete="new-password" required>
-          <button type="button" class="toggle-visibility" data-target="confirmPassword">Show</button>
-        </div>
-      </div>
-    </div>
+
+    <div id="dynamicFields"></div>
 
     <div class="submit-row">
       <span id="form-status" role="status" aria-live="polite"></span>
@@ -758,8 +715,9 @@
   </div>
 
   <p class="lede about-intro">
-    EnerMind is built for Kenyan universities — connecting students, and helping them find
-    attachments, notes, and past exams.
+    EnerMind is built for Kenyan universities — connecting students, companies,
+    mentors, and tech skill teachers, and helping them find attachments, notes,
+    past exams, mentorship, and hands-on training.
   </p>
 
   <div class="profile-card">
@@ -814,8 +772,9 @@
     <div class="info-banner university-banner">
       <span class="banner-icon">🎓</span>
       <div class="banner-text">
-        <strong>University students:</strong> pick your university in the form below so we can route
-        campus-specific updates, events, and resources to you once your registration is approved.
+        <strong>Companies, mentors & tech teachers:</strong> select "I am registering as" above to see
+        the fields for your account type. Campus-specific and category-specific updates go out once
+        your registration is approved.
       </div>
     </div>
   </div>
@@ -826,7 +785,7 @@
 <script>
   // Replace with your deployed Apps Script Web App URL from setup.gs
   // (Deploy > New deployment > Web app > copy the /exec URL).
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxm0Krq4xmKKVhyFWnMk-Y7l6hBRCex3r1qjiZeQ54j4__O85fqVbF1zBVTVHG-VwWp/exec';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyRILz9if4dIxxKjnn1Z3zOKxnCAVDuVa4EV4h0L8AuOEUoujPRSck5JRj67oOaJOpy/exec';
 
   const COUNTIES = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
@@ -851,29 +810,169 @@
     'Garissa University'
   ];
 
-  const countySelect = document.getElementById('county');
-  COUNTIES.forEach(c => {
-    const opt = document.createElement('option');
-    opt.value = c;
-    opt.textContent = c;
-    countySelect.appendChild(opt);
-  });
+  const INDUSTRIES = [
+    'Agriculture', 'Construction & Real Estate', 'Education', 'Energy & Utilities',
+    'Finance & Insurance', 'Healthcare', 'Hospitality & Tourism', 'ICT / Software',
+    'Logistics & Transport', 'Manufacturing', 'Media & Communications',
+    'Retail & E-commerce', 'Telecommunications', 'Other'
+  ];
 
-  const universitySelect = document.getElementById('university');
-  UNIVERSITIES.forEach(u => {
-    const opt = document.createElement('option');
-    opt.value = u;
-    opt.textContent = u;
-    universitySelect.appendChild(opt);
-  });
+  const EXPERTISE_AREAS = [
+    'Business & Entrepreneurship', 'Career Coaching', 'Engineering', 'Finance & Investment',
+    'Leadership & Management', 'Marketing & Sales', 'Renewable Energy',
+    'Software Development', 'Data & AI', 'Design (UI/UX, Graphics)', 'Other'
+  ];
 
-  document.querySelectorAll('.toggle-visibility').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const input = document.getElementById(btn.dataset.target);
-      const isHidden = input.type === 'password';
-      input.type = isHidden ? 'text' : 'password';
-      btn.textContent = isHidden ? 'Hide' : 'Show';
+  const EXPERIENCE_YEARS = ['Less than 1 year', '1-3 years', '3-5 years', '5-10 years', '10+ years'];
+
+  const TECH_SKILLS = [
+    'Web Development', 'Mobile App Development', 'Data Science & Analytics',
+    'Artificial Intelligence / Machine Learning', 'Cybersecurity', 'Cloud Computing',
+    'UI/UX Design', 'Digital Marketing', 'Graphic Design', 'Networking & IT Support',
+    'Robotics & IoT', 'Other'
+  ];
+
+  const EXPERIENCE_LEVELS = [
+    'Beginner-friendly (teaches fundamentals)', 'Intermediate', 'Advanced',
+    'Expert / Industry professional'
+  ];
+
+  /* ---------- Registration category config (mirrors setup.gs CATEGORIES) ---------- */
+  const CATEGORY_CONFIG = {
+    student: {
+      label: 'Campus Student',
+      fields: [
+        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
+        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
+        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
+        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
+        { key: 'university', label: 'University', type: 'select', options: UNIVERSITIES }
+      ]
+    },
+    company: {
+      label: 'Company',
+      fields: [
+        { key: 'companyName', label: 'Company name', type: 'text' },
+        { key: 'contactPerson', label: 'Contact person', type: 'text', autocomplete: 'name' },
+        { key: 'email', label: 'Company email', type: 'email', autocomplete: 'email' },
+        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
+        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
+        { key: 'industry', label: 'Industry', type: 'select', options: INDUSTRIES }
+      ]
+    },
+    mentor: {
+      label: 'Program / Mentor',
+      fields: [
+        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
+        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
+        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
+        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
+        { key: 'expertise', label: 'Area of expertise', type: 'select', options: EXPERTISE_AREAS },
+        { key: 'experience', label: 'Years of experience', type: 'select', options: EXPERIENCE_YEARS }
+      ]
+    },
+    techTeacher: {
+      label: 'Tech Skill Teacher',
+      fields: [
+        { key: 'name', label: 'Full name', type: 'text', autocomplete: 'name' },
+        { key: 'email', label: 'Email', type: 'email', autocomplete: 'email' },
+        { key: 'phone', label: 'Phone number', type: 'tel', autocomplete: 'tel', placeholder: 'e.g. 0712345678' },
+        { key: 'county', label: 'County', type: 'select', options: COUNTIES },
+        { key: 'skill', label: 'Skill you teach', type: 'select', options: TECH_SKILLS },
+        { key: 'experienceLevel', label: 'Experience level', type: 'select', options: EXPERIENCE_LEVELS }
+      ]
+    }
+  };
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+  }
+
+  function fieldRowHTML(index, field) {
+    const idx = String(index).padStart(2, '0');
+    if (field.type === 'select') {
+      const options = field.options.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('');
+      return `
+        <div class="field-row">
+          <div class="field-index">${idx}</div>
+          <div class="field-body">
+            <label for="f_${field.key}">${escapeHtml(field.label)}</label>
+            <select id="f_${field.key}" name="${field.key}" required>
+              <option value="" disabled selected>Select ${escapeHtml(field.label.toLowerCase())}</option>
+              ${options}
+            </select>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="field-row">
+        <div class="field-index">${idx}</div>
+        <div class="field-body">
+          <label for="f_${field.key}">${escapeHtml(field.label)}</label>
+          <input type="${field.type}" id="f_${field.key}" name="${field.key}"
+            ${field.autocomplete ? `autocomplete="${field.autocomplete}"` : ''}
+            ${field.placeholder ? `placeholder="${escapeHtml(field.placeholder)}"` : ''} required>
+        </div>
+      </div>`;
+  }
+
+  function passwordRowHTML(index, key, label, autocomplete, withHint) {
+    const idx = String(index).padStart(2, '0');
+    return `
+      <div class="field-row">
+        <div class="field-index">${idx}</div>
+        <div class="field-body">
+          <label for="${key}">${label}</label>
+          <div class="password-wrap">
+            <input type="password" id="${key}" name="${key}" autocomplete="${autocomplete}" required>
+            <button type="button" class="toggle-visibility" data-target="${key}">Show</button>
+          </div>
+          ${withHint ? '<div class="hint">At least 8 characters, with a letter and a number.</div>' : ''}
+        </div>
+      </div>`;
+  }
+
+  function bindPasswordToggles(scope) {
+    scope.querySelectorAll('.toggle-visibility').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        const isHidden = input.type === 'password';
+        input.type = isHidden ? 'text' : 'password';
+        btn.textContent = isHidden ? 'Hide' : 'Show';
+      });
     });
+  }
+
+  const dynamicFieldsEl = document.getElementById('dynamicFields');
+  const regTypeSelect = document.getElementById('regType');
+  const regTypeHint = document.getElementById('regTypeHint');
+
+  function renderCategoryFields(type) {
+    const config = CATEGORY_CONFIG[type];
+    if (!config) {
+      dynamicFieldsEl.innerHTML = '';
+      return;
+    }
+
+    let html = '';
+    let index = 2;
+    config.fields.forEach(f => {
+      html += fieldRowHTML(index, f);
+      index++;
+    });
+    html += passwordRowHTML(index, 'password', 'Password', 'new-password', true);
+    index++;
+    html += passwordRowHTML(index, 'confirmPassword', 'Confirm password', 'new-password', false);
+
+    dynamicFieldsEl.innerHTML = html;
+    bindPasswordToggles(dynamicFieldsEl);
+    regTypeHint.textContent = 'Registering as: ' + config.label + '.';
+  }
+
+  regTypeSelect.addEventListener('change', (e) => {
+    renderCategoryFields(e.target.value);
   });
 
   /* ---------- REGISTER / LOGIN TAB TOGGLE ---------- */
@@ -912,14 +1011,17 @@
   // Opened as a brand-new page/tab rather than replacing this one, so the
   // register/login page stays put in its own tab.
   function goToHome(user) {
-    const qs = new URLSearchParams({
-      name: user.name || '',
-      email: user.email || '',
-      phone: user.phone || '',
-      county: user.county || '',
-      university: user.university || '',
+    const params = {
+      type: user.type || '',
+      typeLabel: user.typeLabel || '',
       status: user.status || 'Pending'
+    };
+    Object.keys(user).forEach(k => {
+      if (['type', 'typeLabel', 'status'].indexOf(k) === -1) {
+        params[k] = user[k] != null ? user[k] : '';
+      }
     });
+    const qs = new URLSearchParams(params);
     const homeUrl = 'home.html?' + qs.toString();
     const newTab = window.open(homeUrl, '_blank');
     if (!newTab) {
@@ -976,6 +1078,10 @@
   const loginStatusEl = document.getElementById('login-status');
   const loginBtn = document.getElementById('loginBtn');
 
+  // Static toggle for the login password field (register-panel toggles
+  // are bound dynamically in bindPasswordToggles()).
+  bindPasswordToggles(loginForm);
+
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -1018,6 +1124,8 @@
     else loginStatusEl.removeAttribute('data-state');
   }
 
+  /* ---------- REGISTER FORM ---------- */
+
   const form = document.getElementById('registerForm');
   const statusEl = document.getElementById('form-status');
   const submitBtn = document.getElementById('submitBtn');
@@ -1025,22 +1133,34 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const data = {
-      action: 'register',
-      name: document.getElementById('fullName').value.trim(),
-      email: document.getElementById('email').value.trim(),
-      phone: document.getElementById('phone').value.trim(),
-      county: document.getElementById('county').value,
-      university: document.getElementById('university').value,
-      password: document.getElementById('password').value,
-    };
-    const confirmPassword = document.getElementById('confirmPassword').value;
+    const type = regTypeSelect.value;
+    const config = CATEGORY_CONFIG[type];
+    if (!type || !config) {
+      setStatus('Please select what you are registering as.', 'err');
+      return;
+    }
 
-    if (!data.name || !data.email || !data.phone || !data.county || !data.university || !data.password) {
+    const data = { action: 'register', type };
+    let missing = false;
+
+    config.fields.forEach(f => {
+      const el = document.getElementById('f_' + f.key);
+      const val = el ? el.value.trim() : '';
+      if (!val) missing = true;
+      data[f.key] = val;
+    });
+
+    const passwordEl = document.getElementById('password');
+    const confirmEl = document.getElementById('confirmPassword');
+    const password = passwordEl ? passwordEl.value : '';
+    const confirmPassword = confirmEl ? confirmEl.value : '';
+    data.password = password;
+
+    if (missing || !password || !confirmPassword) {
       setStatus('Please fill in every field.', 'err');
       return;
     }
-    if (data.password !== confirmPassword) {
+    if (password !== confirmPassword) {
       setStatus('Passwords do not match.', 'err');
       return;
     }
@@ -1058,6 +1178,8 @@
       if (result.success) {
         setStatus(result.message || 'Registered — pending review.', 'ok');
         form.reset();
+        dynamicFieldsEl.innerHTML = '';
+        regTypeHint.textContent = 'Pick a type to reveal the rest of the form.';
       } else {
         setStatus(result.message || 'Something went wrong.', 'err');
       }
