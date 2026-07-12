@@ -241,7 +241,7 @@
   }
 
   .rc-footer {
-    margin-top: 14px;
+    margin-top: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -255,13 +255,28 @@
   }
   .rc-poster strong { color: var(--paper); }
 
+  /* Open-file button: sized and styled like a real call-to-action,
+     not a plain inline text link, so it's easy to spot and tap. */
   a.rc-file {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--copper);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--blueprint-navy);
+    background: var(--copper);
+    border: none;
+    padding: 11px 22px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: filter 0.15s ease, transform 0.1s ease;
   }
+  a.rc-file:hover { filter: brightness(1.1); }
+  a.rc-file:active { transform: translateY(1px); }
+  a.rc-file:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px; }
 
   .empty-state {
     padding: 40px 24px;
@@ -428,13 +443,13 @@
 <body>
 
 <header>
-  <a href="register.html" class="brandmark">ENEMIND COMPANY</a>
+  <a href="index.html" class="brandmark">ENEMIND COMPANY</a>
   <div class="nav-menu">
     <button type="button" id="navMenuToggle" class="menu-btn" aria-haspopup="true" aria-expanded="false" title="Menu">☰</button>
     <div class="nav-dropdown" id="navDropdown" role="menu">
       <a href="marketplace.html">Marketplace</a>
       <a href="resources.html" class="current">Notes &amp; Attachments</a>
-      <a href="register.html">Log in</a>
+      <a href="index.html">Register / Log in</a>
     </div>
   </div>
 </header>
@@ -670,8 +685,11 @@
     grid.innerHTML = filtered.map(r => {
       const typeClass = r.resourceType === 'Attachment' ? 'type-attachment' : '';
       const companyLine = r.company ? `<span>${escapeHtml(r.company)}</span>` : '';
+      // "Open" button: only rendered when a file/link actually exists,
+      // styled and sized as a clear call-to-action rather than a plain
+      // inline text link, so it's easy to spot and tap on any device.
       const fileLink = r.fileUrl
-        ? `<a class="rc-file" href="${escapeHtml(r.fileUrl)}" target="_blank" rel="noopener">${r.fileName ? escapeHtml(r.fileName) : 'Open file'} →</a>`
+        ? `<a class="rc-file" href="${escapeHtml(r.fileUrl)}" target="_blank" rel="noopener">Open →</a>`
         : '';
       return `
         <div class="resource-card ${typeClass}">
