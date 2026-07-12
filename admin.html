@@ -176,16 +176,18 @@
     gap: 10px;
     flex-wrap: wrap;
   }
-  .filters select {
+  .filters select,
+  .filters input {
     background: var(--blueprint-navy);
     color: var(--paper);
     border: 1px solid rgba(232,238,242,0.35);
     font-family: var(--font-mono);
     font-size: 0.75rem;
     letter-spacing: 0.04em;
-    text-transform: uppercase;
     padding: 8px 10px;
   }
+  .filters select { text-transform: uppercase; }
+  .filters input { text-transform: none; min-width: 200px; }
 
   .stat-strip {
     display: grid;
@@ -215,22 +217,18 @@
   .stat-cell.approved .stat-value { color: var(--ok); }
   .stat-cell.rejected .stat-value { color: var(--err); }
 
-  /* ---------- Entry list ---------- */
+  /* ---------- Member list (name-only roster) ---------- */
   .entry-list { list-style: none; }
 
   .entry-card {
     background: rgba(232,238,242,0.04);
     border: 1px solid rgba(232,238,242,0.3);
-    margin-bottom: 16px;
-  }
-
-  .entry-head {
+    margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     padding: 14px 20px;
-    border-bottom: 1px solid rgba(232,238,242,0.2);
     flex-wrap: wrap;
   }
 
@@ -257,35 +255,10 @@
   .status-badge.status-pending { color: var(--copper); }
   .status-badge.status-rejected { color: var(--err); }
 
-  .entry-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 0;
-  }
-
-  .entry-field {
-    padding: 14px 20px;
-    border-top: 1px solid rgba(232,238,242,0.12);
-    border-right: 1px solid rgba(232,238,242,0.12);
-  }
-  .entry-field .ef-label {
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--blueprint-line);
-    margin-bottom: 3px;
-  }
-  .entry-field .ef-value { font-size: 0.92rem; word-break: break-word; }
-
   .entry-actions {
-    padding: 14px 20px;
     display: flex;
     gap: 10px;
-    justify-content: flex-end;
     flex-wrap: wrap;
-    border-top: 1px solid rgba(232,238,242,0.2);
   }
 
   button.commit {
@@ -387,8 +360,8 @@
 
   <div class="dashboard" id="dashboard">
     <p class="eyebrow">Admin dashboard</p>
-    <h1>Registration <em>queue</em>.</h1>
-    <p class="lede">Every registration lives in one shared sheet — filter below to focus on what needs your attention.</p>
+    <h1>Registered <em>members</em>.</h1>
+    <p class="lede">Every registration lives in one shared sheet. This view lists just each member's name, category, and status — approve, reject, or reset from here.</p>
 
     <div class="stat-strip" id="statStrip">
       <div class="stat-cell pending">
@@ -408,9 +381,10 @@
     <div class="section-head">
       <div class="heading">
         <span class="sheet-no">01</span>
-        <h2>Registrations</h2>
+        <h2>Members</h2>
       </div>
       <div class="filters">
+        <input type="text" id="nameSearch" placeholder="Search by name or email">
         <select id="statusFilter">
           <option value="Pending" selected>Pending</option>
           <option value="Approved">Approved</option>
@@ -423,12 +397,7 @@
           <option value="tvetStudent">TVET Student</option>
           <option value="universityStudent">University Student</option>
           <option value="graduate">Graduate</option>
-          <option value="teacher">Teacher</option>
-          <option value="lecturer">Lecturer</option>
-          <option value="company">Company</option>
-          <option value="hrManager">HR Manager</option>
-          <option value="mentor">Mentor</option>
-          <option value="entrepreneur">Entrepreneur</option>
+          <option value="adult">Adult</option>
         </select>
       </div>
     </div>
@@ -448,9 +417,20 @@
 </footer>
 
 <script>
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbydFqKfhrKoFFbUX-wA5ffeggxWXQt6ne2H792kw4yYHDhsEjpKRtYuCtLRWX7HWL2K/exec';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzE9ipyiM7k2JcYc9WWKQTzocQesBkAMGriZHC0c3SvOHJB_ypxcgKnMITfoInU16IG/exec';
+
+  // Mirrors setup.gs's CATEGORIES — maps the human-readable Type label
+  // stored on each row back to the key updateRegistrationStatus() needs.
+  const CATEGORY_KEY_BY_LABEL = {
+    'Secondary Student': 'secondaryStudent',
+    'TVET Student': 'tvetStudent',
+    'University Student': 'universityStudent',
+    'Graduate': 'graduate',
+    'Adult': 'adult'
+  };
 
   let adminCode = '';
+  let allMembers = [];
 
   function escapeHtml(str) {
     return String(str).replace(/[&<>"']/g, ch => ({
@@ -480,10 +460,9 @@
     gateBtn.disabled = true;
 
     try {
-      // Use a harmless filter call to validate the code before opening the dashboard.
       const res = await fetch(WEB_APP_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'list', adminCode: code, statusFilter: 'Pending' })
+        body: JSON.stringify({ action: 'listAllMemberNames', adminCode: code })
       });
       const result = await res.json();
 
@@ -491,7 +470,9 @@
         adminCode = code;
         gateWrap.classList.add('hidden');
         dashboard.classList.add('open');
-        renderEntries(result.entries);
+        allMembers = result.members || [];
+        renderEntries();
+        refreshCounts();
       } else {
         setGateStatus(result.message || 'Invalid code.', 'err');
       }
@@ -502,9 +483,10 @@
     }
   });
 
-  /* ---------- Fetch + render entries ---------- */
+  /* ---------- Fetch + render members ---------- */
   const statusFilterEl = document.getElementById('statusFilter');
   const typeFilterEl = document.getElementById('typeFilter');
+  const nameSearchEl = document.getElementById('nameSearch');
   const entryListEl = document.getElementById('entryList');
   const listStatusEl = document.getElementById('list-status');
   const refreshBtn = document.getElementById('refreshBtn');
@@ -515,24 +497,19 @@
     else listStatusEl.removeAttribute('data-state');
   }
 
-  async function fetchEntries() {
+  async function fetchMembers() {
     setListStatus('Loading…', '');
     try {
       const res = await fetch(WEB_APP_URL, {
         method: 'POST',
-        body: JSON.stringify({
-          action: 'list',
-          adminCode: adminCode,
-          statusFilter: statusFilterEl.value,
-          typeFilter: typeFilterEl.value
-        })
+        body: JSON.stringify({ action: 'listAllMemberNames', adminCode })
       });
       const result = await res.json();
       if (result.success) {
-        renderEntries(result.entries);
-        setListStatus(result.entries.length + ' result' + (result.entries.length === 1 ? '' : 's') + '.', '');
+        allMembers = result.members || [];
+        renderEntries();
       } else {
-        setListStatus(result.message || 'Could not load registrations.', 'err');
+        setListStatus(result.message || 'Could not load members.', 'err');
       }
     } catch (err) {
       setListStatus('Network error — check the Web App URL is set.', 'err');
@@ -544,58 +521,51 @@
     return key === 'approved' ? 'status-approved' : (key === 'rejected' ? 'status-rejected' : 'status-pending');
   }
 
-  function entryFieldsHtml(entry) {
-    let html = '';
-    html += fieldHtml('Phone', entry.phone);
-    html += fieldHtml('County', entry.county);
-    if (entry.contactPersonLabel) html += fieldHtml(entry.contactPersonLabel, entry.contactPerson);
-    if (entry.organizationLabel) html += fieldHtml(entry.organizationLabel, entry.organization);
-    if (entry.field1Label) html += fieldHtml(entry.field1Label, entry.field1);
-    if (entry.field2Label) html += fieldHtml(entry.field2Label, entry.field2);
-    return html;
-  }
+  function renderEntries() {
+    const statusFilter = statusFilterEl.value;
+    const typeFilter = typeFilterEl.value;
+    const query = nameSearchEl.value.trim().toLowerCase();
 
-  function fieldHtml(label, value) {
-    const display = value && String(value).length ? value : '—';
-    return `
-      <div class="entry-field">
-        <span class="ef-label">${escapeHtml(label)}</span>
-        <span class="ef-value">${escapeHtml(display)}</span>
-      </div>`;
-  }
+    const filtered = allMembers.filter(m => {
+      if (statusFilter && m.status !== statusFilter) return false;
+      if (typeFilter && CATEGORY_KEY_BY_LABEL[m.typeLabel] !== typeFilter) return false;
+      if (query) {
+        const haystack = (String(m.name || '') + ' ' + String(m.email || '')).toLowerCase();
+        if (haystack.indexOf(query) === -1) return false;
+      }
+      return true;
+    });
 
-  function renderEntries(entries) {
-    if (!entries || entries.length === 0) {
+    setListStatus(filtered.length + ' member' + (filtered.length === 1 ? '' : 's') + '.', '');
+
+    if (filtered.length === 0) {
       entryListEl.innerHTML = `
         <div class="empty-state">
           <div class="empty-icon">📭</div>
-          <p>No registrations match this filter.</p>
+          <p>No members match this filter.</p>
         </div>`;
       return;
     }
 
-    entryListEl.innerHTML = entries.map(entry => {
-      const badgeClass = badgeClassFor(entry.status);
-      const isApproved = entry.status === 'Approved';
-      const isRejected = entry.status === 'Rejected';
+    entryListEl.innerHTML = filtered.map(m => {
+      const badgeClass = badgeClassFor(m.status);
+      const isApproved = m.status === 'Approved';
+      const isRejected = m.status === 'Rejected';
+      const typeKey = CATEGORY_KEY_BY_LABEL[m.typeLabel] || '';
 
       return `
-        <li class="entry-card" data-type="${escapeHtml(entry.type)}" data-email="${escapeHtml(entry.email)}">
-          <div class="entry-head">
-            <div class="entry-title">
-              <span class="entry-name">${escapeHtml(entry.name || entry.email)}</span>
-              <span class="entry-type">${escapeHtml(entry.typeLabel)}</span>
-            </div>
-            <span class="status-badge ${badgeClass}">${escapeHtml(entry.status)}</span>
-          </div>
-          <div class="entry-grid">
-            ${fieldHtml('Email', entry.email)}
-            ${entryFieldsHtml(entry)}
+        <li class="entry-card" data-type="${escapeHtml(typeKey)}" data-email="${escapeHtml(m.email)}">
+          <div class="entry-title">
+            <span class="entry-name">${escapeHtml(m.name || m.email)}</span>
+            <span class="entry-type">${escapeHtml(m.typeLabel)}</span>
+            <span class="status-badge ${badgeClass}">${escapeHtml(m.status)}</span>
           </div>
           <div class="entry-actions">
-            ${!isApproved ? `<button type="button" class="commit approve-outline" data-action="Approved">Approve</button>` : ''}
-            ${!isRejected ? `<button type="button" class="commit reject" data-action="Rejected">Reject</button>` : ''}
-            ${(isApproved || isRejected) ? `<button type="button" class="commit ghost" data-action="Pending">Reset to pending</button>` : ''}
+            ${!typeKey ? `<span class="entry-type">Unknown type — edit in the spreadsheet</span>` : `
+              ${!isApproved ? `<button type="button" class="commit approve-outline" data-action="Approved">Approve</button>` : ''}
+              ${!isRejected ? `<button type="button" class="commit reject" data-action="Rejected">Reject</button>` : ''}
+              ${(isApproved || isRejected) ? `<button type="button" class="commit ghost" data-action="Pending">Reset to pending</button>` : ''}
+            `}
           </div>
         </li>`;
     }).join('');
@@ -622,7 +592,7 @@
       });
       const result = await res.json();
       if (result.success) {
-        fetchEntries();
+        await fetchMembers();
         refreshCounts();
       } else {
         setListStatus(result.message || 'Could not update status.', 'err');
@@ -635,33 +605,18 @@
   }
 
   /* ---------- Counts strip (independent of the active filter) ---------- */
-  async function refreshCounts() {
-    try {
-      const res = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'list', adminCode, statusFilter: '', typeFilter: '' })
-      });
-      const result = await res.json();
-      if (result.success) {
-        const counts = { Pending: 0, Approved: 0, Rejected: 0 };
-        result.entries.forEach(e => { if (counts[e.status] !== undefined) counts[e.status]++; });
-        document.getElementById('statPending').textContent = counts.Pending;
-        document.getElementById('statApproved').textContent = counts.Approved;
-        document.getElementById('statRejected').textContent = counts.Rejected;
-      }
-    } catch (err) {
-      // Counts are a nice-to-have; fail silently if this particular call errors.
-    }
+  function refreshCounts() {
+    const counts = { Pending: 0, Approved: 0, Rejected: 0 };
+    allMembers.forEach(m => { if (counts[m.status] !== undefined) counts[m.status]++; });
+    document.getElementById('statPending').textContent = counts.Pending;
+    document.getElementById('statApproved').textContent = counts.Approved;
+    document.getElementById('statRejected').textContent = counts.Rejected;
   }
 
-  statusFilterEl.addEventListener('change', fetchEntries);
-  typeFilterEl.addEventListener('change', fetchEntries);
-  refreshBtn.addEventListener('click', () => { fetchEntries(); refreshCounts(); });
-
-  // Kick off the counts strip once unlocked (called again after every status change).
-  document.getElementById('gateForm').addEventListener('submit', () => {
-    setTimeout(refreshCounts, 400);
-  });
+  statusFilterEl.addEventListener('change', renderEntries);
+  typeFilterEl.addEventListener('change', renderEntries);
+  nameSearchEl.addEventListener('input', renderEntries);
+  refreshBtn.addEventListener('click', () => { fetchMembers(); });
 </script>
 
 </body>
