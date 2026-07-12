@@ -334,6 +334,24 @@
     color: var(--paper);
   }
 
+  .profile-row .profile-value a { color: var(--copper); text-decoration: underline; }
+
+  .profile-logo-thumb {
+    display: inline-flex;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+    border: 1px solid rgba(232,238,242,0.35);
+    align-items: center;
+    justify-content: center;
+    background: var(--paper);
+    color: var(--blueprint-navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .profile-logo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
   /* ---------- Roadmap / next steps ---------- */
   .roadmap {
     list-style: none;
@@ -418,6 +436,102 @@
   .empty-state p { color: rgba(232,238,242,0.75); margin-top: 8px; }
   .empty-state .empty-icon { font-size: 1.6rem; }
 
+  /* ---------- Directory search ---------- */
+  .search-card {
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+    padding: 20px;
+  }
+
+  .search-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .search-row input {
+    flex: 1;
+    min-width: 200px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(232,238,242,0.35);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 8px 2px;
+    outline: none;
+  }
+  .search-row input:focus { border-color: var(--copper); }
+
+  .search-hint {
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(232,238,242,0.45);
+  }
+
+  #directoryResults {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .directory-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border: 1px solid rgba(232,238,242,0.25);
+    background: rgba(232,238,242,0.03);
+  }
+
+  .directory-avatar {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--copper);
+    background: var(--paper);
+    color: var(--blueprint-navy);
+    font-family: var(--font-display);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 0.95rem;
+  }
+  .directory-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .directory-info { min-width: 0; }
+
+  .directory-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+
+  .type-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border: 1px solid var(--blueprint-line);
+    color: var(--blueprint-line);
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .directory-meta {
+    margin-top: 2px;
+    font-size: 0.82rem;
+    color: rgba(232,238,242,0.7);
+  }
+  .directory-meta a { color: var(--copper); text-decoration: underline; }
+
   footer {
     border-top: 1px solid rgba(232,238,242,0.2);
     padding: 28px 32px 32px;
@@ -489,6 +603,20 @@
   </div>
 
   <ul class="roadmap" id="roadmapList"></ul>
+
+  <div class="section-head">
+    <span class="sheet-no">03</span>
+    <h2>Find people</h2>
+  </div>
+
+  <div class="search-card">
+    <div class="search-row">
+      <input type="text" id="directorySearchInput" placeholder="Search by name, email, or TikTok username">
+      <button type="button" class="commit" id="directorySearchBtn">Search</button>
+    </div>
+    <div class="search-hint">Only Approved accounts show up in results. Matches by name, email, or TikTok username.</div>
+    <div id="directoryResults"></div>
+  </div>
 </main>
 
 <footer>
@@ -496,6 +624,13 @@
 </footer>
 
 <script>
+  /* ------------------------------------------------------------------
+   * Point this at your deployed Apps Script Web App URL
+   * (Deploy > New deployment > Web app > /exec) from setup.gs.
+   * Must be the same deployment used by index.html / register.html.
+   * ---------------------------------------------------------------- */
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxi718e15RRliMNnxfluG-6l6dHE_mtIEI4-Dx6kVVPSMOyCVQ51pD5CtkOA3j_6MS3/exec';
+
   /* ---------- Field-label config, mirrors setup.gs / register.html ---------- */
   const CATEGORY_CONFIG = {
     secondaryStudent: {
@@ -674,6 +809,31 @@
     return obj;
   }
 
+  /**
+   * Renders a profile image into `container` if `logoUrl` is set and
+   * loads successfully; otherwise (or on load failure) falls back to
+   * the first letter of `name`. Used for the account button, the
+   * profile card's logo row, and every directory search result, so a
+   * broken/missing image never leaves a blank box.
+   */
+  function renderAvatar(container, name, logoUrl) {
+    if (!container) return;
+    container.innerHTML = '';
+    const initial = String(name || '').trim().charAt(0).toUpperCase() || '?';
+    if (logoUrl) {
+      const img = document.createElement('img');
+      img.src = logoUrl;
+      img.alt = name || 'Profile image';
+      img.addEventListener('error', () => {
+        container.innerHTML = '';
+        container.textContent = initial;
+      });
+      container.appendChild(img);
+    } else {
+      container.textContent = initial;
+    }
+  }
+
   const user = getParams();
   const config = CATEGORY_CONFIG[user.type];
 
@@ -688,7 +848,7 @@
   document.title = 'Dashboard — ' + typeLabel + ' — Enemind Company';
 
   /* ---------- Header / account dropdown ---------- */
-  document.getElementById('accountInitial').textContent = displayName.trim().charAt(0).toUpperCase() || '?';
+  renderAvatar(document.getElementById('accountToggle'), displayName, user.logoUrl);
   document.getElementById('adHeaderType').textContent = typeLabel;
   document.getElementById('adName').textContent = displayName;
   document.getElementById('adEmail').textContent = user.email || '—';
@@ -744,6 +904,28 @@
   const profileCardEl = document.getElementById('profileCard');
   if (config) {
     let rows = '';
+
+    // Logo + TikTok are generic optional fields (see setup.gs / register.html),
+    // not part of CATEGORY_CONFIG.fields, so they're rendered here first.
+    rows += `
+      <div class="profile-row">
+        <div class="field-index">◆</div>
+        <div class="profile-body">
+          <span class="profile-label">Logo / profile image</span>
+          <span class="profile-value" id="profileLogoValue">${user.logoUrl ? '<span class="profile-logo-thumb" id="profileLogoThumb"></span>' : 'Not set'}</span>
+        </div>
+      </div>`;
+    rows += `
+      <div class="profile-row">
+        <div class="field-index">◆</div>
+        <div class="profile-body">
+          <span class="profile-label">TikTok</span>
+          <span class="profile-value">${user.tiktokUsername
+            ? `<a href="https://www.tiktok.com/@${encodeURIComponent(user.tiktokUsername)}" target="_blank" rel="noopener">@${escapeHtml(user.tiktokUsername)}</a>`
+            : 'Not set'}</span>
+        </div>
+      </div>`;
+
     config.fields.forEach((f, i) => {
       const idx = String(i + 1).padStart(2, '0');
       const value = user[f.key] && user[f.key].length ? user[f.key] : '—';
@@ -757,6 +939,10 @@
         </div>`;
     });
     profileCardEl.innerHTML = rows;
+
+    if (user.logoUrl) {
+      renderAvatar(document.getElementById('profileLogoThumb'), displayName, user.logoUrl);
+    }
   } else {
     profileCardEl.innerHTML = `
       <div class="empty-state">
@@ -792,6 +978,90 @@
         </div>
       </li>`;
   }
+
+  /* ---------- Directory search (find other approved users) ---------- */
+  const directoryInput = document.getElementById('directorySearchInput');
+  const directoryBtn = document.getElementById('directorySearchBtn');
+  const directoryResultsEl = document.getElementById('directoryResults');
+
+  function renderDirectoryResults(results) {
+    if (!results || !results.length) {
+      directoryResultsEl.innerHTML = `
+        <div class="empty-state">
+          <p>No matching people found.</p>
+        </div>`;
+      return;
+    }
+
+    directoryResultsEl.innerHTML = results.map((r, i) => {
+      const metaParts = [];
+      if (r.organization) {
+        metaParts.push((r.organizationLabel ? r.organizationLabel + ': ' : '') + r.organization);
+      }
+      if (r.county) metaParts.push(r.county);
+      const metaLine = metaParts.length ? escapeHtml(metaParts.join(' · ')) : '';
+
+      return `
+        <div class="directory-item">
+          <span class="directory-avatar" id="dirAvatar${i}"></span>
+          <div class="directory-info">
+            <div class="directory-name">${escapeHtml(r.name || 'Unnamed')}<span class="type-tag">${escapeHtml(r.typeLabel || '')}</span></div>
+            ${metaLine ? `<div class="directory-meta">${metaLine}</div>` : ''}
+            ${r.tiktokUsername ? `<div class="directory-meta"><a href="https://www.tiktok.com/@${encodeURIComponent(r.tiktokUsername)}" target="_blank" rel="noopener">@${escapeHtml(r.tiktokUsername)}</a></div>` : ''}
+          </div>
+        </div>`;
+    }).join('');
+
+    results.forEach((r, i) => {
+      renderAvatar(document.getElementById('dirAvatar' + i), r.name, r.logoUrl);
+    });
+  }
+
+  function runDirectorySearch() {
+    const q = directoryInput.value.trim();
+    if (!q) {
+      directoryResultsEl.innerHTML = `
+        <div class="empty-state">
+          <p>Type a name, email, or TikTok username to search.</p>
+        </div>`;
+      return;
+    }
+
+    directoryBtn.disabled = true;
+    directoryResultsEl.innerHTML = `
+      <div class="empty-state">
+        <p>Searching…</p>
+      </div>`;
+
+    fetch(WEBAPP_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'searchDirectory', query: q })
+    }).then(res => res.json()).then(result => {
+      if (result.success) {
+        renderDirectoryResults(result.results);
+      } else {
+        directoryResultsEl.innerHTML = `
+          <div class="empty-state">
+            <p>${escapeHtml(result.message || 'Search failed.')}</p>
+          </div>`;
+      }
+    }).catch(() => {
+      directoryResultsEl.innerHTML = `
+        <div class="empty-state">
+          <p>Network error — check the Web App URL is set.</p>
+        </div>`;
+    }).finally(() => {
+      directoryBtn.disabled = false;
+    });
+  }
+
+  directoryBtn.addEventListener('click', runDirectorySearch);
+  directoryInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      runDirectorySearch();
+    }
+  });
 
   /* ---------- Nav menu toggle ---------- */
   const navMenuToggle = document.getElementById('navMenuToggle');
