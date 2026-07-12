@@ -184,6 +184,17 @@
     border: 1px solid rgba(232,238,242,0.25);
   }
 
+  .image-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(232,238,242,0.06);
+    color: rgba(232,238,242,0.5);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    border: 1px solid rgba(232,238,242,0.25);
+  }
+
   /* ---------- Motto / motivational quote banner ---------- */
   .quote-banner {
     margin-top: 28px;
@@ -642,7 +653,7 @@
         <div class="field-body">
           <label for="imageUrl">Image URL (optional)</label>
           <input type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com/your-photo.jpg">
-          <div class="hint">Paste a link to a photo of your product or gig — e.g. from Google Drive, Imgur, or your own site.</div>
+          <div class="hint">Paste a link to a photo of your product or gig — e.g. from Imgur, your own site, or Google Drive. If it's a Drive "share" link (drive.google.com/file/d/...), it'll be converted automatically — just make sure the file's sharing is set to "Anyone with the link".</div>
         </div>
       </div>
       <div class="field-row">
@@ -753,6 +764,37 @@
     }[ch]));
   }
 
+  // Converts common Google Drive "share" link formats into a direct,
+  // hotlinkable image URL (the same lh3.googleusercontent.com/d/FILE_ID
+  // format already used for the favicon above). Any other URL — Imgur,
+  // a personal site, etc. — passes through unchanged. Requires the
+  // Drive file's sharing to be set to "Anyone with the link".
+  function toDirectImageUrl(url) {
+    if (!url) return url;
+    const trimmed = String(url).trim();
+
+    // https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+    let match = trimmed.match(/drive\.google\.com\/file\/d\/([^/]+)/);
+    if (match) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+
+    // https://drive.google.com/open?id=FILE_ID
+    match = trimmed.match(/drive\.google\.com\/open\?id=([^&]+)/);
+    if (match) return `https://lh3.googleusercontent.com/d/${match[1]}`;
+
+    return trimmed;
+  }
+
+  // Builds the <img> tag for a listing/spotlight image, with a visible
+  // placeholder (rather than silently vanishing) if the image URL is
+  // broken, unreachable, or the Drive file isn't actually shared publicly.
+  function buildImageHtml(imageUrl, title, cssClass) {
+    if (!imageUrl) return '';
+    const src = escapeHtml(toDirectImageUrl(imageUrl));
+    const alt = escapeHtml(title || '');
+    const fallback = `this.outerHTML='<div class=&quot;${cssClass} image-placeholder&quot;>Image unavailable</div>'`;
+    return `<img class="${cssClass}" src="${src}" alt="${alt}" onerror="${fallback}">`;
+  }
+
   /* ---------- Populate static county dropdowns ---------- */
   const countyFilterEl = document.getElementById('countyFilter');
   const countySelectEl = document.getElementById('county');
@@ -849,7 +891,7 @@
 
     const priceHtml = l.price ? `<div class="spotlight-price">${escapeHtml(l.price)}</div>` : '';
     const phoneHtml = l.posterPhone ? ` · Phone: <strong>${escapeHtml(l.posterPhone)}</strong>` : '';
-    const imageHtml = l.imageUrl ? `<img class="spotlight-image" src="${escapeHtml(l.imageUrl)}" alt="${escapeHtml(l.title)}" onerror="this.remove()">` : '';
+    const imageHtml = buildImageHtml(l.imageUrl, l.title, 'spotlight-image');
 
     spotlightSectionEl.innerHTML = `
       <div class="spotlight-card">
@@ -902,7 +944,7 @@
       const typeClass = l.listingType === 'Gig / Service' ? 'gig' : '';
       const priceHtml = l.price ? `<div class="listing-price">${escapeHtml(l.price)}</div>` : '';
       const phoneHtml = l.posterPhone ? `<div>Phone: <strong>${escapeHtml(l.posterPhone)}</strong></div>` : '';
-      const imageHtml = l.imageUrl ? `<img class="listing-image" src="${escapeHtml(l.imageUrl)}" alt="${escapeHtml(l.title)}" onerror="this.remove()">` : '';
+      const imageHtml = buildImageHtml(l.imageUrl, l.title, 'listing-image');
       return `
         <div class="listing-card" data-id="${escapeHtml(l.id)}">
           ${imageHtml}
