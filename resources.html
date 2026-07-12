@@ -488,9 +488,15 @@
     <div class="form-row">
       <div class="field-index">06</div>
       <div class="field-body">
-        <label for="rFileUrl">File URL (optional)</label>
-        <input type="url" id="rFileUrl" placeholder="https://drive.google.com/…">
-        <p class="hint">Link to a Google Drive file, PDF, or posting. Leave blank if the description says it all.</p>
+        <label for="rFile">Attach a file (optional)</label>
+        <input type="file" id="rFile" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.png,.jpg,.jpeg,.gif,.zip,.txt">
+        <p class="hint" id="rFileHint">PDF, Word, PowerPoint, Excel, image, ZIP, or text file, up to 8MB. Uploaded straight to Enemind's Drive — no separate link needed.</p>
+        <div id="rFileSelected" style="display:none; margin-top:8px; font-size:0.82rem; color: rgba(232,238,242,0.75);"></div>
+        <details style="margin-top:10px;">
+          <summary style="cursor:pointer; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(232,238,242,0.55);">Or link to a file elsewhere instead</summary>
+          <input type="url" id="rFileUrl" placeholder="https://drive.google.com/…" style="margin-top:10px;">
+          <p class="hint">Used only if you don't attach a file above.</p>
+        </details>
       </div>
     </div>
 
@@ -578,7 +584,7 @@
    * Point this at your deployed Apps Script Web App URL
    * (Deploy > New deployment > Web app > /exec) from setup.gs.
    * ---------------------------------------------------------------- */
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxs6C88xQqbrc36fr6DO5dj8610VncuGvSEsMMokRUieMz4ozckfsqIHDfUEhWshmw3/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbydFqKfhrKoFFbUX-wA5ffeggxWXQt6ne2H792kw4yYHDhsEjpKRtYuCtLRWX7HWL2K/exec';
 
   function escapeHtml(str) {
     return String(str || '').replace(/[&<>"']/g, ch => ({
@@ -631,7 +637,7 @@
       const typeClass = r.resourceType === 'Attachment' ? 'type-attachment' : '';
       const companyLine = r.company ? `<span>${escapeHtml(r.company)}</span>` : '';
       const fileLink = r.fileUrl
-        ? `<a class="rc-file" href="${escapeHtml(r.fileUrl)}" target="_blank" rel="noopener">Open file →</a>`
+        ? `<a class="rc-file" href="${escapeHtml(r.fileUrl)}" target="_blank" rel="noopener">${r.fileName ? escapeHtml(r.fileName) : 'Open file'} →</a>`
         : '';
       return `
         <div class="resource-card ${typeClass}">
@@ -688,39 +694,111 @@
     el.className = 'form-msg show ' + (ok ? 'ok' : 'err');
   }
 
-  document.getElementById('postForm').addEventListener('submit', function (e) {
+  const MAX_UPLOAD_BYTES = 8 * 1024 * 1024; // keep in sync with setup.gs
+
+  document.getElementById('rFile').addEventListener('change', function () {
+    const file = this.files[0];
+    const preview = document.getElementById('rFileSelected');
+    if (!file) {
+      preview.style.display = 'none';
+      preview.textContent = '';
+      return;
+    }
+    const sizeMb = (file.size / (1024 * 1024)).toFixed(2);
+    preview.style.display = 'block';
+    if (file.size > MAX_UPLOAD_BYTES) {
+      preview.style.color = 'var(--err)';
+      preview.textContent = `${file.name} — ${sizeMb}MB. That's over the 8MB limit; choose a smaller file.`;
+    } else {
+      preview.style.color = 'rgba(232,238,242,0.75)';
+      preview.textContent = `Selected: ${file.name} (${sizeMb}MB)`;
+    }
+  });
+
+  function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        // result looks like "data:<mime>;base64,<data>" — strip the prefix.
+        const base64 = reader.result.split(',')[1] || '';
+        resolve(base64);
+      };
+      reader.onerror = () => reject(new Error('Could not read the selected file.'));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  document.getElementById('postForm').addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn = document.getElementById('postSubmitBtn');
     const msg = document.getElementById('postMsg');
+    msg.className = 'form-msg';
+
+    const posterEmail = document.getElementById('rEmail').value;
+    const password = document.getElementById('rPassword').value;
+    const selectedFile = document.getElementById('rFile').files[0];
+
+    if (selectedFile && selectedFile.size > MAX_UPLOAD_BYTES) {
+      showMsg(msg, 'That file is over the 8MB limit. Choose a smaller file or link to it instead.', false);
+      return;
+    }
+
     btn.disabled = true;
-    btn.textContent = 'Posting…';
 
-    const payload = {
-      action: 'createResource',
-      resourceType: document.querySelector('input[name="resourceType"]:checked').value,
-      title: document.getElementById('rTitle').value,
-      description: document.getElementById('rDescription').value,
-      course: document.getElementById('rCourse').value,
-      campus: document.getElementById('rCampus').value,
-      fileUrl: document.getElementById('rFileUrl').value,
-      posterName: document.getElementById('rName').value,
-      posterEmail: document.getElementById('rEmail').value,
-      posterPhone: document.getElementById('rPhone').value,
-      password: document.getElementById('rPassword').value
-    };
+    let fileUrl = document.getElementById('rFileUrl').value;
+    let fileName = '';
 
-    callApi(payload).then(result => {
+    try {
+      if (selectedFile) {
+        btn.textContent = 'Uploading file…';
+        const base64 = await readFileAsBase64(selectedFile);
+        const uploadResult = await callApi({
+          action: 'uploadFile',
+          fileName: selectedFile.name,
+          mimeType: selectedFile.type || 'application/octet-stream',
+          fileData: base64,
+          posterEmail: posterEmail,
+          password: password
+        });
+        if (!uploadResult.success) {
+          showMsg(msg, uploadResult.message, false);
+          btn.disabled = false;
+          btn.textContent = 'Post resource';
+          return;
+        }
+        fileUrl = uploadResult.fileUrl;
+        fileName = uploadResult.fileName;
+      }
+
+      btn.textContent = 'Posting…';
+      const payload = {
+        action: 'createResource',
+        resourceType: document.querySelector('input[name="resourceType"]:checked').value,
+        title: document.getElementById('rTitle').value,
+        description: document.getElementById('rDescription').value,
+        course: document.getElementById('rCourse').value,
+        campus: document.getElementById('rCampus').value,
+        fileUrl: fileUrl,
+        fileName: fileName,
+        posterName: document.getElementById('rName').value,
+        posterEmail: posterEmail,
+        posterPhone: document.getElementById('rPhone').value,
+        password: password
+      };
+
+      const result = await callApi(payload);
       showMsg(msg, result.message, result.success);
       if (result.success) {
         document.getElementById('postForm').reset();
+        document.getElementById('rFileSelected').style.display = 'none';
         loadResources();
       }
-    }).catch(() => {
+    } catch (err) {
       showMsg(msg, 'Network error — check WEBAPP_URL and try again.', false);
-    }).finally(() => {
+    } finally {
       btn.disabled = false;
       btn.textContent = 'Post resource';
-    });
+    }
   });
 
   document.getElementById('removeForm').addEventListener('submit', function (e) {
