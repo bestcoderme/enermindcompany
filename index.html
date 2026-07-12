@@ -51,6 +51,24 @@
     position: relative;
   }
 
+  nav.top-links {
+    display: flex;
+    gap: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-left: auto;
+    margin-right: 24px;
+  }
+  nav.top-links a {
+    text-decoration: none;
+    color: rgba(232,238,242,0.75);
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
+  }
+  nav.top-links a:hover { color: var(--copper); border-bottom-color: var(--copper); }
+
   /* ---------- Account icon + dropdown ---------- */
   .header-right {
     position: relative;
@@ -603,6 +621,10 @@
     ENEMIND COMPANY
   </a>
 
+  <nav class="top-links">
+    <a href="marketplace.html">Marketplace</a>
+  </nav>
+
   <div class="header-right">
     <button type="button" id="accountToggle" class="account-btn" aria-haspopup="true" aria-expanded="false" title="Account">
       <svg id="accountIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -793,14 +815,14 @@
       </div>
     </div>
   </div>
-   <a href="admin.html">Admin page</a>
+   <a href="admin.html">Admin page</a> · <a href="marketplace.html">Marketplace</a>
   Enemind Company — built on Google Sheets + Apps Script
 </footer>
 
 <script>
   // Replace with your deployed Apps Script Web App URL from setup.gs
   // (Deploy > New deployment > Web app > copy the /exec URL).
-  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwnMwHf_-H4Ngmvgyj-2eb3w4nQlvNkYqHUB2cX0vimzICEIDB9_00fa4SIG3JoyA4O/exec';
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw5orUxKrVR25AYlQFPDOgGeo8RxtVZda8astiojW3h6RzIMaH7QIm4X5PGU-Mpoio8/exec';
 
   const COUNTIES = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
