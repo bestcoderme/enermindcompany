@@ -45,6 +45,7 @@
     padding: 18px 32px;
     background: rgba(16,36,62,0.92);
     border-bottom: 1px solid rgba(232,238,242,0.15);
+    position: relative;
   }
 
   .brandmark {
@@ -58,24 +59,53 @@
     text-decoration: none;
   }
 
-  nav.top-links {
+  /* ---------- Nav menu (matches home.html / resources.html / login.html) ---------- */
+  .nav-menu { position: relative; }
+
+  .menu-btn {
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(232,238,242,0.35);
+    background: transparent;
+    color: var(--paper);
     display: flex;
-    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.05rem;
+    line-height: 1;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .menu-btn:hover { border-color: var(--copper); }
+  .menu-btn:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+
+  .nav-dropdown {
+    display: none;
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    min-width: 220px;
+    background: var(--blueprint-navy);
+    border: 1px solid rgba(232,238,242,0.35);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+    z-index: 20;
+  }
+  .nav-dropdown.open { display: block; }
+
+  .nav-dropdown a {
+    display: block;
+    padding: 12px 18px;
     font-family: var(--font-mono);
     font-size: 0.78rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-  }
-  nav.top-links a {
+    color: rgba(232,238,242,0.8);
     text-decoration: none;
-    color: rgba(232,238,242,0.75);
-    border-bottom: 2px solid transparent;
-    padding-bottom: 2px;
+    border-top: 1px solid rgba(232,238,242,0.15);
   }
-  nav.top-links a:hover, nav.top-links a.current {
-    color: var(--copper);
-    border-bottom-color: var(--copper);
-  }
+  .nav-dropdown a:first-child { border-top: none; }
+  .nav-dropdown a:hover { color: var(--paper); background: rgba(232,238,242,0.05); }
+  .nav-dropdown a.current { color: var(--copper); }
 
   main {
     max-width: 960px;
@@ -522,10 +552,14 @@
 
 <header>
   <a href="index.html" class="brandmark">ENEMIND COMPANY</a>
-  <nav class="top-links">
-    <a href="index.html">Register / Login</a>
-    <a href="marketplace.html" class="current">Marketplace</a>
-  </nav>
+  <div class="nav-menu">
+    <button type="button" id="navMenuToggle" class="menu-btn" aria-haspopup="true" aria-expanded="false" title="Menu">☰</button>
+    <div class="nav-dropdown" id="navDropdown" role="menu">
+      <a href="index.html">Register / Log in</a>
+      <a href="marketplace.html" class="current">Marketplace</a>
+      <a href="resources.html">Notes &amp; Attachments</a>
+    </div>
+  </div>
 </header>
 
 <main id="top">
@@ -730,8 +764,8 @@
 </footer>
 
 <script>
-  // Same deployed Apps Script Web App URL used by register.html / home.html / admin.html.
-  const WEB_APP_URL = https://script.google.com/macros/s/AKfycbydFqKfhrKoFFbUX-wA5ffeggxWXQt6ne2H792kw4yYHDhsEjpKRtYuCtLRWX7HWL2K/exec';
+  // Same deployed Apps Script Web App URL used by index.html / home.html / admin.html / resources.html.
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbydFqKfhrKoFFbUX-wA5ffeggxWXQt6ne2H792kw4yYHDhsEjpKRtYuCtLRWX7HWL2K/exec';
 
   const COUNTIES = [
     'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
@@ -1071,6 +1105,30 @@
     } finally {
       submitBtn.disabled = false;
     }
+  });
+
+  /* ---------- Nav menu toggle ---------- */
+  const navMenuToggle = document.getElementById('navMenuToggle');
+  const navDropdown = document.getElementById('navDropdown');
+
+  function closeNavDropdown() {
+    navDropdown.classList.remove('open');
+    navMenuToggle.setAttribute('aria-expanded', 'false');
+  }
+
+  navMenuToggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (navDropdown.classList.contains('open')) closeNavDropdown();
+    else {
+      navDropdown.classList.add('open');
+      navMenuToggle.setAttribute('aria-expanded', 'true');
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (!navDropdown.contains(e.target) && e.target !== navMenuToggle) closeNavDropdown();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeNavDropdown();
   });
 
   /* ---------- Init ---------- */
