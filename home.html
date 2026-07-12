@@ -48,7 +48,17 @@
     position: relative;
   }
 
-  .header-right { position: relative; }
+  .header-right { position: relative; display: flex; align-items: center; gap: 20px; }
+
+  .header-link {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(232,238,242,0.75);
+    text-decoration: none;
+  }
+  .header-link:hover { color: var(--paper); }
 
   .account-btn {
     width: 38px;
@@ -388,8 +398,9 @@
     ENEMIND COMPANY
   </a>
 
-  <div class="header-right" style="display:flex; align-items:center; gap:20px;">
-    <a href="marketplace.html" style="font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(232,238,242,0.75); text-decoration: none;">Marketplace</a>
+  <div class="header-right">
+    <a href="marketplace.html" class="header-link">Marketplace</a>
+    <a href="resources.html" class="header-link">Notes &amp; Attachments</a>
     <button type="button" id="accountToggle" class="account-btn" aria-haspopup="true" aria-expanded="false" title="Account">
       <span id="accountInitial">?</span>
     </button>
