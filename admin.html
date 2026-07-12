@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Enemind Company</title>
+<link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blueprint-navy: #10243E;
+    --blueprint-blue: #2E6F9E;
+    --blueprint-line: #4C86AE;
+    --paper: #E8EEF2;
+    --copper: #C97B3D;
+    --ink: #0B1B2B;
+    --ok: #3F8F5F;
+    --err: #B4453A;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background:
+      repeating-linear-gradient(0deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      var(--blueprint-navy);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  a { color: inherit; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    background: rgba(16,36,62,0.92);
+    border-bottom: 1px solid rgba(232,238,242,0.15);
+  }
+
+  .brandmark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  .header-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--copper);
+    border: 1px solid var(--copper);
+    padding: 4px 10px;
+  }
+
+  main {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    line-height: 1.15;
+  }
+
+  h1 em { font-style: normal; color: var(--copper); }
+
+  p.lede {
+    margin-top: 14px;
+    max-width: 60ch;
+    font-size: 1rem;
+    color: rgba(232,238,242,0.8);
+  }
+
+  /* ---------- Unlock gate ---------- */
+  .gate-card {
+    margin-top: 32px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+    max-width: 440px;
+  }
+  .gate-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+  }
+  .gate-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--blueprint-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(232,238,242,0.25);
+  }
+  .gate-body { padding: 16px 20px; }
+  .gate-body label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 8px;
+  }
+  .gate-body input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(232,238,242,0.35);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 6px 2px;
+    outline: none;
+  }
+  .gate-body input:focus { border-color: var(--copper); }
+  .gate-submit-row {
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  #gate-status { font-family: var(--font-mono); font-size: 0.8rem; }
+  #gate-status[data-state="err"] { color: var(--err); }
+
+  /* ---------- Dashboard (post-unlock) ---------- */
+  .dashboard { display: none; }
+  .dashboard.open { display: block; }
+  .gate-wrap.hidden { display: none; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 40px 0 24px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    padding-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .section-head .heading { display: flex; align-items: baseline; gap: 16px; }
+  .sheet-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--copper); flex-shrink: 0; }
+  .section-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; }
+
+  .filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filters select {
+    background: var(--blueprint-navy);
+    color: var(--paper);
+    border: 1px solid rgba(232,238,242,0.35);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 8px 10px;
+  }
+
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid rgba(232,238,242,0.4);
+    margin-top: 28px;
+  }
+  .stat-cell {
+    padding: 16px 18px;
+    border-right: 1px solid rgba(232,238,242,0.4);
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+  }
+  .stat-cell .stat-value {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .stat-cell.pending .stat-value { color: var(--copper); }
+  .stat-cell.approved .stat-value { color: var(--ok); }
+  .stat-cell.rejected .stat-value { color: var(--err); }
+
+  /* ---------- Entry list ---------- */
+  .entry-list { list-style: none; }
+
+  .entry-card {
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+    margin-bottom: 16px;
+  }
+
+  .entry-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    flex-wrap: wrap;
+  }
+
+  .entry-title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .entry-name { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; }
+  .entry-type {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+  }
+
+  .status-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid currentColor;
+  }
+  .status-badge.status-approved { color: var(--ok); }
+  .status-badge.status-pending { color: var(--copper); }
+  .status-badge.status-rejected { color: var(--err); }
+
+  .entry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0;
+  }
+
+  .entry-field {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(232,238,242,0.12);
+    border-right: 1px solid rgba(232,238,242,0.12);
+  }
+  .entry-field .ef-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 3px;
+  }
+  .entry-field .ef-value { font-size: 0.92rem; word-break: break-word; }
+
+  .entry-actions {
+    padding: 14px 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(232,238,242,0.2);
+  }
+
+  button.commit {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--copper);
+    color: var(--blueprint-navy);
+    border: none;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  button.commit:hover { filter: brightness(1.1); }
+  button.commit:active { transform: translateY(1px); }
+  button.commit:disabled { opacity: 0.45; cursor: not-allowed; }
+  button.commit:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px; }
+
+  button.commit.ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid var(--copper);
+  }
+  button.commit.reject {
+    background: transparent;
+    color: var(--err);
+    border: 1px solid var(--err);
+  }
+  button.commit.approve-outline {
+    background: transparent;
+    color: var(--ok);
+    border: 1px solid var(--ok);
+  }
+
+  .refresh-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+    margin-bottom: 16px;
+  }
+  .refresh-row button.commit.ghost { padding: 8px 14px; font-size: 0.72rem; }
+
+  .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    border: 1px dashed rgba(232,238,242,0.35);
+  }
+  .empty-state .empty-icon { font-size: 1.6rem; }
+  .empty-state p { color: rgba(232,238,242,0.75); margin-top: 8px; }
+
+  #list-status { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(232,238,242,0.6); }
+  #list-status[data-state="err"] { color: var(--err); }
+
+  footer {
+    border-top: 1px solid rgba(232,238,242,0.2);
+    padding: 28px 32px 32px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(232,238,242,0.55);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="register.html" class="brandmark">ENEMIND COMPANY</a>
+  <span class="header-tag">Admin</span>
+</header>
+
+<main id="top">
+  <div class="gate-wrap" id="gateWrap">
+    <p class="eyebrow">Admin access</p>
+    <h1>Review and <em>approve</em> registrations.</h1>
+    <p class="lede">
+      Enter the admin access code to see everyone who has registered, filter by
+      status or category, and approve or reject accounts — without opening the
+      spreadsheet directly.
+    </p>
+
+    <div class="gate-card">
+      <form id="gateForm">
+        <div class="gate-row">
+          <div class="gate-index">01</div>
+          <div class="gate-body">
+            <label for="adminCode">Admin access code</label>
+            <input type="password" id="adminCode" name="adminCode" autocomplete="off" required>
+          </div>
+        </div>
+        <div class="gate-submit-row">
+          <span id="gate-status" role="status" aria-live="polite"></span>
+          <button type="submit" class="commit" id="gateBtn">Unlock</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="dashboard" id="dashboard">
+    <p class="eyebrow">Admin dashboard</p>
+    <h1>Registration <em>queue</em>.</h1>
+    <p class="lede">Every registration lives in one shared sheet — filter below to focus on what needs your attention.</p>
+
+    <div class="stat-strip" id="statStrip">
+      <div class="stat-cell pending">
+        <div class="stat-label">Pending</div>
+        <div class="stat-value" id="statPending">—</div>
+      </div>
+      <div class="stat-cell approved">
+        <div class="stat-label">Approved</div>
+        <div class="stat-value" id="statApproved">—</div>
+      </div>
+      <div class="stat-cell rejected">
+        <div class="stat-label">Rejected</div>
+        <div class="stat-value" id="statRejected">—</div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div class="heading">
+        <span class="sheet-no">01</span>
+        <h2>Registrations</h2>
+      </div>
+      <div class="filters">
+        <select id="statusFilter">
+          <option value="Pending" selected>Pending</option>
+          <option value="Approved">Approved</option>
+          <option value="Rejected">Rejected</option>
+          <option value="">All statuses</option>
+        </select>
+        <select id="typeFilter">
+          <option value="">All types</option>
+          <option value="secondaryStudent">Secondary Student</option>
+          <option value="tvetStudent">TVET Student</option>
+          <option value="universityStudent">University Student</option>
+          <option value="graduate">Graduate</option>
+          <option value="teacher">Teacher</option>
+          <option value="lecturer">Lecturer</option>
+          <option value="company">Company</option>
+          <option value="hrManager">HR Manager</option>
+          <option value="mentor">Mentor</option>
+          <option value="entrepreneur">Entrepreneur</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="refresh-row">
+      <span id="list-status" role="status" aria-live="polite"></span>
+      &nbsp;
+      <button type="button" class="commit ghost" id="refreshBtn">Refresh</button>
+    </div>
+
+    <ul class="entry-list" id="entryList"></ul>
+  </div>
+</main>
+
+<footer>
+  Enemind Company — built on Google Sheets + Apps Script
+</footer>
+
+<script>
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbz8ml-8fQhWmT0DanAg-QXWCtKbAnlcRO9KmwoY2jUCB2QVuMV-4XA-V8j_0pcWn6Fa/exec';
+
+  let adminCode = '';
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+  }
+
+  /* ---------- Unlock gate ---------- */
+  const gateForm = document.getElementById('gateForm');
+  const gateStatusEl = document.getElementById('gate-status');
+  const gateBtn = document.getElementById('gateBtn');
+  const gateWrap = document.getElementById('gateWrap');
+  const dashboard = document.getElementById('dashboard');
+
+  function setGateStatus(message, state) {
+    gateStatusEl.textContent = message;
+    if (state) gateStatusEl.setAttribute('data-state', state);
+    else gateStatusEl.removeAttribute('data-state');
+  }
+
+  gateForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const code = document.getElementById('adminCode').value;
+    if (!code) return;
+
+    setGateStatus('Checking…', '');
+    gateBtn.disabled = true;
+
+    try {
+      // Use a harmless filter call to validate the code before opening the dashboard.
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'list', adminCode: code, statusFilter: 'Pending' })
+      });
+      const result = await res.json();
+
+      if (result.success) {
+        adminCode = code;
+        gateWrap.classList.add('hidden');
+        dashboard.classList.add('open');
+        renderEntries(result.entries);
+      } else {
+        setGateStatus(result.message || 'Invalid code.', 'err');
+      }
+    } catch (err) {
+      setGateStatus('Network error — check the Web App URL is set.', 'err');
+    } finally {
+      gateBtn.disabled = false;
+    }
+  });
+
+  /* ---------- Fetch + render entries ---------- */
+  const statusFilterEl = document.getElementById('statusFilter');
+  const typeFilterEl = document.getElementById('typeFilter');
+  const entryListEl = document.getElementById('entryList');
+  const listStatusEl = document.getElementById('list-status');
+  const refreshBtn = document.getElementById('refreshBtn');
+
+  function setListStatus(message, state) {
+    listStatusEl.textContent = message;
+    if (state) listStatusEl.setAttribute('data-state', state);
+    else listStatusEl.removeAttribute('data-state');
+  }
+
+  async function fetchEntries() {
+    setListStatus('Loading…', '');
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'list',
+          adminCode: adminCode,
+          statusFilter: statusFilterEl.value,
+          typeFilter: typeFilterEl.value
+        })
+      });
+      const result = await res.json();
+      if (result.success) {
+        renderEntries(result.entries);
+        setListStatus(result.entries.length + ' result' + (result.entries.length === 1 ? '' : 's') + '.', '');
+      } else {
+        setListStatus(result.message || 'Could not load registrations.', 'err');
+      }
+    } catch (err) {
+      setListStatus('Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  function badgeClassFor(status) {
+    const key = String(status).toLowerCase();
+    return key === 'approved' ? 'status-approved' : (key === 'rejected' ? 'status-rejected' : 'status-pending');
+  }
+
+  function entryFieldsHtml(entry) {
+    let html = '';
+    html += fieldHtml('Phone', entry.phone);
+    html += fieldHtml('County', entry.county);
+    if (entry.contactPersonLabel) html += fieldHtml(entry.contactPersonLabel, entry.contactPerson);
+    if (entry.organizationLabel) html += fieldHtml(entry.organizationLabel, entry.organization);
+    if (entry.field1Label) html += fieldHtml(entry.field1Label, entry.field1);
+    if (entry.field2Label) html += fieldHtml(entry.field2Label, entry.field2);
+    return html;
+  }
+
+  function fieldHtml(label, value) {
+    const display = value && String(value).length ? value : '—';
+    return `
+      <div class="entry-field">
+        <span class="ef-label">${escapeHtml(label)}</span>
+        <span class="ef-value">${escapeHtml(display)}</span>
+      </div>`;
+  }
+
+  function renderEntries(entries) {
+    // Update the always-visible pending/approved/rejected counts using
+    // whatever the current result set implies isn't accurate across filters,
+    // so pull fresh unfiltered counts in the background.
+    if (!entries || entries.length === 0) {
+      entryListEl.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <p>No registrations match this filter.</p>
+        </div>`;
+      return;
+    }
+
+    entryListEl.innerHTML = entries.map(entry => {
+      const badgeClass = badgeClassFor(entry.status);
+      const isPending = entry.status === 'Pending';
+      const isApproved = entry.status === 'Approved';
+      const isRejected = entry.status === 'Rejected';
+
+      return `
+        <li class="entry-card" data-type="${escapeHtml(entry.type)}" data-email="${escapeHtml(entry.email)}">
+          <div class="entry-head">
+            <div class="entry-title">
+              <span class="entry-name">${escapeHtml(entry.name || entry.email)}</span>
+              <span class="entry-type">${escapeHtml(entry.typeLabel)}</span>
+            </div>
+            <span class="status-badge ${badgeClass}">${escapeHtml(entry.status)}</span>
+          </div>
+          <div class="entry-grid">
+            ${fieldHtml('Email', entry.email)}
+            ${entryFieldsHtml(entry)}
+          </div>
+          <div class="entry-actions">
+            ${!isApproved ? `<button type="button" class="commit approve-outline" data-action="Approved">Approve</button>` : ''}
+            ${!isRejected ? `<button type="button" class="commit reject" data-action="Rejected">Reject</button>` : ''}
+            ${(isApproved || isRejected) ? `<button type="button" class="commit ghost" data-action="Pending">Reset to pending</button>` : ''}
+          </div>
+        </li>`;
+    }).join('');
+
+    entryListEl.querySelectorAll('.entry-card').forEach(card => {
+      card.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', () => updateStatus(card, btn));
+      });
+    });
+  }
+
+  async function updateStatus(card, btn) {
+    const type = card.dataset.type;
+    const email = card.dataset.email;
+    const status = btn.dataset.action;
+
+    card.querySelectorAll('button').forEach(b => b.disabled = true);
+    setListStatus('Updating…', '');
+
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'updateStatus', adminCode, type, email, status })
+      });
+      const result = await res.json();
+      if (result.success) {
+        fetchEntries();
+        refreshCounts();
+      } else {
+        setListStatus(result.message || 'Could not update status.', 'err');
+        card.querySelectorAll('button').forEach(b => b.disabled = false);
+      }
+    } catch (err) {
+      setListStatus('Network error — check the Web App URL is set.', 'err');
+      card.querySelectorAll('button').forEach(b => b.disabled = false);
+    }
+  }
+
+  /* ---------- Counts strip (independent of the active filter) ---------- */
+  async function refreshCounts() {
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'list', adminCode, statusFilter: '', typeFilter: '' })
+      });
+      const result = await res.json();
+      if (result.success) {
+        const counts = { Pending: 0, Approved: 0, Rejected: 0 };
+        result.entries.forEach(e => { if (counts[e.status] !== undefined) counts[e.status]++; });
+        document.getElementById('statPending').textContent = counts.Pending;
+        document.getElementById('statApproved').textContent = counts.Approved;
+        document.getElementById('statRejected').textContent = counts.Rejected;
+      }
+    } catch (err) {
+      // Counts are a nice-to-have; fail silently if this particular call errors.
+    }
+  }
+
+  statusFilterEl.addEventListener('change', fetchEntries);
+  typeFilterEl.addEventListener('change', fetchEntries);
+  refreshBtn.addEventListener('click', () => { fetchEntries(); refreshCounts(); });
+
+  // Kick off the counts strip once unlocked (called again after every status change).
+  const originalRenderEntries = renderEntries;
+  document.getElementById('gateForm').addEventListener('submit', () => {
+    setTimeout(refreshCounts, 400);
+  });
+</script>
+
+</body>
+</html>
