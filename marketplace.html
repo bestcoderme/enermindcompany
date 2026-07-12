@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marketplace — Enemind Company</title>
+<link rel="icon" type="image/jpeg" href="https://lh3.googleusercontent.com/d/170W1KrU-wH25nard8MBn47CVNmqdx8P2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blueprint-navy: #10243E;
+    --blueprint-blue: #2E6F9E;
+    --blueprint-line: #4C86AE;
+    --paper: #E8EEF2;
+    --copper: #C97B3D;
+    --ink: #0B1B2B;
+    --ok: #3F8F5F;
+    --err: #B4453A;
+
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background:
+      repeating-linear-gradient(0deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      repeating-linear-gradient(90deg, rgba(76,134,174,0.14) 0px, rgba(76,134,174,0.14) 1px, transparent 1px, transparent 32px),
+      var(--blueprint-navy);
+    color: var(--paper);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  a { color: inherit; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 32px;
+    background: rgba(16,36,62,0.92);
+    border-bottom: 1px solid rgba(232,238,242,0.15);
+  }
+
+  .brandmark {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.02em;
+    text-decoration: none;
+  }
+
+  nav.top-links {
+    display: flex;
+    gap: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  nav.top-links a {
+    text-decoration: none;
+    color: rgba(232,238,242,0.75);
+    border-bottom: 2px solid transparent;
+    padding-bottom: 2px;
+  }
+  nav.top-links a:hover, nav.top-links a.current {
+    color: var(--copper);
+    border-bottom-color: var(--copper);
+  }
+
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 56px 32px 96px;
+  }
+
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    line-height: 1.1;
+    max-width: 20ch;
+  }
+  h1 em { font-style: normal; color: var(--copper); }
+
+  p.lede {
+    margin-top: 16px;
+    max-width: 60ch;
+    font-size: 1rem;
+    color: rgba(232,238,242,0.8);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 48px 0 24px;
+    border-bottom: 1px solid rgba(232,238,242,0.2);
+    padding-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .section-head .heading { display: flex; align-items: baseline; gap: 16px; }
+  .sheet-no { font-family: var(--font-mono); font-size: 0.8rem; color: var(--copper); flex-shrink: 0; }
+  .section-head h2 { font-family: var(--font-display); font-weight: 600; font-size: 1.3rem; }
+
+  /* ---------- Filters ---------- */
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  .filter-field label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 8px;
+  }
+
+  .filter-field select,
+  .filter-field input {
+    width: 100%;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.35);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    padding: 10px 10px;
+    outline: none;
+  }
+  .filter-field select option { background: var(--blueprint-navy); color: var(--paper); }
+  .filter-field select:focus, .filter-field input:focus { border-color: var(--copper); }
+
+  .active-filters {
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: rgba(232,238,242,0.6);
+  }
+  .active-filters button {
+    background: transparent;
+    border: none;
+    color: var(--copper);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 10px;
+  }
+
+  /* ---------- Listing cards ---------- */
+  .listing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 28px;
+  }
+
+  .listing-card {
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .listing-head {
+    padding: 16px 18px 0;
+  }
+
+  .listing-type-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border: 1px solid var(--copper);
+    color: var(--copper);
+    margin-bottom: 10px;
+  }
+  .listing-type-tag.gig { border-color: var(--blueprint-line); color: var(--blueprint-line); }
+
+  .listing-title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+
+  .listing-price {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ok);
+  }
+
+  .listing-desc {
+    padding: 12px 18px 0;
+    font-size: 0.88rem;
+    color: rgba(232,238,242,0.8);
+    flex-grow: 1;
+  }
+
+  .listing-meta {
+    padding: 14px 18px;
+    margin-top: 14px;
+    border-top: 1px solid rgba(232,238,242,0.15);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: rgba(232,238,242,0.6);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .listing-meta strong { color: var(--paper); font-weight: 600; }
+
+  .listing-actions {
+    padding: 0 18px 16px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  button.commit {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    background: var(--copper);
+    color: var(--blueprint-navy);
+    border: none;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: filter 0.15s ease, transform 0.1s ease;
+  }
+  button.commit:hover { filter: brightness(1.1); }
+  button.commit:active { transform: translateY(1px); }
+  button.commit:disabled { opacity: 0.5; cursor: not-allowed; }
+  button.commit:focus-visible { outline: 2px solid var(--paper); outline-offset: 2px; }
+
+  button.commit.ghost {
+    background: transparent;
+    color: var(--paper);
+    border: 1px solid var(--copper);
+  }
+  button.commit.small { padding: 7px 12px; font-size: 0.7rem; }
+
+  .empty-state {
+    padding: 48px 24px;
+    text-align: center;
+    border: 1px dashed rgba(232,238,242,0.35);
+    margin-top: 28px;
+  }
+  .empty-state .empty-icon { font-size: 1.6rem; }
+  .empty-state p { color: rgba(232,238,242,0.75); margin-top: 8px; }
+
+  #list-status { font-family: var(--font-mono); font-size: 0.8rem; color: rgba(232,238,242,0.6); }
+  #list-status[data-state="err"] { color: var(--err); }
+
+  /* ---------- Post-a-listing panel ---------- */
+  .post-toggle-row {
+    margin-top: 28px;
+  }
+
+  .post-panel {
+    display: none;
+    margin-top: 20px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.3);
+  }
+  .post-panel.open { display: block; }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    border-top: 1px solid rgba(232,238,242,0.25);
+  }
+  .field-row:first-child { border-top: none; }
+
+  .field-index {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--blueprint-line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid rgba(232,238,242,0.25);
+  }
+
+  .field-body { padding: 16px 20px; }
+
+  .field-body label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blueprint-line);
+    margin-bottom: 8px;
+  }
+
+  .field-body .hint {
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: rgba(232,238,242,0.45);
+  }
+
+  .field-body input,
+  .field-body select,
+  .field-body textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(232,238,242,0.35);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    padding: 6px 2px;
+    outline: none;
+    resize: vertical;
+  }
+  .field-body textarea { min-height: 70px; }
+  .field-body select option { background: var(--blueprint-navy); color: var(--paper); }
+  .field-body input:focus, .field-body select:focus, .field-body textarea:focus { border-color: var(--copper); }
+
+  .password-wrap { position: relative; display: flex; align-items: center; }
+  .password-wrap input { padding-right: 52px; }
+  .toggle-visibility {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--blueprint-line);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 4px 2px;
+  }
+  .toggle-visibility:hover, .toggle-visibility:focus-visible { color: var(--copper); }
+
+  .submit-row {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  #form-status { font-family: var(--font-mono); font-size: 0.82rem; min-height: 1.2em; }
+  #form-status[data-state="ok"] { color: var(--ok); }
+  #form-status[data-state="err"] { color: var(--err); }
+
+  .info-banner {
+    margin-top: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: rgba(232,238,242,0.04);
+    border: 1px solid rgba(232,238,242,0.25);
+    border-left: 3px solid var(--blueprint-line);
+  }
+  .info-banner .banner-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(232,238,242,0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background: rgba(232,238,242,0.05);
+  }
+  .info-banner .banner-text { font-size: 0.9rem; color: rgba(232,238,242,0.85); }
+  .info-banner .banner-text strong { color: var(--paper); }
+  .info-banner .banner-text a { color: var(--copper); text-decoration: underline; }
+
+  footer {
+    border-top: 1px solid rgba(232,238,242,0.2);
+    padding: 28px 32px 32px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(232,238,242,0.55);
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="register.html" class="brandmark">ENEMIND COMPANY</a>
+  <nav class="top-links">
+    <a href="register.html">Register / Login</a>
+    <a href="marketplace.html" class="current">Marketplace</a>
+  </nav>
+</header>
+
+<main id="top">
+  <p class="eyebrow">Hustler Market</p>
+  <h1>Browse products &amp; <em>gigs</em> from the EnerMind community.</h1>
+  <p class="lede">
+    Any approved member — student, educator, company, mentor, or entrepreneur —
+    can list a product or a gig here. Filter by county and by campus or
+    institution to find what's near you.
+  </p>
+
+  <div class="section-head">
+    <div class="heading">
+      <span class="sheet-no">01</span>
+      <h2>Filter listings</h2>
+    </div>
+  </div>
+
+  <div class="filters">
+    <div class="filter-field">
+      <label for="countyFilter">County</label>
+      <select id="countyFilter">
+        <option value="">All counties</option>
+      </select>
+    </div>
+    <div class="filter-field">
+      <label for="campusFilter">Campus / Institution</label>
+      <select id="campusFilter">
+        <option value="">All campuses / institutions</option>
+      </select>
+    </div>
+    <div class="filter-field">
+      <label for="typeFilter">Listing type</label>
+      <select id="typeFilter">
+        <option value="">Products &amp; gigs</option>
+        <option value="Product">Products only</option>
+        <option value="Gig / Service">Gigs / services only</option>
+      </select>
+    </div>
+  </div>
+  <div class="active-filters" id="activeFiltersLine"></div>
+
+  <div class="section-head">
+    <div class="heading">
+      <span class="sheet-no">02</span>
+      <h2>Listings</h2>
+    </div>
+    <span id="list-status" role="status" aria-live="polite"></span>
+  </div>
+
+  <div class="listing-grid" id="listingGrid"></div>
+  <div class="empty-state" id="emptyState" style="display:none;">
+    <div class="empty-icon">🛍️</div>
+    <p>No listings match these filters yet.</p>
+  </div>
+
+  <div class="section-head post-toggle-row">
+    <div class="heading">
+      <span class="sheet-no">03</span>
+      <h2>Post a listing</h2>
+    </div>
+    <button type="button" class="commit ghost" id="postToggleBtn">Post a listing</button>
+  </div>
+
+  <div class="info-banner">
+    <span class="banner-icon">🔑</span>
+    <div class="banner-text">
+      <strong>Posting requires an approved account.</strong> Use the same email and
+      password you registered with on the
+      <a href="register.html">registration page</a> — your account must already be
+      Approved. If you haven't registered yet, do that first.
+    </div>
+  </div>
+
+  <div class="post-panel" id="postPanel">
+    <form id="listingForm" novalidate>
+      <div class="field-row">
+        <div class="field-index">01</div>
+        <div class="field-body">
+          <label for="listingType">Listing type</label>
+          <select id="listingType" name="listingType" required>
+            <option value="" disabled selected>Select a type</option>
+            <option value="Product">Product</option>
+            <option value="Gig / Service">Gig / Service</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">02</div>
+        <div class="field-body">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" placeholder="e.g. Solar phone chargers, or 'CV editing service'" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">03</div>
+        <div class="field-body">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" placeholder="What are you offering?" required></textarea>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">04</div>
+        <div class="field-body">
+          <label for="price">Price / rate (optional)</label>
+          <input type="text" id="price" name="price" placeholder="e.g. KES 500, or 'Negotiable'">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">05</div>
+        <div class="field-body">
+          <label for="county">County</label>
+          <select id="county" name="county" required>
+            <option value="" disabled selected>Select county</option>
+          </select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">06</div>
+        <div class="field-body">
+          <label for="campus">Campus / institution</label>
+          <input type="text" id="campus" name="campus" placeholder="e.g. University of Nairobi, or your company/school name" required>
+          <div class="hint">This is how others will filter by campus — use the same institution name you registered with.</div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">07</div>
+        <div class="field-body">
+          <label for="posterName">Your name</label>
+          <input type="text" id="posterName" name="posterName" autocomplete="name" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">08</div>
+        <div class="field-body">
+          <label for="posterPhone">Phone number (optional, shown to buyers)</label>
+          <input type="tel" id="posterPhone" name="posterPhone" placeholder="e.g. 0712345678">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">09</div>
+        <div class="field-body">
+          <label for="posterEmail">Your registered email</label>
+          <input type="email" id="posterEmail" name="posterEmail" autocomplete="email" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-index">10</div>
+        <div class="field-body">
+          <label for="password">Your password</label>
+          <div class="password-wrap">
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+            <button type="button" class="toggle-visibility" data-target="password">Show</button>
+          </div>
+          <div class="hint">Used only to verify your account is Approved — not stored with the listing.</div>
+        </div>
+      </div>
+
+      <div class="submit-row">
+        <span id="form-status" role="status" aria-live="polite"></span>
+        <button type="submit" class="commit" id="submitBtn">Post listing</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="section-head">
+    <div class="heading">
+      <span class="sheet-no">04</span>
+      <h2>Remove a listing</h2>
+    </div>
+  </div>
+  <p class="lede" style="margin-top:0;">
+    To remove your own listing, find its card above and use the "Remove" button on it —
+    you'll be asked to confirm with the email and password you posted it with.
+  </p>
+</main>
+
+<footer>
+  Enemind Company — built on Google Sheets + Apps Script
+</footer>
+
+<script>
+  // Same deployed Apps Script Web App URL used by register.html / home.html / admin.html.
+  const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbw5orUxKrVR25AYlQFPDOgGeo8RxtVZda8astiojW3h6RzIMaH7QIm4X5PGU-Mpoio8/exec';
+
+  const COUNTIES = [
+    'Baringo', 'Bomet', 'Bungoma', 'Busia', 'Elgeyo-Marakwet', 'Embu',
+    'Garissa', 'Homa Bay', 'Isiolo', 'Kajiado', 'Kakamega', 'Kericho',
+    'Kiambu', 'Kilifi', 'Kirinyaga', 'Kisii', 'Kisumu', 'Kitui', 'Kwale',
+    'Laikipia', 'Lamu', 'Machakos', 'Makueni', 'Mandera', 'Marsabit',
+    'Meru', 'Migori', 'Mombasa', "Murang'a", 'Nairobi', 'Nakuru', 'Nandi',
+    'Narok', 'Nyamira', 'Nyandarua', 'Nyeri', 'Samburu', 'Siaya',
+    'Taita-Taveta', 'Tana River', 'Tharaka-Nithi', 'Trans Nzoia', 'Turkana',
+    'Uasin Gishu', 'Vihiga', 'Wajir', 'West Pokot'
+  ];
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, ch => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+  }
+
+  /* ---------- Populate static county dropdowns ---------- */
+  const countyFilterEl = document.getElementById('countyFilter');
+  const countySelectEl = document.getElementById('county');
+  COUNTIES.forEach(c => {
+    countyFilterEl.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`);
+    countySelectEl.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`);
+  });
+
+  /* ---------- State ---------- */
+  let allListings = [];
+
+  const campusFilterEl = document.getElementById('campusFilter');
+  const typeFilterEl = document.getElementById('typeFilter');
+  const listingGridEl = document.getElementById('listingGrid');
+  const emptyStateEl = document.getElementById('emptyState');
+  const listStatusEl = document.getElementById('list-status');
+  const activeFiltersLineEl = document.getElementById('activeFiltersLine');
+
+  function setListStatus(message, state) {
+    listStatusEl.textContent = message;
+    if (state) listStatusEl.setAttribute('data-state', state);
+    else listStatusEl.removeAttribute('data-state');
+  }
+
+  /* ---------- Fetch listings ---------- */
+  async function fetchListings() {
+    setListStatus('Loading…', '');
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'listListings' })
+      });
+      const result = await res.json();
+      if (result.success) {
+        allListings = result.listings || [];
+        rebuildCampusOptions();
+        renderListings();
+        setListStatus(allListings.length + ' total listing' + (allListings.length === 1 ? '' : 's') + '.', '');
+      } else {
+        setListStatus(result.message || 'Could not load listings.', 'err');
+      }
+    } catch (err) {
+      setListStatus('Network error — check the Web App URL is set.', 'err');
+    }
+  }
+
+  // Campus/institution options are built from real listing data (not a
+  // fixed list), since "campus" means a university for a student, a
+  // school for a teacher, or a company name for an HR manager.
+  function rebuildCampusOptions() {
+    const current = campusFilterEl.value;
+    const campuses = Array.from(new Set(allListings.map(l => l.campus).filter(Boolean))).sort();
+    campusFilterEl.innerHTML = '<option value="">All campuses / institutions</option>' +
+      campuses.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    if (campuses.indexOf(current) !== -1) campusFilterEl.value = current;
+  }
+
+  /* ---------- Render ---------- */
+  function renderListings() {
+    const county = countyFilterEl.value;
+    const campus = campusFilterEl.value;
+    const type = typeFilterEl.value;
+
+    const filtered = allListings.filter(l => {
+      if (county && l.county !== county) return false;
+      if (campus && l.campus !== campus) return false;
+      if (type && l.listingType !== type) return false;
+      return true;
+    });
+
+    const activeParts = [];
+    if (county) activeParts.push('County: ' + county);
+    if (campus) activeParts.push('Campus: ' + campus);
+    if (type) activeParts.push('Type: ' + type);
+    activeFiltersLineEl.innerHTML = activeParts.length
+      ? 'Showing ' + activeParts.join(' · ') + '<button type="button" id="clearFiltersBtn">Clear filters</button>'
+      : '';
+    const clearBtn = document.getElementById('clearFiltersBtn');
+    if (clearBtn) clearBtn.addEventListener('click', () => {
+      countyFilterEl.value = ''; campusFilterEl.value = ''; typeFilterEl.value = '';
+      renderListings();
+    });
+
+    if (filtered.length === 0) {
+      listingGridEl.innerHTML = '';
+      emptyStateEl.style.display = '';
+      return;
+    }
+    emptyStateEl.style.display = 'none';
+
+    listingGridEl.innerHTML = filtered.map(l => {
+      const typeClass = l.listingType === 'Gig / Service' ? 'gig' : '';
+      const priceHtml = l.price ? `<div class="listing-price">${escapeHtml(l.price)}</div>` : '';
+      const phoneHtml = l.posterPhone ? `<div>Phone: <strong>${escapeHtml(l.posterPhone)}</strong></div>` : '';
+      return `
+        <div class="listing-card" data-id="${escapeHtml(l.id)}">
+          <div class="listing-head">
+            <span class="listing-type-tag ${typeClass}">${escapeHtml(l.listingType)}</span>
+            <div class="listing-title">${escapeHtml(l.title)}</div>
+            ${priceHtml}
+          </div>
+          <div class="listing-desc">${escapeHtml(l.description)}</div>
+          <div class="listing-meta">
+            <div>Posted by: <strong>${escapeHtml(l.posterName)}</strong> (${escapeHtml(l.posterType || '')})</div>
+            <div>${escapeHtml(l.campus)} · ${escapeHtml(l.county)}</div>
+            ${phoneHtml}
+          </div>
+          <div class="listing-actions">
+            <button type="button" class="commit ghost small" data-action="remove">Remove</button>
+          </div>
+        </div>`;
+    }).join('');
+
+    listingGridEl.querySelectorAll('.listing-card').forEach(card => {
+      const removeBtn = card.querySelector('[data-action="remove"]');
+      removeBtn.addEventListener('click', () => promptRemove(card.dataset.id));
+    });
+  }
+
+  async function promptRemove(listingId) {
+    const email = window.prompt('Enter the email you posted this listing with:');
+    if (!email) return;
+    const password = window.prompt('Enter your password:');
+    if (!password) return;
+
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'removeListing', listingId, email, password })
+      });
+      const result = await res.json();
+      if (result.success) {
+        fetchListings();
+      } else {
+        alert(result.message || 'Could not remove listing.');
+      }
+    } catch (err) {
+      alert('Network error — check the Web App URL is set.');
+    }
+  }
+
+  countyFilterEl.addEventListener('change', renderListings);
+  campusFilterEl.addEventListener('change', renderListings);
+  typeFilterEl.addEventListener('change', renderListings);
+
+  /* ---------- Post-a-listing panel ---------- */
+  const postToggleBtn = document.getElementById('postToggleBtn');
+  const postPanel = document.getElementById('postPanel');
+  postToggleBtn.addEventListener('click', () => {
+    const opening = !postPanel.classList.contains('open');
+    postPanel.classList.toggle('open');
+    postToggleBtn.textContent = opening ? 'Hide form' : 'Post a listing';
+    if (opening) postPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.querySelectorAll('.toggle-visibility').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = document.getElementById(btn.dataset.target);
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      btn.textContent = isHidden ? 'Hide' : 'Show';
+    });
+  });
+
+  const listingForm = document.getElementById('listingForm');
+  const formStatusEl = document.getElementById('form-status');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function setFormStatus(message, state) {
+    formStatusEl.textContent = message;
+    if (state) formStatusEl.setAttribute('data-state', state);
+    else formStatusEl.removeAttribute('data-state');
+  }
+
+  listingForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      action: 'createListing',
+      listingType: document.getElementById('listingType').value,
+      title: document.getElementById('title').value.trim(),
+      description: document.getElementById('description').value.trim(),
+      price: document.getElementById('price').value.trim(),
+      county: document.getElementById('county').value,
+      campus: document.getElementById('campus').value.trim(),
+      posterName: document.getElementById('posterName').value.trim(),
+      posterPhone: document.getElementById('posterPhone').value.trim(),
+      posterEmail: document.getElementById('posterEmail').value.trim(),
+      password: document.getElementById('password').value
+    };
+
+    if (!data.listingType || !data.title || !data.description || !data.county ||
+        !data.campus || !data.posterName || !data.posterEmail || !data.password) {
+      setFormStatus('Please fill in every required field.', 'err');
+      return;
+    }
+
+    setFormStatus('Submitting…', '');
+    submitBtn.disabled = true;
+
+    try {
+      const res = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (result.success) {
+        setFormStatus(result.message || 'Listing posted.', 'ok');
+        listingForm.reset();
+        fetchListings();
+      } else {
+        setFormStatus(result.message || 'Could not post listing.', 'err');
+      }
+    } catch (err) {
+      setFormStatus('Network error — check the Web App URL is set.', 'err');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  /* ---------- Init ---------- */
+  fetchListings();
+</script>
+
+</body>
+</html>
