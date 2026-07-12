@@ -207,6 +207,13 @@
     margin-bottom: 8px;
   }
 
+  .field-body label .optional-tag {
+    text-transform: none;
+    letter-spacing: normal;
+    color: rgba(232,238,242,0.45);
+    font-family: var(--font-body);
+  }
+
   .field-body .hint {
     margin-top: 6px;
     font-family: var(--font-mono);
@@ -734,6 +741,25 @@
       </div>`;
   }
 
+  /**
+   * Renders a row for an OPTIONAL, generic field (not required, no
+   * category-specific validation) — used for Logo URL and TikTok
+   * username, which are offered to every registration category.
+   */
+  function optionalFieldRowHTML(index, key, label, type, placeholder, hint) {
+    const idx = String(index).padStart(2, '0');
+    return `
+      <div class="field-row">
+        <div class="field-index">${idx}</div>
+        <div class="field-body">
+          <label for="f_${key}">${escapeHtml(label)} <span class="optional-tag">(optional)</span></label>
+          <input type="${type}" id="f_${key}" name="${key}"
+            ${placeholder ? `placeholder="${escapeHtml(placeholder)}"` : ''}>
+          ${hint ? `<div class="hint">${escapeHtml(hint)}</div>` : ''}
+        </div>
+      </div>`;
+  }
+
   function passwordRowHTML(index, key, label, autocomplete, withHint) {
     const idx = String(index).padStart(2, '0');
     return `
@@ -766,6 +792,21 @@
       html += fieldRowHTML(index, f);
       index++;
     });
+
+    // Generic optional fields, offered to every category.
+    html += optionalFieldRowHTML(
+      index, 'logoUrl', 'Logo / profile image URL', 'url',
+      'https://...',
+      'Link to an image people will see on your listings and posts. You can add or change this later.'
+    );
+    index++;
+    html += optionalFieldRowHTML(
+      index, 'tiktokUsername', 'TikTok username', 'text',
+      '@yourhandle',
+      'Share your TikTok handle so others can find and follow you.'
+    );
+    index++;
+
     html += passwordRowHTML(index, 'password', 'Password', 'new-password', true);
     index++;
     html += passwordRowHTML(index, 'confirmPassword', 'Confirm password', 'new-password', false);
@@ -806,6 +847,12 @@
       if (!val) missing = true;
       data[f.key] = val;
     });
+
+    // Optional generic fields — included if present, but never required.
+    const logoUrlEl = document.getElementById('f_logoUrl');
+    const tiktokEl = document.getElementById('f_tiktokUsername');
+    data.logoUrl = logoUrlEl ? logoUrlEl.value.trim() : '';
+    data.tiktokUsername = tiktokEl ? tiktokEl.value.trim() : '';
 
     const passwordEl = document.getElementById('password');
     const confirmEl = document.getElementById('confirmPassword');
