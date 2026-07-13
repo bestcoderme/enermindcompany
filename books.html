@@ -53,10 +53,69 @@
   h1 em { font-style: normal; color: var(--copper); }
   p.lede { margin-top: 14px; max-width: 62ch; font-size: 1rem; color: rgba(232,238,242,0.8); }
 
-  .quote-banner { margin-top: 24px; padding: 16px 20px; background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.25); border-left: 3px solid var(--blueprint-line); display: none; }
+  /* ---------- Weekly motivation ---------- */
+  .quote-banner {
+    display: none;
+    position: relative;
+    margin-top: 28px;
+    padding: 30px 28px 28px 30px;
+    background:
+      linear-gradient(135deg, rgba(201,123,61,0.16), rgba(46,111,158,0.10) 55%, rgba(16,36,62,0) 100%),
+      rgba(232,238,242,0.04);
+    border: 1px solid rgba(201,123,61,0.45);
+    overflow: hidden;
+    isolation: isolate;
+  }
   .quote-banner.show { display: block; }
-  .quote-banner .quote-eyebrow { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--blueprint-line); margin-bottom: 6px; }
-  .quote-banner .quote-text { font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--copper); }
+  .quote-banner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--copper), var(--blueprint-line));
+  }
+  .quote-banner::after {
+    content: '\201C';
+    position: absolute;
+    right: 18px;
+    top: -28px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 7.5rem;
+    line-height: 1;
+    color: rgba(201,123,61,0.14);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .quote-banner .quote-eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 12px;
+  }
+  .quote-banner .quote-eyebrow::before {
+    content: '✦';
+    font-size: 0.75rem;
+    animation: quote-twinkle 2.4s ease-in-out infinite;
+  }
+  .quote-banner .quote-text {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.1rem, 2.6vw, 1.45rem);
+    line-height: 1.45;
+    color: var(--paper);
+    max-width: 56ch;
+    letter-spacing: 0.01em;
+  }
+  @keyframes quote-twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+  }
 
   .status-banner { margin-top: 16px; display: flex; align-items: flex-start; gap: 14px; padding: 16px 18px; background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.25); border-left: 3px solid var(--blueprint-line); }
   .status-banner.ok { border-left-color: var(--ok); }
