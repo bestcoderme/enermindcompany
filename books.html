@@ -91,10 +91,20 @@
 
   /* ---------- Book cards ---------- */
   .book-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-  .book-card { background: rgba(232,238,242,0.04); border: 1px solid rgba(232,238,242,0.3); border-left: 3px solid var(--blueprint-line); padding: 18px 20px; }
+  .book-card {
+    position: relative;
+    background: rgba(232,238,242,0.04);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid rgba(232,238,242,0.3);
+    border-left: 3px solid var(--blueprint-line);
+    padding: 18px 20px;
+    isolation: isolate;
+  }
   .book-card.unlocked { border-left-color: var(--ok); }
   .bc-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-  .bc-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--blueprint-line); color: var(--blueprint-line); flex-shrink: 0; }
+  .bc-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--blueprint-line); color: var(--blueprint-line); flex-shrink: 0; background: rgba(16,36,62,0.55); }
   .bc-price { font-family: var(--font-mono); font-size: 0.78rem; color: var(--copper); font-weight: 600; white-space: nowrap; }
   .bc-price.free { color: var(--ok); }
   .bc-title { font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; margin-top: 8px; }
@@ -269,6 +279,14 @@
     <div class="form-row">
       <div class="field-index">09</div>
       <div class="field-body">
+        <label for="bLogoUrl">Poster logo URL (optional)</label>
+        <input type="url" id="bLogoUrl" placeholder="https://example.com/logo.png">
+        <p class="hint">Shown as a faint background image on this book's card in the library. Leave blank to use the logo already saved on your account, if any.</p>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="field-index">10</div>
+      <div class="field-body">
         <label for="bPassword">Account password</label>
         <input type="password" id="bPassword" required placeholder="Verifies your Active account">
         <p class="hint">We check this against your Enemind registration — your account must be Active to post.</p>
@@ -310,7 +328,7 @@
    * the PESAPAL_CALLBACK_URL registered in setup.gs, so Pesapal
    * redirects the reader's browser back here after paying.
    * ---------------------------------------------------------------- */
-  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbweqIoXdbkqzo8d_zwlmRJB_SESWs14cWaI9OasGJlnGxYJCL2y4nr2QR5q-Pze9tcS/exec';
+  const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwGttVGhIg_H3Ttj-w4Esa2-B3Kd_D2pnte2BEDLBPzBG7lCDKsCohM0wPT8WTjifgN/exec';
 
   function escapeHtml(str) {
     return String(str == null ? '' : str).replace(/[&<>"']/g, ch => ({
@@ -439,8 +457,14 @@
       const actionHtml = unlocked
         ? `<a class="bc-action open" href="${escapeHtml(access.fileUrl)}" target="_blank" rel="noopener">Open →</a>`
         : `<button type="button" class="bc-action" data-action="unlock" data-id="${escapeHtml(b.id)}" data-title="${escapeHtml(b.title)}">Unlock — KSh ${escapeHtml(b.price)}</button>`;
+      // Poster's logo, if any, is layered under a dark gradient so the
+      // card text stays readable — a subtle branded watermark rather
+      // than a full-strength image.
+      const cardStyle = b.posterLogoUrl
+        ? ` style="background-image: linear-gradient(135deg, rgba(16,36,62,0.90), rgba(16,36,62,0.96)), url('${escapeHtml(b.posterLogoUrl)}');"`
+        : '';
       return `
-        <div class="book-card ${unlocked ? 'unlocked' : ''}">
+        <div class="book-card ${unlocked ? 'unlocked' : ''}"${cardStyle}>
           <div class="bc-top">
             <div><span class="bc-tag">Book</span><div class="bc-title">${escapeHtml(b.title)}</div></div>
             ${priceHtml}
@@ -598,6 +622,7 @@
         posterName: document.getElementById('bName').value,
         posterEmail: posterEmail,
         posterPhone: document.getElementById('bPhone').value,
+        posterLogoUrl: document.getElementById('bLogoUrl').value,
         password: password
       };
 
